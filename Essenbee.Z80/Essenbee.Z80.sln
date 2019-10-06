@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29326.143
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Essenbee.Z80", "Essenbee.Z80.csproj", "{7D5005D4-A8F1-4E80-8689-8DDD04264F3A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Essenbee.Z80.Tests", "..\Essenbee.Z80.Tests\Essenbee.Z80.Tests.csproj", "{A6771D5B-325D-4051-AE66-9C2F1DBE92E8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7D5005D4-A8F1-4E80-8689-8DDD04264F3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D5005D4-A8F1-4E80-8689-8DDD04264F3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D5005D4-A8F1-4E80-8689-8DDD04264F3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D5005D4-A8F1-4E80-8689-8DDD04264F3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6771D5B-325D-4051-AE66-9C2F1DBE92E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6771D5B-325D-4051-AE66-9C2F1DBE92E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6771D5B-325D-4051-AE66-9C2F1DBE92E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6771D5B-325D-4051-AE66-9C2F1DBE92E8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {511CBE2B-5AAD-41EE-A7DC-11E042ABABB5}
+	EndGlobalSection
+EndGlobal
