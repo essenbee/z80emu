@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Essenbee.Z80
 {
-    public class Z80
+    public partial class Z80
     {
         [Flags]
         public enum Flags
@@ -43,10 +44,10 @@ namespace Essenbee.Z80
         public byte H { get; set; } = 0x00;
         public byte L { get; set; } = 0x00;
         // ========================================
-        // Alternate General Purpose Registers
+        // Shadow General Purpose Registers
         // ========================================
         public byte A1 { get; set; } = 0x00;
-        public Flags F1 { get; set; } = 0x00; //Shows CPU state in the form of bit flags
+        public Flags F1 { get; set; } = 0x00;
         public byte B1 { get; set; } = 0x00;
         public byte C1 { get; set; } = 0x00;
         public byte D1 { get; set; } = 0x00;
@@ -68,7 +69,15 @@ namespace Essenbee.Z80
         // Program Counter
         public ushort PC { get; set; } = 0x0000;
 
+        // 16-bit Combined Registers
+        public ushort HL => (ushort)(L + (H << 8));
+        public ushort BC => (ushort)((B << 8) + C);
+        public ushort DE => (ushort)((D << 8) + E);
+
         private IBus _bus;
+        private Dictionary<byte, Instruction> _rootInstructions = new Dictionary<byte, Instruction>();
+        private ushort _absoluteAddress = 0x0000;
+        private ushort _relativeAddress = 0x0000;
 
         public Z80()
         {
