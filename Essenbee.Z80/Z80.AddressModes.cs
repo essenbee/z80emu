@@ -13,22 +13,18 @@ namespace Essenbee.Z80
         // and in these cases, two types of addressing can be employed. For example, LD can use
         // Immediate Mode to specify the source data and Indexed Mode to specify the destination.
 
-        // None - that is, all information required is held within the opcode itself e.g. LD A,C
-        byte NON()
-        {
-            PC++;
-            return 0;
-        }
+        // Implied Mode - that is, all information required is held within the opcode itself e.g. LD A,C
+        private byte IMP() => 0;
 
         // Immediate Mode
-        byte IMM()
+        private byte IMM()
         {
             _absoluteAddress = PC++;
             return 0;
         }
 
         // Immediate Extended Mode
-        byte IMX()
+        private byte IMX()
         {
             var loByte = PC++;
             var hiByte = PC++;

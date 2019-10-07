@@ -4,12 +4,4 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Z80.Instructions.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Z80.Instructions.cs" />
-  </ItemGroup>
-
 </Project>

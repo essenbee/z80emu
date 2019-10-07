@@ -78,14 +78,35 @@ namespace Essenbee.Z80
         private Dictionary<byte, Instruction> _rootInstructions = new Dictionary<byte, Instruction>();
         private ushort _absoluteAddress = 0x0000;
         private ushort _relativeAddress = 0x0000;
+        private byte _currentOpCode = 0x00;
+        private int _clockCycles = 0;
 
         public Z80()
         {
+            _rootInstructions = new Dictionary<byte, Instruction>
+            {
+                { 0x00, new Instruction("NOP", IMP, IMP, NOP, 4) },
+                { 0x47, new Instruction("LD B,A", IMP, IMP, LDBA, 4) },
+                { 0x78, new Instruction("LD A,B", IMP, IMP, LDAB, 4) },
+                { 0x7F, new Instruction("LD A,A", IMP, IMP, LDAA, 4) },
+            };
         }
 
         public void ConnectToBus(IBus bus)
         {
             _bus = bus;
+        }
+
+        public void Tick()
+        {
+            if (_clockCycles == 0)
+            {
+                _currentOpCode = ReadFromBus(PC);
+                PC++;
+                _clockCycles = _rootInstructions[_currentOpCode].TCycles;
+                _rootInstructions[_currentOpCode].Op();
+                _clockCycles--;
+            }
         }
 
         private byte ReadFromBus(ushort addr)
@@ -143,5 +164,7 @@ namespace Essenbee.Z80
                 }
             }
         }
+
+
     }
 }
