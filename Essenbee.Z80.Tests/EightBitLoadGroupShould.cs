@@ -68,12 +68,78 @@ namespace Essenbee.Z80.Tests
             // Reading RAM will fetch opcode 0x7F, which is LD A,A
             A.CallTo(() => fakeBus.FakedObject.Read(A<ushort>.Ignored, A<bool>.Ignored)).Returns<byte>(0x7F);
 
-            var cpu = new Z80() { A = 0x00, B = 0x0F, PC = 0x0080 };
+            var cpu = new Z80() { A = 0x03, B = 0x0F, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus.FakedObject);
             cpu.Tick();
 
-            Assert.Equal(0x00, cpu.A);
+            Assert.Equal(0x03, cpu.A);
             Assert.Equal(0x0F, cpu.B);
+
+            // No affect on Condition Flags
+            Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
+            Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
+            Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
+            Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+        }
+
+        [Fact]
+        public void LoadAwithValueWhenOperationIsLDAn()
+        {
+            var fakeBus = new Fake<IBus>();
+
+            var program = new byte[]
+            {
+                0x3E,
+                0x02,
+            };
+
+            // Reading RAM will fetch opcode 0x3E, which is LD A,n,
+            // and then the operand n (2 in this case)...
+            A.CallTo(() => fakeBus.FakedObject.Read(A<ushort>.Ignored, A<bool>.Ignored)).ReturnsNextFromSequence(program);
+
+            // Load 2 into register A, which starts out having a value of 3...
+            var cpu = new Z80() { A = 0x03, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus.FakedObject);
+            cpu.Tick();
+
+            Assert.Equal(0x02, cpu.A);
+
+            // No affect on Condition Flags
+            Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
+            Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
+            Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
+            Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+        }
+
+        [Fact]
+        public void LoadHwithValueWhenOperationIsLDHn()
+        {
+            var fakeBus = new Fake<IBus>();
+
+            var program = new byte[]
+            {
+                0x26,
+                0x1E,
+            };
+
+            // Reading RAM will fetch opcode 0x26, which is LD H,n,
+            // and then the operand n...
+            A.CallTo(() => fakeBus.FakedObject.Read(A<ushort>.Ignored, A<bool>.Ignored)).ReturnsNextFromSequence(program);
+
+            // Load 1E into register A, which starts out having a value of 3...
+            var cpu = new Z80() { A = 0x03, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus.FakedObject);
+            cpu.Tick();
+
+            Assert.Equal(0x1E, cpu.H);
 
             // No affect on Condition Flags
             Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);

@@ -16,8 +16,19 @@ namespace Essenbee.Z80
         //
         // This means that we have to read another byte in order to detrmine the operation in this four cases.
 
-        // No Operation
-        private byte NOP() => 0;
+        // Instruction    : NOP
+        // Operation      : No Operation
+        // Flags Affected: None
+        private byte NOP(byte opCode) => 0;
+
+        // Instruction    : HALT
+        // Operation      : Execute NOPs until a subsequent interrupt or reset is received
+        // Flags Affected: None
+        private byte HALT(byte opCode)
+        {
+            // ToDo: Figure this out!
+            return 0;
+        }
 
         // ========================================
         // 8-bit Load Group
@@ -25,27 +36,100 @@ namespace Essenbee.Z80
 
         // Instruction   : LD r, r'
         // Operation     : r <- r'
-
-        // OpCode        : 0x7F
-        // Flags Affected: none
-        private byte LDAA()
+        // Flags Affected: None
+        private byte LDRR(byte opCode)
         {
-            return NOP();
-        }
+            var src = opCode & 0b00000111;
+            var dest = (opCode & 0b00111000) >> 3;
 
-        // OpCode        : 0x78
-        // Flags Affected: none
-        private byte LDAB()
-        {
-            A = B;
+            var srcReg = 0;
+
+            switch (src)
+            {
+                case 0:
+                    srcReg = B;
+                    break;
+                case 1:
+                    srcReg = C;
+                    break;
+                case 2:
+                    srcReg = D;
+                    break;
+                case 3:
+                    srcReg =E;
+                    break;
+                case 4:
+                    srcReg = H;
+                    break;
+                case 5:
+                    srcReg = L;
+                    break;
+                case 7:
+                    srcReg = A;
+                    break;
+            }
+
+            switch (dest)
+            {
+                case 0:
+                    B = (byte)srcReg;
+                    break;
+                case 1:
+                    C = (byte)srcReg;
+                    break;
+                case 2:
+                    D = (byte)srcReg;
+                    break;
+                case 3:
+                    E = (byte)srcReg;
+                    break;
+                case 4:
+                    H = (byte)srcReg;
+                    break;
+                case 5:
+                    L = (byte)srcReg;
+                    break;
+                case 7:
+                    A = (byte)srcReg;
+                    break;
+            }
+
             return 0;
         }
 
-        // OpCode        : 0x47
-        // Flags Affected: none
-        private byte LDBA()
+        // Instruction   : LD r, n
+        // Operation     : r <- n
+        // Flags Affected: None
+        private byte LDRN(byte opCode)
         {
-            B = A;
+            var dest = (opCode & 0b00111000) >> 3;
+            var n = Fetch1();
+
+            switch (dest)
+            {
+                case 0:
+                    B = (byte)n;
+                    break;
+                case 1:
+                    C = (byte)n;
+                    break;
+                case 2:
+                    D = (byte)n;
+                    break;
+                case 3:
+                    E = (byte)n;
+                    break;
+                case 4:
+                    H = (byte)n;
+                    break;
+                case 5:
+                    L = (byte)n;
+                    break;
+                case 7:
+                    A = (byte)n;
+                    break;
+            }
+
             return 0;
         }
     }

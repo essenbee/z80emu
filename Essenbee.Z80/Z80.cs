@@ -86,9 +86,72 @@ namespace Essenbee.Z80
             _rootInstructions = new Dictionary<byte, Instruction>
             {
                 { 0x00, new Instruction("NOP", IMP, IMP, NOP, 4) },
-                { 0x47, new Instruction("LD B,A", IMP, IMP, LDBA, 4) },
-                { 0x78, new Instruction("LD A,B", IMP, IMP, LDAB, 4) },
-                { 0x7F, new Instruction("LD A,A", IMP, IMP, LDAA, 4) },
+
+                { 0x06, new Instruction("LD B,n", IMM, IMM, LDRN, 7) },
+                { 0x0E, new Instruction("LD C,n", IMM, IMM, LDRN, 7) },
+                { 0x16, new Instruction("LD D,n", IMM, IMM, LDRN, 7) },
+                { 0x1E, new Instruction("LD E,n", IMM, IMM, LDRN, 7) },
+                { 0x26, new Instruction("LD H,n", IMM, IMM, LDRN, 7) },
+                { 0x2E, new Instruction("LD L,n", IMM, IMM, LDRN, 7) },
+                { 0x3E, new Instruction("LD A,n", IMM, IMM, LDRN, 7) },
+
+                { 0x40, new Instruction("LD B,B", IMP, IMP, LDRR, 4) },
+                { 0x41, new Instruction("LD B,C", IMP, IMP, LDRR, 4) },
+                { 0x42, new Instruction("LD B,D", IMP, IMP, LDRR, 4) },
+                { 0x43, new Instruction("LD B,E", IMP, IMP, LDRR, 4) },
+                { 0x44, new Instruction("LD B,H", IMP, IMP, LDRR, 4) },
+                { 0x45, new Instruction("LD B,L", IMP, IMP, LDRR, 4) },
+                { 0x47, new Instruction("LD B,A", IMP, IMP, LDRR, 4) },
+
+                { 0x48, new Instruction("LD C,B", IMP, IMP, LDRR, 4) },
+                { 0x49, new Instruction("LD C,C", IMP, IMP, LDRR, 4) },
+                { 0x4A, new Instruction("LD C,D", IMP, IMP, LDRR, 4) },
+                { 0x4B, new Instruction("LD C,E", IMP, IMP, LDRR, 4) },
+                { 0x4C, new Instruction("LD C,H", IMP, IMP, LDRR, 4) },
+                { 0x4D, new Instruction("LD C,L", IMP, IMP, LDRR, 4) },
+                { 0x4F, new Instruction("LD C,A", IMP, IMP, LDRR, 4) },
+
+                { 0x50, new Instruction("LD D,B", IMP, IMP, LDRR, 4) },
+                { 0x51, new Instruction("LD D,C", IMP, IMP, LDRR, 4) },
+                { 0x52, new Instruction("LD D,D", IMP, IMP, LDRR, 4) },
+                { 0x53, new Instruction("LD D,E", IMP, IMP, LDRR, 4) },
+                { 0x54, new Instruction("LD D,H", IMP, IMP, LDRR, 4) },
+                { 0x55, new Instruction("LD D,L", IMP, IMP, LDRR, 4) },
+                { 0x57, new Instruction("LD D,A", IMP, IMP, LDRR, 4) },
+
+                { 0x58, new Instruction("LD E,B", IMP, IMP, LDRR, 4) },
+                { 0x59, new Instruction("LD E,C", IMP, IMP, LDRR, 4) },
+                { 0x5A, new Instruction("LD E,D", IMP, IMP, LDRR, 4) },
+                { 0x5B, new Instruction("LD E,E", IMP, IMP, LDRR, 4) },
+                { 0x5C, new Instruction("LD E,H", IMP, IMP, LDRR, 4) },
+                { 0x5D, new Instruction("LD E,L", IMP, IMP, LDRR, 4) },
+                { 0x5F, new Instruction("LD E,A", IMP, IMP, LDRR, 4) },
+
+                { 0x60, new Instruction("LD H,B", IMP, IMP, LDRR, 4) },
+                { 0x61, new Instruction("LD H,C", IMP, IMP, LDRR, 4) },
+                { 0x62, new Instruction("LD H,D", IMP, IMP, LDRR, 4) },
+                { 0x63, new Instruction("LD H,E", IMP, IMP, LDRR, 4) },
+                { 0x64, new Instruction("LD H,H", IMP, IMP, LDRR, 4) },
+                { 0x65, new Instruction("LD H,L", IMP, IMP, LDRR, 4) },
+                { 0x67, new Instruction("LD H,A", IMP, IMP, LDRR, 4) },
+
+                { 0x68, new Instruction("LD L,B", IMP, IMP, LDRR, 4) },
+                { 0x69, new Instruction("LD L,C", IMP, IMP, LDRR, 4) },
+                { 0x6A, new Instruction("LD L,D", IMP, IMP, LDRR, 4) },
+                { 0x6B, new Instruction("LD L,E", IMP, IMP, LDRR, 4) },
+                { 0x6C, new Instruction("LD L,H", IMP, IMP, LDRR, 4) },
+                { 0x6D, new Instruction("LD L,L", IMP, IMP, LDRR, 4) },
+                { 0x6F, new Instruction("LD L,A", IMP, IMP, LDRR, 4) },
+
+                { 0x76, new Instruction("HALT", IMP, IMP, HALT, 4) },
+
+                { 0x78, new Instruction("LD A,B", IMP, IMP, LDRR, 4) },
+                { 0x79, new Instruction("LD A,C", IMP, IMP, LDRR, 4) },
+                { 0x7A, new Instruction("LD A,D", IMP, IMP, LDRR, 4) },
+                { 0x7B, new Instruction("LD A,E", IMP, IMP, LDRR, 4) },
+                { 0x7C, new Instruction("LD A,H", IMP, IMP, LDRR, 4) },
+                { 0x7D, new Instruction("LD A,L", IMP, IMP, LDRR, 4) },
+                { 0x7F, new Instruction("LD A,A", IMP, IMP, LDRR, 4) },
             };
         }
 
@@ -104,7 +167,7 @@ namespace Essenbee.Z80
                 _currentOpCode = ReadFromBus(PC);
                 PC++;
                 _clockCycles = _rootInstructions[_currentOpCode].TCycles;
-                _rootInstructions[_currentOpCode].Op();
+                _rootInstructions[_currentOpCode].Op(_currentOpCode);
                 _clockCycles--;
             }
         }
@@ -165,6 +228,14 @@ namespace Essenbee.Z80
             }
         }
 
+        private byte Fetch1()
+        {
+            if (!(_rootInstructions[_currentOpCode].AddressingMode1 == IMP))
+            {
+                return ReadFromBus(_absoluteAddress);
+            }
 
+            return 0x00;
+        }
     }
 }
