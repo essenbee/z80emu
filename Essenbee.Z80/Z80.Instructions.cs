@@ -47,7 +47,7 @@ namespace Essenbee.Z80
             var src = opCode & 0b00000111;
             var dest = (opCode & 0b00111000) >> 3;
 
-            var srcReg = 0;
+            byte srcReg = 0x00;
 
             switch (src)
             {
@@ -74,30 +74,7 @@ namespace Essenbee.Z80
                     break;
             }
 
-            switch (dest)
-            {
-                case 0:
-                    B = (byte)srcReg;
-                    break;
-                case 1:
-                    C = (byte)srcReg;
-                    break;
-                case 2:
-                    D = (byte)srcReg;
-                    break;
-                case 3:
-                    E = (byte)srcReg;
-                    break;
-                case 4:
-                    H = (byte)srcReg;
-                    break;
-                case 5:
-                    L = (byte)srcReg;
-                    break;
-                case 7:
-                    A = (byte)srcReg;
-                    break;
-            }
+            AssignToRegister(dest, srcReg);
 
             return 0;
         }
@@ -110,30 +87,7 @@ namespace Essenbee.Z80
             var dest = (opCode & 0b00111000) >> 3;
             var n = Fetch1();
 
-            switch (dest)
-            {
-                case 0:
-                    B = (byte)n;
-                    break;
-                case 1:
-                    C = (byte)n;
-                    break;
-                case 2:
-                    D = (byte)n;
-                    break;
-                case 3:
-                    E = (byte)n;
-                    break;
-                case 4:
-                    H = (byte)n;
-                    break;
-                case 5:
-                    L = (byte)n;
-                    break;
-                case 7:
-                    A = (byte)n;
-                    break;
-            }
+            AssignToRegister(dest, n);
 
             return 0;
         }
@@ -146,6 +100,13 @@ namespace Essenbee.Z80
             var dest = (opCode & 0b00111000) >> 3;
             var n = Fetch1();
 
+            AssignToRegister(dest, n);
+
+            return 0;
+        }
+
+        private void AssignToRegister(int dest, byte n)
+        {
             switch (dest)
             {
                 case 0:
@@ -170,8 +131,6 @@ namespace Essenbee.Z80
                     A = (byte)n;
                     break;
             }
-
-            return 0;
         }
     }
 }
