@@ -47,37 +47,12 @@ namespace Essenbee.Z80
             var src = opCode & 0b00000111;
             var dest = (opCode & 0b00111000) >> 3;
 
-            byte srcReg = 0x00;
-
-            switch (src)
-            {
-                case 0:
-                    srcReg = B;
-                    break;
-                case 1:
-                    srcReg = C;
-                    break;
-                case 2:
-                    srcReg = D;
-                    break;
-                case 3:
-                    srcReg =E;
-                    break;
-                case 4:
-                    srcReg = H;
-                    break;
-                case 5:
-                    srcReg = L;
-                    break;
-                case 7:
-                    srcReg = A;
-                    break;
-            }
-
+            byte srcReg = ReadFromRegister(src);
             AssignToRegister(dest, srcReg);
 
             return 0;
         }
+
 
         // Instruction   : LD r, n
         // Operation     : r <- n
@@ -103,6 +78,29 @@ namespace Essenbee.Z80
             AssignToRegister(dest, n);
 
             return 0;
+        }
+
+        private byte ReadFromRegister(int src)
+        {
+            switch (src)
+            {
+                case 0:
+                    return B;
+                case 1:
+                    return C;;
+                case 2:
+                    return D;
+                case 3:
+                    return E;
+                case 4:
+                    return H;
+                case 5:
+                    return L;
+                case 7:
+                    return A;
+                default:
+                    return 0x00;
+            }
         }
 
         private void AssignToRegister(int dest, byte n)
