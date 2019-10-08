@@ -15,16 +15,16 @@ namespace Essenbee.Z80
             // Parity/Overflow flag - for arithmetic operations, this flag is set when overflow occurs.
             // Also usd in logical operations to indicate that the resulting parity is even
             P = (1 << 2),
-            // Not Used
+            // Undocumented - holds a copy of bit 3 of the result
             X = (1 << 3),
             // Half Carry flag - set or cleared depending upon the carry/borrow status between bits 3
-            // and 4 of an 8-bit arithmetic operation
+            // and 4 of an 8-bit arithmetic operation. Need for Binary Coded Decimal correction.
             H = (1 << 4),
-            // Not Used
+            // Undocumented - holds a copy of bit 5 of the result
             U = (1 << 5),
             // Zero flag - set if the result of an arithmetic operation is zero.
             Z = (1 << 6),
-            // Sign flag - stores the sate of the MSB of the Accumulator (register A).
+            // Sign flag - stores the state of the MSB of the Accumulator (register A).
             S = (1 << 7),
         };
 
@@ -54,7 +54,6 @@ namespace Essenbee.Z80
         public byte E1 { get; set; } = 0x00;
         public byte H1 { get; set; } = 0x00;
         public byte L1 { get; set; } = 0x00;
-
         // ========================================
         // Special Purpose Registers
         // ========================================
@@ -73,6 +72,11 @@ namespace Essenbee.Z80
         public ushort HL => (ushort)(L + (H << 8));
         public ushort BC => (ushort)((B << 8) + C);
         public ushort DE => (ushort)((D << 8) + E);
+
+        // 16-bit Combined Shadow Registers
+        public ushort HL1 => (ushort)(L1 + (H1 << 8));
+        public ushort BC1 => (ushort)((B1 << 8) + C1);
+        public ushort DE1 => (ushort)((D1 << 8) + E1);
 
         private IBus _bus;
         private Dictionary<byte, Instruction> _rootInstructions = new Dictionary<byte, Instruction>();
@@ -101,46 +105,59 @@ namespace Essenbee.Z80
                 { 0x43, new Instruction("LD B,E", REG, REG, LDRR, 4) },
                 { 0x44, new Instruction("LD B,H", REG, REG, LDRR, 4) },
                 { 0x45, new Instruction("LD B,L", REG, REG, LDRR, 4) },
-                { 0x47, new Instruction("LD B,A", REG, REG, LDRR, 4) },
 
+                { 0x46, new Instruction("LD B,(HL)", RIDXHL, RIDXHL, LDRHL, 7) },
+
+                { 0x47, new Instruction("LD B,A", REG, REG, LDRR, 4) },
                 { 0x48, new Instruction("LD C,B", REG, REG, LDRR, 4) },
                 { 0x49, new Instruction("LD C,C", REG, REG, LDRR, 4) },
                 { 0x4A, new Instruction("LD C,D", REG, REG, LDRR, 4) },
                 { 0x4B, new Instruction("LD C,E", REG, REG, LDRR, 4) },
                 { 0x4C, new Instruction("LD C,H", REG, REG, LDRR, 4) },
                 { 0x4D, new Instruction("LD C,L", REG, REG, LDRR, 4) },
-                { 0x4F, new Instruction("LD C,A", REG, REG, LDRR, 4) },
 
+                { 0x4E, new Instruction("LD C,(HL)", RIDXHL, RIDXHL, LDRHL, 7) },
+
+                { 0x4F, new Instruction("LD C,A", REG, REG, LDRR, 4) },
                 { 0x50, new Instruction("LD D,B", REG, REG, LDRR, 4) },
                 { 0x51, new Instruction("LD D,C", REG, REG, LDRR, 4) },
                 { 0x52, new Instruction("LD D,D", REG, REG, LDRR, 4) },
                 { 0x53, new Instruction("LD D,E", REG, REG, LDRR, 4) },
                 { 0x54, new Instruction("LD D,H", REG, REG, LDRR, 4) },
                 { 0x55, new Instruction("LD D,L", REG, REG, LDRR, 4) },
-                { 0x57, new Instruction("LD D,A", REG, REG, LDRR, 4) },
 
+                { 0x56, new Instruction("LD D,(HL)", RIDXHL, RIDXHL, LDRHL, 7) },
+
+                { 0x57, new Instruction("LD D,A", REG, REG, LDRR, 4) },
                 { 0x58, new Instruction("LD E,B", REG, REG, LDRR, 4) },
                 { 0x59, new Instruction("LD E,C", REG, REG, LDRR, 4) },
                 { 0x5A, new Instruction("LD E,D", REG, REG, LDRR, 4) },
                 { 0x5B, new Instruction("LD E,E", REG, REG, LDRR, 4) },
                 { 0x5C, new Instruction("LD E,H", REG, REG, LDRR, 4) },
                 { 0x5D, new Instruction("LD E,L", REG, REG, LDRR, 4) },
-                { 0x5F, new Instruction("LD E,A", REG, REG, LDRR, 4) },
 
+                { 0x5E, new Instruction("LD E,(HL)", RIDXHL, RIDXHL, LDRHL, 7) },
+
+                { 0x5F, new Instruction("LD E,A", REG, REG, LDRR, 4) },
                 { 0x60, new Instruction("LD H,B", REG, REG, LDRR, 4) },
                 { 0x61, new Instruction("LD H,C", REG, REG, LDRR, 4) },
                 { 0x62, new Instruction("LD H,D", REG, REG, LDRR, 4) },
                 { 0x63, new Instruction("LD H,E", REG, REG, LDRR, 4) },
                 { 0x64, new Instruction("LD H,H", REG, REG, LDRR, 4) },
                 { 0x65, new Instruction("LD H,L", REG, REG, LDRR, 4) },
-                { 0x67, new Instruction("LD H,A", REG, REG, LDRR, 4) },
 
+                { 0x66, new Instruction("LD H,(HL)", RIDXHL, RIDXHL, LDRHL, 7) },
+
+                { 0x67, new Instruction("LD H,A", REG, REG, LDRR, 4) },
                 { 0x68, new Instruction("LD L,B", REG, REG, LDRR, 4) },
                 { 0x69, new Instruction("LD L,C", REG, REG, LDRR, 4) },
                 { 0x6A, new Instruction("LD L,D", REG, REG, LDRR, 4) },
                 { 0x6B, new Instruction("LD L,E", REG, REG, LDRR, 4) },
                 { 0x6C, new Instruction("LD L,H", REG, REG, LDRR, 4) },
                 { 0x6D, new Instruction("LD L,L", REG, REG, LDRR, 4) },
+
+                { 0x6E, new Instruction("LD L,(HL)", RIDXHL, RIDXHL, LDRHL, 7) },
+
                 { 0x6F, new Instruction("LD L,A", REG, REG, LDRR, 4) },
 
                 { 0x76, new Instruction("HALT", IMP, IMP, HALT, 4) },
@@ -151,6 +168,9 @@ namespace Essenbee.Z80
                 { 0x7B, new Instruction("LD A,E", REG, REG, LDRR, 4) },
                 { 0x7C, new Instruction("LD A,H", REG, REG, LDRR, 4) },
                 { 0x7D, new Instruction("LD A,L", REG, REG, LDRR, 4) },
+
+                { 0x7E, new Instruction("LD A,(HL)", RIDXHL, RIDXHL, LDRHL, 7) },
+
                 { 0x7F, new Instruction("LD A,A", REG, REG, LDRR, 4) },
             };
         }
@@ -165,7 +185,22 @@ namespace Essenbee.Z80
             if (_clockCycles == 0)
             {
                 _currentOpCode = ReadFromBus(PC);
-                PC++;
+
+                // ToDo: Need to handle interrupts to release CPU from HALT state!
+                if (!_rootInstructions[_currentOpCode].Mnemonic.Equals("HALT"))
+                {
+                    PC++;
+                }
+
+                // ToDo: Need to handle the multi-byte extended opcodes
+                //
+                // - 0xCB prefix
+                // - 0xDD prefix
+                // - 0xFD prefix
+                // - 0xED prefix
+                // - 0xDDCB prefix
+                // - 0xFDCB prefix
+
                 _clockCycles = _rootInstructions[_currentOpCode].TCycles;
                 _rootInstructions[_currentOpCode].Op(_currentOpCode);
                 _clockCycles--;
@@ -230,8 +265,10 @@ namespace Essenbee.Z80
 
         private byte Fetch1()
         {
-            if (!(_rootInstructions[_currentOpCode].AddressingMode1 == IMP))
+            if (_rootInstructions[_currentOpCode].AddressingMode1 != IMP && 
+                _rootInstructions[_currentOpCode].AddressingMode1 != REG)
             {
+                _rootInstructions[_currentOpCode].AddressingMode1();
                 return ReadFromBus(_absoluteAddress);
             }
 

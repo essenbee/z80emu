@@ -33,7 +33,7 @@ namespace Essenbee.Z80
             return 0;
         }
 
-        // Modified Zero page Mode
+        // Modified Zero Page Mode
 
         // Relative Mode
 
@@ -45,7 +45,13 @@ namespace Essenbee.Z80
         // The opcode contains bits of information that determine the registers involved
         private byte REG() => 0;
 
-        // Register Indirect Addressing
+        // Register Indirect Addressing - (HL)
+        private byte RIDXHL()
+        {
+            _absoluteAddress = HL;
+
+            return 0;
+        }
 
         // Bit Addressing
 
