@@ -13,7 +13,7 @@ namespace Essenbee.Z80
         // and in these cases, two types of addressing can be employed. For example, LD can use
         // Immediate Mode to specify the source data and Indexed Mode to specify the destination.
 
-        // Implied Mode - that is, all information required is held within the opcode itself e.g. LD A,C
+        // Implied Mode
         private byte IMP() => 0;
 
         // Immediate Mode
@@ -41,7 +41,9 @@ namespace Essenbee.Z80
 
         // Indexed Mode
 
-        // Register Addressing
+        // Register Addressing:
+        // The opcode contains bits of information that determine the registers involved
+        private byte REG() => 0;
 
         // Register Indirect Addressing
 
