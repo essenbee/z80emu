@@ -19,7 +19,7 @@ namespace Essenbee.Z80
         // Immediate Mode
         private byte IMM()
         {
-            _absoluteAddress = PC++;
+            _absoluteAddress = ++PC;
             return 0;
         }
 

@@ -60,7 +60,7 @@ namespace Essenbee.Z80
         private byte LDRN(byte opCode)
         {
             var dest = (opCode & 0b00111000) >> 3;
-            var n = Fetch1();
+            var n = Fetch1(_rootInstructions);
 
             AssignToRegister(dest, n);
 
@@ -73,7 +73,22 @@ namespace Essenbee.Z80
         private byte LDRHL(byte opCode)
         {
             var dest = (opCode & 0b00111000) >> 3;
-            var n = Fetch1();
+            var n = Fetch1(_rootInstructions);
+
+            AssignToRegister(dest, n);
+
+            return 0;
+        }
+
+        // Instruction   : LD r, (IX+d)
+        // Operation     : r <- (IX+d)
+        // Flags Affected: None
+        private byte LDRIXD(byte opCode)
+        {
+            var dest = (opCode & 0b00111000) >> 3;
+            sbyte d = (sbyte)Fetch1(_ddInstructions); // displacement -128 to +127
+
+            var n = ReadFromBus((ushort)(IX + d));
 
             AssignToRegister(dest, n);
 

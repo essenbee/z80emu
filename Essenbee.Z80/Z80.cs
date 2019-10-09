@@ -9,23 +9,23 @@ namespace Essenbee.Z80
         public enum Flags
         {
             // Carry flag - set if an ADD instruction generates a carry or a SUB instruction generates a borrow.
-            C = (1 << 0),
+            C = 1 << 0,
             // Add/Subtract flag - used by the DAA instruction; set for Subtractions, cleared for Additions.
-            N = (1 << 1),
+            N = 1 << 1,
             // Parity/Overflow flag - for arithmetic operations, this flag is set when overflow occurs.
             // Also usd in logical operations to indicate that the resulting parity is even
-            P = (1 << 2),
+            P = 1 << 2,
             // Undocumented - holds a copy of bit 3 of the result
-            X = (1 << 3),
+            X = 1 << 3,
             // Half Carry flag - set or cleared depending upon the carry/borrow status between bits 3
             // and 4 of an 8-bit arithmetic operation. Need for Binary Coded Decimal correction.
-            H = (1 << 4),
+            H = 1 << 4,
             // Undocumented - holds a copy of bit 5 of the result
-            U = (1 << 5),
+            U = 1 << 5,
             // Zero flag - set if the result of an arithmetic operation is zero.
-            Z = (1 << 6),
+            Z = 1 << 6,
             // Sign flag - stores the state of the MSB of the Accumulator (register A).
-            S = (1 << 7),
+            S = 1 << 7,
         };
 
         // CPU Registers
@@ -80,6 +80,7 @@ namespace Essenbee.Z80
 
         private IBus _bus;
         private Dictionary<byte, Instruction> _rootInstructions = new Dictionary<byte, Instruction>();
+        private Dictionary<byte, Instruction> _ddInstructions = new Dictionary<byte, Instruction>();
         private ushort _absoluteAddress = 0x0000;
         private ushort _relativeAddress = 0x0000;
         private byte _currentOpCode = 0x00;
@@ -172,13 +173,24 @@ namespace Essenbee.Z80
                 { 0x7E, new Instruction("LD A,(HL)", RIDXHL, RIDXHL, LDRHL, 7) },
 
                 { 0x7F, new Instruction("LD A,A", REG, REG, LDRR, 4) },
+
+                // Multi-byte Opcode Prefixes
+                { 0xDD, new Instruction("NOP", IMP, IMP, NOP, 4) },
+            };
+
+            _ddInstructions = new Dictionary<byte, Instruction>
+            {
+                { 0x46, new Instruction("LD B,(IX+d)", IMM, IMM, LDRIXD, 19) },
+                { 0x4E, new Instruction("LD C,(IX+d)", IMM, IMM, LDRIXD, 19) },
+                { 0x56, new Instruction("LD D,(IX+d)", IMM, IMM, LDRIXD, 19) },
+                { 0x5E, new Instruction("LD E,(IX+d)", IMM, IMM, LDRIXD, 19) },
+                { 0x66, new Instruction("LD H,(IX+d)", IMM, IMM, LDRIXD, 19) },
+                { 0x6E, new Instruction("LD L,(IX+d)", IMM, IMM, LDRIXD, 19) },
+                { 0x7E, new Instruction("LD A,(IX+d)", IMM, IMM, LDRIXD, 19) },
             };
         }
 
-        public void ConnectToBus(IBus bus)
-        {
-            _bus = bus;
-        }
+        public void ConnectToBus(IBus bus) => _bus = bus;
 
         public void Tick()
         {
@@ -201,21 +213,27 @@ namespace Essenbee.Z80
                 // - 0xDDCB prefix
                 // - 0xFDCB prefix
 
-                _clockCycles = _rootInstructions[_currentOpCode].TCycles;
-                _rootInstructions[_currentOpCode].Op(_currentOpCode);
+                if (_currentOpCode == 0xDD)
+                {
+                    _currentOpCode = ReadFromBus(PC);
+
+                    _clockCycles = _ddInstructions[_currentOpCode].TCycles;
+                    _ddInstructions[_currentOpCode].Op(_currentOpCode);
+                }
+                else
+                {
+
+                    _clockCycles = _rootInstructions[_currentOpCode].TCycles;
+                    _rootInstructions[_currentOpCode].Op(_currentOpCode);
+                }
+
                 _clockCycles--;
             }
         }
 
-        private byte ReadFromBus(ushort addr)
-        {
-            return _bus.Read(addr, false);
-        }
+        private byte ReadFromBus(ushort addr) => _bus.Read(addr, false);
 
-        private void WriteToBus(ushort addr, byte data)
-        {
-            _bus.Write(addr, data);
-        }
+        private void WriteToBus(ushort addr, byte data) => _bus.Write(addr, data);
 
         private bool CheckFlag(Flags flag, bool isAlternate = false)
         {
@@ -263,12 +281,12 @@ namespace Essenbee.Z80
             }
         }
 
-        private byte Fetch1()
+        private byte Fetch1(Dictionary<byte, Instruction> lookupTable)
         {
-            if (_rootInstructions[_currentOpCode].AddressingMode1 != IMP && 
-                _rootInstructions[_currentOpCode].AddressingMode1 != REG)
+            if ((lookupTable[_currentOpCode].AddressingMode1 != IMP) &&
+                (lookupTable[_currentOpCode].AddressingMode1 != REG))
             {
-                _rootInstructions[_currentOpCode].AddressingMode1();
+                lookupTable[_currentOpCode].AddressingMode1();
                 return ReadFromBus(_absoluteAddress);
             }
 
