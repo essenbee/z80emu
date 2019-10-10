@@ -200,14 +200,14 @@ namespace Essenbee.Z80
                 { 0x66, new Instruction("LD H,(IX+d)", IMM, IDX, LDRIXD, 19) },
                 { 0x6E, new Instruction("LD L,(IX+d)", IMM, IDX, LDRIXD, 19) },
 
-                { 0x70, new Instruction("LD (IX+d),B", IMM, IDX, LDIXDR, 7) },
-                { 0x71, new Instruction("LD (IX+d),C", IMM, IDX, LDIXDR, 7) },
-                { 0x72, new Instruction("LD (IX+d),D", IMM, IDX, LDIXDR, 7) },
-                { 0x73, new Instruction("LD (IX+d),E", IMM, IDX, LDIXDR, 7) },
-                { 0x74, new Instruction("LD (IX+d),H", IMM, IDX, LDIXDR, 7) },
-                { 0x75, new Instruction("LD (IX+d),L", IMM, IDX, LDIXDR, 7) },
+                { 0x70, new Instruction("LD (IX+d),B", IMM, IDX, LDIXDR, 19) },
+                { 0x71, new Instruction("LD (IX+d),C", IMM, IDX, LDIXDR, 19) },
+                { 0x72, new Instruction("LD (IX+d),D", IMM, IDX, LDIXDR, 19) },
+                { 0x73, new Instruction("LD (IX+d),E", IMM, IDX, LDIXDR, 19) },
+                { 0x74, new Instruction("LD (IX+d),H", IMM, IDX, LDIXDR, 19) },
+                { 0x75, new Instruction("LD (IX+d),L", IMM, IDX, LDIXDR, 10) },
 
-                { 0x77, new Instruction("LD (IX+d),A", IMM, IDX, LDIXDR, 7) },
+                { 0x77, new Instruction("LD (IX+d),A", IMM, IDX, LDIXDR, 19) },
 
                 { 0x7E, new Instruction("LD A,(IX+d)", IMM, IDX, LDRIXD, 19) },
             };
@@ -220,6 +220,16 @@ namespace Essenbee.Z80
                 { 0x5E, new Instruction("LD E,(IY+d)", IMM, IDX, LDRIYD, 19) },
                 { 0x66, new Instruction("LD H,(IY+d)", IMM, IDX, LDRIYD, 19) },
                 { 0x6E, new Instruction("LD L,(IY+d)", IMM, IDX, LDRIYD, 19) },
+
+                { 0x70, new Instruction("LD (IY+d),B", IMM, IDX, LDIYDR, 19) },
+                { 0x71, new Instruction("LD (IY+d),C", IMM, IDX, LDIYDR, 19) },
+                { 0x72, new Instruction("LD (IY+d),D", IMM, IDX, LDIYDR, 19) },
+                { 0x73, new Instruction("LD (IY+d),E", IMM, IDX, LDIYDR, 19) },
+                { 0x74, new Instruction("LD (IY+d),H", IMM, IDX, LDIYDR, 19) },
+                { 0x75, new Instruction("LD (IY+d),L", IMM, IDX, LDIYDR, 10) },
+
+                { 0x77, new Instruction("LD (IY+d),A", IMM, IDX, LDIYDR, 19) },
+
                 { 0x7E, new Instruction("LD A,(IY+d)", IMM, IDX, LDRIYD, 19) },
             };
         }
