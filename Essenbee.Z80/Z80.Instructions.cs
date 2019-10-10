@@ -88,7 +88,24 @@ namespace Essenbee.Z80
             var dest = (opCode & 0b00111000) >> 3;
             sbyte d = (sbyte)Fetch1(_ddInstructions); // displacement -128 to +127
 
-            var n = ReadFromBus((ushort)(IX + d));
+            _absoluteAddress = (ushort)(IX + d);
+            var n = Fetch2(_ddInstructions);
+
+            AssignToRegister(dest, n);
+
+            return 0;
+        }
+
+        // Instruction   : LD r, (IY+d)
+        // Operation     : r <- (IY+d)
+        // Flags Affected: None
+        private byte LDRIYD(byte opCode)
+        {
+            var dest = (opCode & 0b00111000) >> 3;
+            sbyte d = (sbyte)Fetch1(_fdInstructions); // displacement -128 to +127
+
+            _absoluteAddress = (ushort)(IY + d);
+            var n = Fetch2(_fdInstructions);
 
             AssignToRegister(dest, n);
 

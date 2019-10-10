@@ -16,6 +16,9 @@ namespace Essenbee.Z80
         // Implied Mode
         private byte IMP() => 0;
 
+        // Indexed Mode
+        private byte IDX() => 0;
+
         // Immediate Mode
         private byte IMM()
         {
@@ -46,7 +49,7 @@ namespace Essenbee.Z80
         private byte REG() => 0;
 
         // Register Indirect Addressing - (HL)
-        private byte RIDXHL()
+        private byte RGIHL()
         {
             _absoluteAddress = HL;
 

@@ -81,6 +81,7 @@ namespace Essenbee.Z80
         private IBus _bus;
         private Dictionary<byte, Instruction> _rootInstructions = new Dictionary<byte, Instruction>();
         private Dictionary<byte, Instruction> _ddInstructions = new Dictionary<byte, Instruction>();
+        private Dictionary<byte, Instruction> _fdInstructions = new Dictionary<byte, Instruction>();
         private ushort _absoluteAddress = 0x0000;
         private ushort _relativeAddress = 0x0000;
         private byte _currentOpCode = 0x00;
@@ -107,7 +108,7 @@ namespace Essenbee.Z80
                 { 0x44, new Instruction("LD B,H", REG, REG, LDRR, 4) },
                 { 0x45, new Instruction("LD B,L", REG, REG, LDRR, 4) },
 
-                { 0x46, new Instruction("LD B,(HL)", RIDXHL, RIDXHL, LDRHL, 7) },
+                { 0x46, new Instruction("LD B,(HL)", RGIHL, RGIHL, LDRHL, 7) },
 
                 { 0x47, new Instruction("LD B,A", REG, REG, LDRR, 4) },
                 { 0x48, new Instruction("LD C,B", REG, REG, LDRR, 4) },
@@ -117,7 +118,7 @@ namespace Essenbee.Z80
                 { 0x4C, new Instruction("LD C,H", REG, REG, LDRR, 4) },
                 { 0x4D, new Instruction("LD C,L", REG, REG, LDRR, 4) },
 
-                { 0x4E, new Instruction("LD C,(HL)", RIDXHL, RIDXHL, LDRHL, 7) },
+                { 0x4E, new Instruction("LD C,(HL)", RGIHL, RGIHL, LDRHL, 7) },
 
                 { 0x4F, new Instruction("LD C,A", REG, REG, LDRR, 4) },
                 { 0x50, new Instruction("LD D,B", REG, REG, LDRR, 4) },
@@ -127,7 +128,7 @@ namespace Essenbee.Z80
                 { 0x54, new Instruction("LD D,H", REG, REG, LDRR, 4) },
                 { 0x55, new Instruction("LD D,L", REG, REG, LDRR, 4) },
 
-                { 0x56, new Instruction("LD D,(HL)", RIDXHL, RIDXHL, LDRHL, 7) },
+                { 0x56, new Instruction("LD D,(HL)", RGIHL, RGIHL, LDRHL, 7) },
 
                 { 0x57, new Instruction("LD D,A", REG, REG, LDRR, 4) },
                 { 0x58, new Instruction("LD E,B", REG, REG, LDRR, 4) },
@@ -137,7 +138,7 @@ namespace Essenbee.Z80
                 { 0x5C, new Instruction("LD E,H", REG, REG, LDRR, 4) },
                 { 0x5D, new Instruction("LD E,L", REG, REG, LDRR, 4) },
 
-                { 0x5E, new Instruction("LD E,(HL)", RIDXHL, RIDXHL, LDRHL, 7) },
+                { 0x5E, new Instruction("LD E,(HL)", RGIHL, RGIHL, LDRHL, 7) },
 
                 { 0x5F, new Instruction("LD E,A", REG, REG, LDRR, 4) },
                 { 0x60, new Instruction("LD H,B", REG, REG, LDRR, 4) },
@@ -147,7 +148,7 @@ namespace Essenbee.Z80
                 { 0x64, new Instruction("LD H,H", REG, REG, LDRR, 4) },
                 { 0x65, new Instruction("LD H,L", REG, REG, LDRR, 4) },
 
-                { 0x66, new Instruction("LD H,(HL)", RIDXHL, RIDXHL, LDRHL, 7) },
+                { 0x66, new Instruction("LD H,(HL)", RGIHL, RGIHL, LDRHL, 7) },
 
                 { 0x67, new Instruction("LD H,A", REG, REG, LDRR, 4) },
                 { 0x68, new Instruction("LD L,B", REG, REG, LDRR, 4) },
@@ -157,7 +158,7 @@ namespace Essenbee.Z80
                 { 0x6C, new Instruction("LD L,H", REG, REG, LDRR, 4) },
                 { 0x6D, new Instruction("LD L,L", REG, REG, LDRR, 4) },
 
-                { 0x6E, new Instruction("LD L,(HL)", RIDXHL, RIDXHL, LDRHL, 7) },
+                { 0x6E, new Instruction("LD L,(HL)", RGIHL, RGIHL, LDRHL, 7) },
 
                 { 0x6F, new Instruction("LD L,A", REG, REG, LDRR, 4) },
 
@@ -170,23 +171,37 @@ namespace Essenbee.Z80
                 { 0x7C, new Instruction("LD A,H", REG, REG, LDRR, 4) },
                 { 0x7D, new Instruction("LD A,L", REG, REG, LDRR, 4) },
 
-                { 0x7E, new Instruction("LD A,(HL)", RIDXHL, RIDXHL, LDRHL, 7) },
+                { 0x7E, new Instruction("LD A,(HL)", RGIHL, RGIHL, LDRHL, 7) },
 
                 { 0x7F, new Instruction("LD A,A", REG, REG, LDRR, 4) },
 
                 // Multi-byte Opcode Prefixes
+                { 0xCB, new Instruction("NOP", IMP, IMP, NOP, 4) },
                 { 0xDD, new Instruction("NOP", IMP, IMP, NOP, 4) },
+                { 0xED, new Instruction("NOP", IMP, IMP, NOP, 4) },
+                { 0xFD, new Instruction("NOP", IMP, IMP, NOP, 4) },
             };
 
             _ddInstructions = new Dictionary<byte, Instruction>
             {
-                { 0x46, new Instruction("LD B,(IX+d)", IMM, IMM, LDRIXD, 19) },
-                { 0x4E, new Instruction("LD C,(IX+d)", IMM, IMM, LDRIXD, 19) },
-                { 0x56, new Instruction("LD D,(IX+d)", IMM, IMM, LDRIXD, 19) },
-                { 0x5E, new Instruction("LD E,(IX+d)", IMM, IMM, LDRIXD, 19) },
-                { 0x66, new Instruction("LD H,(IX+d)", IMM, IMM, LDRIXD, 19) },
-                { 0x6E, new Instruction("LD L,(IX+d)", IMM, IMM, LDRIXD, 19) },
-                { 0x7E, new Instruction("LD A,(IX+d)", IMM, IMM, LDRIXD, 19) },
+                { 0x46, new Instruction("LD B,(IX+d)", IMM, IDX, LDRIXD, 19) },
+                { 0x4E, new Instruction("LD C,(IX+d)", IMM, IDX, LDRIXD, 19) },
+                { 0x56, new Instruction("LD D,(IX+d)", IMM, IDX, LDRIXD, 19) },
+                { 0x5E, new Instruction("LD E,(IX+d)", IMM, IDX, LDRIXD, 19) },
+                { 0x66, new Instruction("LD H,(IX+d)", IMM, IDX, LDRIXD, 19) },
+                { 0x6E, new Instruction("LD L,(IX+d)", IMM, IDX, LDRIXD, 19) },
+                { 0x7E, new Instruction("LD A,(IX+d)", IMM, IDX, LDRIXD, 19) },
+            };
+
+            _fdInstructions = new Dictionary<byte, Instruction>
+            {
+                { 0x46, new Instruction("LD B,(IY+d)", IMM, IDX, LDRIYD, 19) },
+                { 0x4E, new Instruction("LD C,(IY+d)", IMM, IDX, LDRIYD, 19) },
+                { 0x56, new Instruction("LD D,(IY+d)", IMM, IDX, LDRIYD, 19) },
+                { 0x5E, new Instruction("LD E,(IY+d)", IMM, IDX, LDRIYD, 19) },
+                { 0x66, new Instruction("LD H,(IY+d)", IMM, IDX, LDRIYD, 19) },
+                { 0x6E, new Instruction("LD L,(IY+d)", IMM, IDX, LDRIYD, 19) },
+                { 0x7E, new Instruction("LD A,(IY+d)", IMM, IDX, LDRIYD, 19) },
             };
         }
 
@@ -204,27 +219,30 @@ namespace Essenbee.Z80
                     PC++;
                 }
 
-                // ToDo: Need to handle the multi-byte extended opcodes
-                //
+                // ToDo: Need to handle the following multi-byte extended opcodes:
                 // - 0xCB prefix
-                // - 0xDD prefix
-                // - 0xFD prefix
                 // - 0xED prefix
                 // - 0xDDCB prefix
                 // - 0xFDCB prefix
 
-                if (_currentOpCode == 0xDD)
+                switch (_currentOpCode)
                 {
-                    _currentOpCode = ReadFromBus(PC);
+                    case 0xDD:
+                        _currentOpCode = ReadFromBus(PC);
 
-                    _clockCycles = _ddInstructions[_currentOpCode].TCycles;
-                    _ddInstructions[_currentOpCode].Op(_currentOpCode);
-                }
-                else
-                {
+                        _clockCycles = _ddInstructions[_currentOpCode].TCycles;
+                        _ddInstructions[_currentOpCode].Op(_currentOpCode);
+                        break;
+                    case 0xFD:
+                        _currentOpCode = ReadFromBus(PC);
 
-                    _clockCycles = _rootInstructions[_currentOpCode].TCycles;
-                    _rootInstructions[_currentOpCode].Op(_currentOpCode);
+                        _clockCycles = _fdInstructions[_currentOpCode].TCycles;
+                        _fdInstructions[_currentOpCode].Op(_currentOpCode);
+                        break;
+                    default:
+                        _clockCycles = _rootInstructions[_currentOpCode].TCycles;
+                        _rootInstructions[_currentOpCode].Op(_currentOpCode);
+                        break;
                 }
 
                 _clockCycles--;
@@ -287,6 +305,18 @@ namespace Essenbee.Z80
                 (lookupTable[_currentOpCode].AddressingMode1 != REG))
             {
                 lookupTable[_currentOpCode].AddressingMode1();
+                return ReadFromBus(_absoluteAddress);
+            }
+
+            return 0x00;
+        }
+
+        private byte Fetch2(Dictionary<byte, Instruction> lookupTable)
+        {
+            if ((lookupTable[_currentOpCode].AddressingMode2 != IMP) &&
+                (lookupTable[_currentOpCode].AddressingMode2 != REG))
+            {
+                lookupTable[_currentOpCode].AddressingMode2();
                 return ReadFromBus(_absoluteAddress);
             }
 
