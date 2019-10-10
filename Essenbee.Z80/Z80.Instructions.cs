@@ -125,6 +125,21 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction   : LD (IX+d),r
+        // Operation     : (IX+d) <- r
+        // Flags Affected: None
+        private byte LDIXDR(byte opCode)
+        {
+            var src = (opCode & 0b00000111);
+            var n = ReadFromRegister(src);
+            sbyte d = (sbyte)Fetch1(_ddInstructions); // displacement -128 to +127
+            var addr = (ushort)(IX + d);
+
+            WriteToBus(addr, n);
+
+            return 0;
+        }
+
         private byte ReadFromRegister(int src)
         {
             switch (src)
