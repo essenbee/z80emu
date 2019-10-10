@@ -112,6 +112,19 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction   : LD (HL),r
+        // Operation     : (HL) <- r - that is, r is loaded into the memory address pointed to by HL
+        // Flags Affected: None
+        private byte LDHLR(byte opCode)
+        {
+            var src = (opCode & 0b00000111);
+            var n = ReadFromRegister(src);
+
+            WriteToBus(HL, n);
+
+            return 0;
+        }
+
         private byte ReadFromRegister(int src)
         {
             switch (src)

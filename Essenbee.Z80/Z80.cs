@@ -162,7 +162,16 @@ namespace Essenbee.Z80
 
                 { 0x6F, new Instruction("LD L,A", REG, REG, LDRR, 4) },
 
+                { 0x70, new Instruction("LD (HL),B", IMP, IMP, LDHLR, 7) },
+                { 0x71, new Instruction("LD (HL),C", IMP, IMP, LDHLR, 7) },
+                { 0x72, new Instruction("LD (HL),D", IMP, IMP, LDHLR, 7) },
+                { 0x73, new Instruction("LD (HL),E", IMP, IMP, LDHLR, 7) },
+                { 0x74, new Instruction("LD (HL),H", IMP, IMP, LDHLR, 7) },
+                { 0x75, new Instruction("LD (HL),L", IMP, IMP, LDHLR, 7) },
+
                 { 0x76, new Instruction("HALT", IMP, IMP, HALT, 4) },
+
+                { 0x77, new Instruction("LD (HL),A", IMP, IMP, LDHLR, 7) },
 
                 { 0x78, new Instruction("LD A,B", REG, REG, LDRR, 4) },
                 { 0x79, new Instruction("LD A,C", REG, REG, LDRR, 4) },
