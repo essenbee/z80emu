@@ -78,7 +78,7 @@ namespace Essenbee.Z80
         public ushort BC1 => (ushort)((B1 << 8) + C1);
         public ushort DE1 => (ushort)((D1 << 8) + E1);
 
-        private IBus _bus;
+        private IBus _bus = null!;
         private Dictionary<byte, Instruction> _rootInstructions = new Dictionary<byte, Instruction>();
         private Dictionary<byte, Instruction> _ddInstructions = new Dictionary<byte, Instruction>();
         private Dictionary<byte, Instruction> _fdInstructions = new Dictionary<byte, Instruction>();
