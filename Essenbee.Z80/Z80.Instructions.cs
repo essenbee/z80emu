@@ -155,28 +155,18 @@ namespace Essenbee.Z80
             return 0;
         }
 
-        private byte ReadFromRegister(int src)
-        {
-            switch (src)
+        private byte ReadFromRegister(int src) => 
+            src switch
             {
-                case 0:
-                    return B;
-                case 1:
-                    return C;;
-                case 2:
-                    return D;
-                case 3:
-                    return E;
-                case 4:
-                    return H;
-                case 5:
-                    return L;
-                case 7:
-                    return A;
-                default:
-                    return 0x00;
-            }
-        }
+                0 => B,
+                1 => C,
+                2 => D,
+                3 => E,
+                4 => H,
+                5 => L,
+                7 => A,
+                _ => 0x00
+            };
 
         private void AssignToRegister(int dest, byte n)
         {

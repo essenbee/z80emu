@@ -42,8 +42,6 @@ namespace Essenbee.Z80
 
         // Extended Mode
 
-        // Indexed Mode
-
         // Register Addressing:
         // The opcode contains bits of information that determine the registers involved
         private byte REG() => 0;
