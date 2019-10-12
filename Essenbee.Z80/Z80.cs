@@ -99,6 +99,9 @@ namespace Essenbee.Z80
                 { 0x1E, new Instruction("LD E,n", IMM, IMM, LDRN, 7) },
                 { 0x26, new Instruction("LD H,n", IMM, IMM, LDRN, 7) },
                 { 0x2E, new Instruction("LD L,n", IMM, IMM, LDRN, 7) },
+
+                { 0x36, new Instruction("LD A,n", IMM, IMM, LDHLN, 10) },
+
                 { 0x3E, new Instruction("LD A,n", IMM, IMM, LDRN, 7) },
 
                 { 0x40, new Instruction("LD B,B", REG, REG, LDRR, 4) },
@@ -258,13 +261,13 @@ namespace Essenbee.Z80
                 {
                     case 0xDD:
                         _currentOpCode = ReadFromBus(PC);
-
+                        PC++;
                         _clockCycles = _ddInstructions[_currentOpCode].TCycles;
                         _ddInstructions[_currentOpCode].Op(_currentOpCode);
                         break;
                     case 0xFD:
                         _currentOpCode = ReadFromBus(PC);
-
+                        PC++;
                         _clockCycles = _fdInstructions[_currentOpCode].TCycles;
                         _fdInstructions[_currentOpCode].Op(_currentOpCode);
                         break;
