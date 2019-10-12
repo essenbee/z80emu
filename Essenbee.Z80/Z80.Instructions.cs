@@ -194,6 +194,18 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction   : LD A,(BC)
+        // Operation     : A <- (BC)
+        // Flags Affected: None
+        private byte LDABC(byte opCode)
+        {
+            _absoluteAddress = (ushort)(BC);
+            var n = Fetch1(_rootInstructions);
+            A = n;
+
+            return 0;
+        }
+
         private byte ReadFromRegister(int src) => 
             src switch
             {
