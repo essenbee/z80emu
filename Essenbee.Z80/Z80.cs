@@ -100,7 +100,7 @@ namespace Essenbee.Z80
                 { 0x26, new Instruction("LD H,n", IMM, IMM, LDRN, 7) },
                 { 0x2E, new Instruction("LD L,n", IMM, IMM, LDRN, 7) },
 
-                { 0x36, new Instruction("LD A,n", IMM, IMM, LDHLN, 10) },
+                { 0x36, new Instruction("LD (HL),n", IMM, IMM, LDHLN, 10) },
 
                 { 0x3E, new Instruction("LD A,n", IMM, IMM, LDRN, 7) },
 
@@ -196,6 +196,8 @@ namespace Essenbee.Z80
 
             _ddInstructions = new Dictionary<byte, Instruction>
             {
+                { 0x36, new Instruction("LD (IX+d),n", IMM, IMM, LDIXDN, 19) },
+
                 { 0x46, new Instruction("LD B,(IX+d)", IMM, IDX, LDRIXD, 19) },
                 { 0x4E, new Instruction("LD C,(IX+d)", IMM, IDX, LDRIXD, 19) },
                 { 0x56, new Instruction("LD D,(IX+d)", IMM, IDX, LDRIXD, 19) },
@@ -217,6 +219,8 @@ namespace Essenbee.Z80
 
             _fdInstructions = new Dictionary<byte, Instruction>
             {
+                { 0x36, new Instruction("LD (IY+d),n", IMM, IMM, LDIYDN, 19) },
+
                 { 0x46, new Instruction("LD B,(IY+d)", IMM, IDX, LDRIYD, 19) },
                 { 0x4E, new Instruction("LD C,(IY+d)", IMM, IDX, LDRIYD, 19) },
                 { 0x56, new Instruction("LD D,(IY+d)", IMM, IDX, LDRIYD, 19) },

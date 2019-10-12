@@ -147,7 +147,7 @@ namespace Essenbee.Z80
         {
             var src = (opCode & 0b00000111);
             var n = ReadFromRegister(src);
-            sbyte d = (sbyte)Fetch1(_ddInstructions); // displacement -128 to +127
+            sbyte d = (sbyte)Fetch1(_fdInstructions); // displacement -128 to +127
             var addr = (ushort)(IY + d);
 
             WriteToBus(addr, n);
@@ -162,6 +162,34 @@ namespace Essenbee.Z80
         {
             var n = Fetch1(_rootInstructions);
             WriteToBus(HL, n);
+
+            return 0;
+        }
+
+        // Instruction   : LD (IX+d),n
+        // Operation     : (IX+d) <- n
+        // Flags Affected: None
+        private byte LDIXDN(byte opCode)
+        {
+            sbyte d = (sbyte)Fetch1(_ddInstructions); // displacement -128 to +127
+            var n = Fetch2(_ddInstructions);
+            var addr = (ushort)(IX + d);
+
+            WriteToBus(addr, n);
+
+            return 0;
+        }
+
+        // Instruction   : LD (IY+d),n
+        // Operation     : (IY+d) <- n
+        // Flags Affected: None
+        private byte LDIYDN(byte opCode)
+        {
+            sbyte d = (sbyte)Fetch1(_fdInstructions); // displacement -128 to +127
+            var n = Fetch2(_fdInstructions);
+            var addr = (ushort)(IY + d);
+
+            WriteToBus(addr, n);
 
             return 0;
         }
