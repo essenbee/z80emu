@@ -206,6 +206,58 @@ namespace Essenbee.Z80
             return 0;
         }
 
+
+
+
+        // ========================================
+        // 8-bit Arithmetic and Logic Group
+        // ========================================
+
+        // Instruction    : ADD A, n
+        // Operation      : A <- A + n
+        // Flags Affected : 
+        private byte ADDAN(byte opCode)
+        {
+            byte n = Fetch1(_rootInstructions);
+            A = Add8(A, n);
+
+            return 0;
+        }
+
+        // Instruction    : ADC A, n
+        // Operation      : A <- A + n
+        // Flags Affected : 
+        private byte ADCAN(byte opCode)
+        {
+            byte n = Fetch1(_rootInstructions);
+            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+            A = Add8(A, n, c);
+
+            return 0;
+        }
+
+
+        private byte Add8(byte a, byte b, byte c = 0)
+        {
+            var sum = a + b + c;
+
+            SetFlag(Flags.N, false);
+            SetFlag(Flags.Z, sum == 0 ? true : false);
+            SetFlag(Flags.S, (sum & 0x80) > 0 ? true : false);
+            SetFlag(Flags.H, (a & 0x0F) + (b & 0x0F) > 0xF ? true : false);
+            SetFlag(Flags.P, (a >= 0x80 && b >= 0x80) ||
+                (a < 0x80 && b < 0x80 && sum < 0) 
+                ? true : false);
+            SetFlag(Flags.C, sum > 0xFF ? true : false);
+
+            // Undocumented Flags
+            SetFlag(Flags.X, (sum & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (sum & 0x20) > 0 ? true : false); //Copy of bit 5
+
+            return (byte)sum;
+        }
+
+
         private byte ReadFromRegister(int src) => 
             src switch
             {

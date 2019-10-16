@@ -190,6 +190,9 @@ namespace Essenbee.Z80
 
                 { 0x7F, new Instruction("LD A,A", REG, REG, LDRR, 4) },
 
+                { 0xC6, new Instruction("ADD A,n", IMM, IMM, ADDAN, 7) },
+                { 0xCE, new Instruction("ADC A,n", IMM, IMM, ADCAN, 7) },
+
                 // Multi-byte Opcode Prefixes
                 { 0xCB, new Instruction("NOP", IMP, IMP, NOP, 4) },
                 { 0xDD, new Instruction("NOP", IMP, IMP, NOP, 4) },
