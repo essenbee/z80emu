@@ -1,0 +1,31 @@
+﻿Hex File Format Overview
+========================
+
+:LLAAAATT[DD ...]CC
+
+:    = start of line
+LL   = number of DD data bytes in record
+AAAA = start address
+TT   = record type:
+		00 = data
+		01 = end-of-file
+		02 = extended segment address record
+		04 = extended linear address record
+		05 = start linear address record
+DD   = data byte (there will be LL of these in the record)
+CC   = checksum
+
+:0F0080003E05060A80870E0F9126082EFF770097
+|||||||||||                            CC->Checksum
+|||||||||DD->Data
+|||||||TT->Record Type
+|||AAAA->Address
+|LL->Record Length
+:->Colon
+
+End-ofFile Records
+------------------
+
+These always look like this:
+
+:00000001FF
