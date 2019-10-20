@@ -12,20 +12,19 @@ namespace Essenbee.Z80.Tests
         {
             var fakeBus = A.Fake<IBus>();
 
-            // Routine #1
-            //              T-cycles
-            //              --------
-            // LD A, 0x05     (7)
-            // LD B, 0x0A     (7)
-            // ADD A, B       (4)
-            // ADD A, A       (4)
-            // LD C, 0x0F     (7)
-            // SUB A, C       (4)
-            // LD H, 0x08     (7)
-            // LD L, 0xFF     (7)
-            // LD (HL), A     (7)
-            //              --------
-            //                54
+            // Routine #1 - 58 T-Cycles
+            // 0080                          .ORG   0080h
+            //
+            // 0080   3E 05                  LD A,05h
+            // 0082   06 0A                  LD   B,0Ah
+            // 0084   80                     ADD A, B
+            // 0085   87                     ADD A, A
+            // 0086   0E 0F                  LD C,0Fh
+            // 0088   91                     SUB C
+            // 0089   26 08                  LD H,08h
+            // 008B   2E FF                  LD   L,0FFh
+            // 008D   77                     LD(HL),A
+            // 008E   00                     NOP
 
             var program = new Dictionary<ushort, byte>
             {
@@ -38,7 +37,7 @@ namespace Essenbee.Z80.Tests
                 { 0x0085, 0x87 }, // ADD A, A
                 { 0x0086, 0x0E }, // LD C, 0x0F
                 { 0x0087, 0x0F },
-                { 0x0088, 0x99 }, // SUB A, C
+                { 0x0088, 0x99 }, // SUB C
                 { 0x0089, 0x26 }, // LD H, 0x08
                 { 0x008A, 0x08 },
                 { 0x008B, 0x2E }, // LD L, 0xFF
