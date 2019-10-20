@@ -190,6 +190,22 @@ namespace Essenbee.Z80
 
                 { 0x7F, new Instruction("LD A,A", REG, REG, LDRR, 4) },
 
+                { 0x80, new Instruction("ADD A,B", REG, REG, ADDAR, 4) },
+                { 0x81, new Instruction("ADD A,C", REG, REG, ADDAR, 4) },
+                { 0x82, new Instruction("ADD A,D", REG, REG, ADDAR, 4) },
+                { 0x83, new Instruction("ADD A,E", REG, REG, ADDAR, 4) },
+                { 0x84, new Instruction("ADD A,H", REG, REG, ADDAR, 4) },
+                { 0x85, new Instruction("ADD A,L", REG, REG, ADDAR, 4) },
+                { 0x86, new Instruction("ADD A,(HL)", RGIHL, RGIHL, ADDAHL, 7) },
+                { 0x87, new Instruction("ADD A,A", REG, REG, ADDAR, 4) },
+                { 0x88, new Instruction("ADC A,B", REG, REG, ADCAR, 4) },
+                { 0x89, new Instruction("ADC A,C", REG, REG, ADCAR, 4) },
+                { 0x8A, new Instruction("ADC A,D", REG, REG, ADCAR, 4) },
+                { 0x8B, new Instruction("ADC A,E", REG, REG, ADCAR, 4) },
+                { 0x8C, new Instruction("ADC A,H", REG, REG, ADCAR, 4) },
+                { 0x8D, new Instruction("ADC A,L", REG, REG, ADCAR, 4) },
+                { 0x8E, new Instruction("ADC A,(HL)", RGIHL, RGIHL, ADCAHL, 7) },
+                { 0x8F, new Instruction("ADC A,A", REG, REG, ADCAR, 4) },
                 { 0xC6, new Instruction("ADD A,n", IMM, IMM, ADDAN, 7) },
                 { 0xCE, new Instruction("ADC A,n", IMM, IMM, ADCAN, 7) },
 
@@ -221,6 +237,9 @@ namespace Essenbee.Z80
                 { 0x77, new Instruction("LD (IX+d),A", IMM, IDX, LDIXDR, 19) },
 
                 { 0x7E, new Instruction("LD A,(IX+d)", IMM, IDX, LDRIXD, 19) },
+
+                { 0x86, new Instruction("ADD A,(IX+d)", IMM, IDX, ADDAIXDN, 19) },
+                { 0x8E, new Instruction("ADC A,(IX+d)", IMM, IDX, ADCAIXDN, 19) },
             };
 
             _fdInstructions = new Dictionary<byte, Instruction>
@@ -244,6 +263,9 @@ namespace Essenbee.Z80
                 { 0x77, new Instruction("LD (IY+d),A", IMM, IDX, LDIYDR, 19) },
 
                 { 0x7E, new Instruction("LD A,(IY+d)", IMM, IDX, LDRIYD, 19) },
+
+                { 0x86, new Instruction("ADD A,(IY+d)", IMM, IDX, ADDAIYDN, 19) },
+                { 0x8E, new Instruction("ADC A,(IY+d)", IMM, IDX, ADCAIYDN, 19) },
             };
         }
 

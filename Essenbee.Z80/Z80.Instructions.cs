@@ -215,7 +215,7 @@ namespace Essenbee.Z80
 
         // Instruction    : ADD A, n
         // Operation      : A <- A + n
-        // Flags Affected : 
+        // Flags Affected : All
         private byte ADDAN(byte opCode)
         {
             byte n = Fetch1(_rootInstructions);
@@ -224,9 +224,58 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction    : ADD A, r
+        // Operation      : A <- A + r
+        // Flags Affected : All
+        private byte ADDAR(byte opCode)
+        {
+            var src = (opCode & 0b00000111);
+            byte n = ReadFromRegister(src);
+            A = Add8(A, n);
+
+            return 0;
+        }
+
+        // Instruction    : ADD A, (HL)
+        // Operation      : A <- A + r
+        // Flags Affected : All
+        private byte ADDAHL(byte opCode)
+        {
+            byte n = Fetch1(_rootInstructions);
+            A = Add8(A, n);
+
+            return 0;
+        }
+
+        // Instruction   : ADD A,(IX+d)
+        // Operation     : A <- A + (IX+d)
+        // Flags Affected: All
+        private byte ADDAIXDN(byte opCode)
+        {
+            sbyte d = (sbyte)Fetch1(_ddInstructions); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IX + d);
+            var n = Fetch2(_ddInstructions);
+            A = Add8(A, n);
+
+            return 0;
+        }
+
+        // Instruction   : ADD A,(IY+d)
+        // Operation     : A <- A + (IY+d)
+        // Flags Affected: All
+        private byte ADDAIYDN(byte opCode)
+        {
+            sbyte d = (sbyte)Fetch1(_ddInstructions); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IY + d);
+            var n = Fetch2(_ddInstructions);
+            A = Add8(A, n);
+
+            return 0;
+        }
+
         // Instruction    : ADC A, n
-        // Operation      : A <- A + n
-        // Flags Affected : 
+        // Operation      : A <- A + n + C
+        // Flags Affected : All
         private byte ADCAN(byte opCode)
         {
             byte n = Fetch1(_rootInstructions);
@@ -236,6 +285,58 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction    : ADC A, r
+        // Operation      : A <- A + r + C
+        // Flags Affected : All
+        private byte ADCAR(byte opCode)
+        {
+            var src = (opCode & 0b00000111);
+            byte n = ReadFromRegister(src);
+            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+            A = Add8(A, n, c);
+
+            return 0;
+        }
+
+        // Instruction    : ADC A, (HL)
+        // Operation      : A <- A + (HL) + C
+        // Flags Affected : All
+        private byte ADCAHL(byte opCode)
+        {
+            byte n = Fetch1(_rootInstructions);
+            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+            A = Add8(A, n, c);
+
+            return 0;
+        }
+
+        // Instruction   : ADD A,(IX+d)
+        // Operation     : A <- A + (IX+d)
+        // Flags Affected: All
+        private byte ADCAIXDN(byte opCode)
+        {
+            sbyte d = (sbyte)Fetch1(_ddInstructions); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IX + d);
+            var n = Fetch2(_ddInstructions);
+            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+            A = Add8(A, n, c);
+
+            return 0;
+        }
+
+        // Instruction   : ADD A,(IY+d)
+        // Operation     : A <- A + (IY+d)
+        // Flags Affected: All
+        private byte ADCAIYDN(byte opCode)
+        {
+            sbyte d = (sbyte)Fetch1(_ddInstructions); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IY + d);
+            var n = Fetch2(_ddInstructions);
+            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+            A = Add8(A, n,c );
+
+            return 0;
+        }
 
         private byte Add8(byte a, byte b, byte c = 0)
         {
