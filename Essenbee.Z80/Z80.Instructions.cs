@@ -474,7 +474,7 @@ namespace Essenbee.Z80
             SetFlag(Flags.P, (a >= 0x80 && b >= 0x80) ||
                 (a < 0x80 && b < 0x80 && sum < 0) 
                 ? true : false);
-            SetFlag(Flags.C, sum > 0xFF ? true : false);
+            SetFlag(Flags.C, sum > 0xFF ? true : false); // Set if there is a carry into bit 8
 
             // Undocumented Flags
             SetFlag(Flags.X, (sum & 0x08) > 0 ? true : false); //Copy of bit 3
@@ -494,7 +494,7 @@ namespace Essenbee.Z80
             SetFlag(Flags.P, (a >= 0x80 && b >= 0x80 && (sbyte)diff > 0 || 
                 (a < 0x80 && b < 0x80 && (sbyte)diff < 0))
                 ? true : false);
-            SetFlag(Flags.C, diff > 0xFF ? true : false); // CHECK THIS!
+            SetFlag(Flags.C, diff > 0xFF ? true : false); // Set if there is not a borrow from bit 8
 
             // Undocumented Flags
             SetFlag(Flags.X, (diff & 0x08) > 0 ? true : false); //Copy of bit 3

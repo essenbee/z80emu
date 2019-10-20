@@ -331,9 +331,9 @@ namespace Essenbee.Z80
                         _rootInstructions[_currentOpCode].Op(_currentOpCode);
                         break;
                 }
-
-                _clockCycles--;
             }
+
+            _clockCycles--;
         }
 
         private byte ReadFromBus(ushort addr) => _bus.Read(addr, false);
