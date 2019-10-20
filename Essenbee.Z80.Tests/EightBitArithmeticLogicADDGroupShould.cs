@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Essenbee.Z80.Tests
 {
-    public class EightBitArithmeticLogicGroupShould
+    public class EightBitArithmeticLogicADDGroupShould
     {
         [Fact]
         public void LoadAWithThreeWhenAddingOneAndTwoForOpcodeADDAN()
@@ -808,7 +808,7 @@ namespace Essenbee.Z80.Tests
         }
 
         [Fact]
-        public void LoadAWith10WhenAdding4And6LocationPointedToByIXForOpcodeADDAHL_GivenDisPositive()
+        public void LoadAWith10WhenAdding4And6LocationPointedToByIXForOpcodeADDAIXD_GivenDisPositive()
         {
             var fakeBus = A.Fake<IBus>();
 
@@ -855,7 +855,7 @@ namespace Essenbee.Z80.Tests
         }
 
         [Fact]
-        public void LoadAWith10WhenAdding4And6LocationPointedToByIYForOpcodeADDAHL_GivenDisPositive()
+        public void LoadAWith10WhenAdding4And6LocationPointedToByIYForOpcodeADDAIYD_GivenDisPositive()
         {
             var fakeBus = A.Fake<IBus>();
 
@@ -902,7 +902,7 @@ namespace Essenbee.Z80.Tests
         }
 
         [Fact]
-        public void LoadAWith11WhenAdding4And6LocationPointedToByIXwithCarrySetForOpcodeADDAHL_GivenDisPositive()
+        public void LoadAWith11WhenAdding4And6LocationPointedToByIXwithCarrySetForOpcodeADCAIXD_GivenDisPositive()
         {
             var fakeBus = A.Fake<IBus>();
 
@@ -949,7 +949,7 @@ namespace Essenbee.Z80.Tests
         }
 
         [Fact]
-        public void LoadAWith10WhenAdding4And6LocationPointedToByIYwithCarrySetForOpcodeADDAHL_GivenDisPositive()
+        public void LoadAWith10WhenAdding4And6LocationPointedToByIYwithCarrySetForOpcodeADCAIXY_GivenDisPositive()
         {
             var fakeBus = A.Fake<IBus>();
 

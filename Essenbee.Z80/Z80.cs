@@ -206,8 +206,27 @@ namespace Essenbee.Z80
                 { 0x8D, new Instruction("ADC A,L", REG, REG, ADCAR, 4) },
                 { 0x8E, new Instruction("ADC A,(HL)", RGIHL, RGIHL, ADCAHL, 7) },
                 { 0x8F, new Instruction("ADC A,A", REG, REG, ADCAR, 4) },
+                { 0x90, new Instruction("SUB A,B", REG, REG, SUBAR, 4) },
+                { 0x91, new Instruction("SUB A,C", REG, REG, SUBAR, 4) },
+                { 0x92, new Instruction("SUB A,D", REG, REG, SUBAR, 4) },
+                { 0x93, new Instruction("SUB A,E", REG, REG, SUBAR, 4) },
+                { 0x94, new Instruction("SUB A,H", REG, REG, SUBAR, 4) },
+                { 0x95, new Instruction("SUB A,L", REG, REG, SUBAR, 4) },
+                { 0x96, new Instruction("SUB A,(HL)", RGIHL, RGIHL, SUBAHL, 7) },
+                { 0x97, new Instruction("SUB A,A", REG, REG, SUBAR, 4) },
+                { 0x98, new Instruction("SBC A,B", REG, REG, SBCAR, 4) },
+                { 0x99, new Instruction("SBC A,C", REG, REG, SBCAR, 4) },
+                { 0x9A, new Instruction("SBC A,D", REG, REG, SBCAR, 4) },
+                { 0x9B, new Instruction("SBC A,E", REG, REG, SBCAR, 4) },
+                { 0x9C, new Instruction("SBC A,H", REG, REG, SBCAR, 4) },
+                { 0x9D, new Instruction("SBC A,L", REG, REG, SBCAR, 4) },
+                { 0x9E, new Instruction("SBC A,(HL)", RGIHL, RGIHL, SBCAHL, 7) },
+                { 0x9F, new Instruction("SBC A,A", REG, REG, SBCAR, 4) },
+
                 { 0xC6, new Instruction("ADD A,n", IMM, IMM, ADDAN, 7) },
                 { 0xCE, new Instruction("ADC A,n", IMM, IMM, ADCAN, 7) },
+                { 0xD6, new Instruction("SUB A,n", IMM, IMM, SUBAN, 7) },
+                { 0xDE, new Instruction("SBC A,n", IMM, IMM, SBCAN, 7) },
 
                 // Multi-byte Opcode Prefixes
                 { 0xCB, new Instruction("NOP", IMP, IMP, NOP, 4) },
@@ -240,6 +259,8 @@ namespace Essenbee.Z80
 
                 { 0x86, new Instruction("ADD A,(IX+d)", IMM, IDX, ADDAIXDN, 19) },
                 { 0x8E, new Instruction("ADC A,(IX+d)", IMM, IDX, ADCAIXDN, 19) },
+                { 0x96, new Instruction("SUB A,(IX+d)", IMM, IDX, SUBAIXDN, 19) },
+                { 0x9E, new Instruction("SBC A,(IX+d)", IMM, IDX, SBCAIXDN, 19) },
             };
 
             _fdInstructions = new Dictionary<byte, Instruction>
@@ -266,6 +287,8 @@ namespace Essenbee.Z80
 
                 { 0x86, new Instruction("ADD A,(IY+d)", IMM, IDX, ADDAIYDN, 19) },
                 { 0x8E, new Instruction("ADC A,(IY+d)", IMM, IDX, ADCAIYDN, 19) },
+                { 0x96, new Instruction("SUB A,(IY+d)", IMM, IDX, SUBAIYDN, 19) },
+                { 0x9E, new Instruction("SBC A,(IY+d)", IMM, IDX, SBCAIYDN, 19) },
             };
         }
 

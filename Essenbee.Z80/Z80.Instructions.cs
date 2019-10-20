@@ -215,7 +215,7 @@ namespace Essenbee.Z80
 
         // Instruction    : ADD A, n
         // Operation      : A <- A + n
-        // Flags Affected : All
+        // Flags Affected : All except N
         private byte ADDAN(byte opCode)
         {
             byte n = Fetch1(_rootInstructions);
@@ -226,7 +226,7 @@ namespace Essenbee.Z80
 
         // Instruction    : ADD A, r
         // Operation      : A <- A + r
-        // Flags Affected : All
+        // Flags Affected : All except N
         private byte ADDAR(byte opCode)
         {
             var src = (opCode & 0b00000111);
@@ -238,7 +238,7 @@ namespace Essenbee.Z80
 
         // Instruction    : ADD A, (HL)
         // Operation      : A <- A + r
-        // Flags Affected : All
+        // Flags Affected : All except N
         private byte ADDAHL(byte opCode)
         {
             byte n = Fetch1(_rootInstructions);
@@ -249,7 +249,7 @@ namespace Essenbee.Z80
 
         // Instruction   : ADD A,(IX+d)
         // Operation     : A <- A + (IX+d)
-        // Flags Affected: All
+        // Flags Affected: All except N
         private byte ADDAIXDN(byte opCode)
         {
             sbyte d = (sbyte)Fetch1(_ddInstructions); // displacement -128 to +127
@@ -262,7 +262,7 @@ namespace Essenbee.Z80
 
         // Instruction   : ADD A,(IY+d)
         // Operation     : A <- A + (IY+d)
-        // Flags Affected: All
+        // Flags Affected: All except N
         private byte ADDAIYDN(byte opCode)
         {
             sbyte d = (sbyte)Fetch1(_ddInstructions); // displacement -128 to +127
@@ -275,7 +275,7 @@ namespace Essenbee.Z80
 
         // Instruction    : ADC A, n
         // Operation      : A <- A + n + C
-        // Flags Affected : All
+        // Flags Affected : All except N
         private byte ADCAN(byte opCode)
         {
             byte n = Fetch1(_rootInstructions);
@@ -287,7 +287,7 @@ namespace Essenbee.Z80
 
         // Instruction    : ADC A, r
         // Operation      : A <- A + r + C
-        // Flags Affected : All
+        // Flags Affected : All except N
         private byte ADCAR(byte opCode)
         {
             var src = (opCode & 0b00000111);
@@ -300,7 +300,7 @@ namespace Essenbee.Z80
 
         // Instruction    : ADC A, (HL)
         // Operation      : A <- A + (HL) + C
-        // Flags Affected : All
+        // Flags Affected : All except N
         private byte ADCAHL(byte opCode)
         {
             byte n = Fetch1(_rootInstructions);
@@ -312,7 +312,7 @@ namespace Essenbee.Z80
 
         // Instruction   : ADD A,(IX+d)
         // Operation     : A <- A + (IX+d)
-        // Flags Affected: All
+        // Flags Affected: All except N
         private byte ADCAIXDN(byte opCode)
         {
             sbyte d = (sbyte)Fetch1(_ddInstructions); // displacement -128 to +127
@@ -326,7 +326,7 @@ namespace Essenbee.Z80
 
         // Instruction   : ADD A,(IY+d)
         // Operation     : A <- A + (IY+d)
-        // Flags Affected: All
+        // Flags Affected: All except N
         private byte ADCAIYDN(byte opCode)
         {
             sbyte d = (sbyte)Fetch1(_ddInstructions); // displacement -128 to +127
@@ -334,6 +334,131 @@ namespace Essenbee.Z80
             var n = Fetch2(_ddInstructions);
             byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
             A = Add8(A, n,c );
+
+            return 0;
+        }
+
+        // Instruction    : SUB A, n
+        // Operation      : A <- A - n
+        // Flags Affected : All
+        private byte SUBAN(byte opCode)
+        {
+            byte n = Fetch1(_rootInstructions);
+            A = Sub8(A, n);
+
+            return 0;
+        }
+
+        // Instruction    : SUB A, r
+        // Operation      : A <- A - r
+        // Flags Affected : All
+        private byte SUBAR(byte opCode)
+        {
+            var src = (opCode & 0b00000111);
+            byte n = ReadFromRegister(src);
+            A = Sub8(A, n);
+
+            return 0;
+        }
+
+        // Instruction    : SUB A, (HL)
+        // Operation      : A <- A - (HL)
+        // Flags Affected : All
+        private byte SUBAHL(byte opCode)
+        {
+            byte n = Fetch1(_rootInstructions);
+            A = Sub8(A, n);
+
+            return 0;
+        }
+
+        // Instruction   : SUB A,(IX+d)
+        // Operation     : A <- A - (IX+d)
+        // Flags Affected: All
+        private byte SUBAIXDN(byte opCode)
+        {
+            sbyte d = (sbyte)Fetch1(_ddInstructions); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IX + d);
+            var n = Fetch2(_ddInstructions);
+            A = Sub8(A, n);
+
+            return 0;
+        }
+
+        // Instruction   : SUB A,(IY+d)
+        // Operation     : A <- A - (IY+d)
+        // Flags Affected: All
+        private byte SUBAIYDN(byte opCode)
+        {
+            sbyte d = (sbyte)Fetch1(_ddInstructions); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IY + d);
+            var n = Fetch2(_ddInstructions);
+            A = Sub8(A, n);
+
+            return 0;
+        }
+
+        // Instruction    : SBC A, n
+        // Operation      : A <- A - n - C
+        // Flags Affected : All
+        private byte SBCAN(byte opCode)
+        {
+            byte n = Fetch1(_rootInstructions);
+            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+            A = Sub8(A, n, c);
+
+            return 0;
+        }
+
+        // Instruction    : SBC A, r
+        // Operation      : A <- A - r - C
+        // Flags Affected : All
+        private byte SBCAR(byte opCode)
+        {
+            var src = (opCode & 0b00000111);
+            byte n = ReadFromRegister(src);
+            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+            A = Sub8(A, n, c);
+
+            return 0;
+        }
+
+        // Instruction    : SBC A, (HL)
+        // Operation      : A <- A - (HL) - C
+        // Flags Affected : All
+        private byte SBCAHL(byte opCode)
+        {
+            byte n = Fetch1(_rootInstructions);
+            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+            A = Sub8(A, n, c);
+
+            return 0;
+        }
+
+        // Instruction   : SBC A,(IX+d)
+        // Operation     : A <- A - (IX+d) - C
+        // Flags Affected: All
+        private byte SBCAIXDN(byte opCode)
+        {
+            sbyte d = (sbyte)Fetch1(_ddInstructions); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IX + d);
+            var n = Fetch2(_ddInstructions);
+            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+            A = Sub8(A, n, c);
+
+            return 0;
+        }
+
+        // Instruction   : SBC A,(IY+d)
+        // Operation     : A <- A - (IY+d) - C
+        // Flags Affected: All
+        private byte SBCAIYDN(byte opCode)
+        {
+            sbyte d = (sbyte)Fetch1(_ddInstructions); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IY + d);
+            var n = Fetch2(_ddInstructions);
+            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+            A = Sub8(A, n, c);
 
             return 0;
         }
@@ -356,6 +481,26 @@ namespace Essenbee.Z80
             SetFlag(Flags.U, (sum & 0x20) > 0 ? true : false); //Copy of bit 5
 
             return (byte)sum;
+        }
+
+        private byte Sub8(byte a, byte b, byte c = 0)
+        {
+            var diff = a - b - c;
+
+            SetFlag(Flags.N, true);
+            SetFlag(Flags.Z, diff == 0 ? true : false);
+            SetFlag(Flags.S, (diff & 0x80) > 0 ? true : false);
+            SetFlag(Flags.H, ((a & 0x0F) < (b & 0x0F) + c) ? true : false);
+            SetFlag(Flags.P, (a >= 0x80 && b >= 0x80 && (sbyte)diff > 0 || 
+                (a < 0x80 && b < 0x80 && (sbyte)diff < 0))
+                ? true : false);
+            SetFlag(Flags.C, diff > 0xFF ? true : false); // CHECK THIS!
+
+            // Undocumented Flags
+            SetFlag(Flags.X, (diff & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (diff & 0x20) > 0 ? true : false); //Copy of bit 5
+
+            return (byte)diff;
         }
 
 
