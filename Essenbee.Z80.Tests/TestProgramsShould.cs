@@ -1,8 +1,6 @@
 ﻿using FakeItEasy;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using Xunit;
 
 namespace Essenbee.Z80.Tests
@@ -15,17 +13,19 @@ namespace Essenbee.Z80.Tests
             var fakeBus = A.Fake<IBus>();
 
             // Routine #1
-            //
-            // LD A, 0x05
-            // LD B, 0x0A
-            // ADD A, B
-            // ADD A, A
-            // LD C, 0x0F
-            // SUB A, C
-            // LD H, 0x08
-            // LD L, 0xFF
-            // LD (HL), A
-            //
+            //              T-cycles
+            //              --------
+            // LD A, 0x05     (7)
+            // LD B, 0x0A     (7)
+            // ADD A, B       (4)
+            // ADD A, A       (4)
+            // LD C, 0x0F     (7)
+            // SUB A, C       (4)
+            // LD H, 0x08     (7)
+            // LD L, 0xFF     (7)
+            // LD (HL), A     (7)
+            //              --------
+            //                54
 
             var program = new Dictionary<ushort, byte>
             {
@@ -53,14 +53,10 @@ namespace Essenbee.Z80.Tests
                 { 0x08FC, 0x00 },
                 { 0x08FD, 0x00 },
                 { 0x08FE, 0x00 },
-                { 0x08FF, 0x00 }, // <-- Result stored here
+                { 0x08FF, 0x00 }, // <-- Result stored here (0x0F expected)
                 { 0x0900, 0x00 },
                 { 0x0901, 0x00 },
                 { 0x0902, 0x00 },
-                { 0x0903, 0x00 },
-                { 0x0904, 0x00 },
-                { 0x0905, 0x00 },
-                { 0x0906, 0x00 },
             };
 
             A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
@@ -71,7 +67,7 @@ namespace Essenbee.Z80.Tests
             var cpu = new Z80() { A = 0x00, B = 0x00, C = 0x00, H = 0x00, L = 0x00, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
 
-            // Run 58 T-cycles
+            // Run 58 T-cycles = 54 + NOP
             for (int i = 0; i < 58; i++)
             {
                 cpu.Tick();
