@@ -308,7 +308,25 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction    : LD I,A
+        // Operation      : I <- A
+        // Flags Affected : None
+        private byte LDIA(byte opCode)
+        {
+            I = A;
 
+            return 0;
+        }
+
+        // Instruction    : LD R,A
+        // Operation      : R <- A
+        // Flags Affected : None
+        private byte LDRA(byte opCode)
+        {
+            R = A;
+
+            return 0;
+        }
 
         // ========================================
         // 8-bit Arithmetic and Logic Group
