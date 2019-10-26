@@ -255,6 +255,25 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction   : LD (nn),A
+        // Operation     : (nn) <- A
+        // Flags Affected: None
+        private byte LDNNA(byte opCode)
+        {
+            var loByte = Fetch1(_rootInstructions);
+            var hiByte = (ushort)Fetch1(_rootInstructions);
+
+            var addr = (ushort)((hiByte << 8) + loByte);
+            WriteToBus(addr, A);
+
+            return 0;
+        }
+
+
+
+
+
+
 
         // ========================================
         // 8-bit Arithmetic and Logic Group
