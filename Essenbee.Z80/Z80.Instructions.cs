@@ -507,6 +507,50 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction   : LD IX,(nn)
+        // Operation     : IX <- (nn+1), <- (nn)
+        // Flags Affected: None
+        private byte LDIXFNN(byte opCode)
+        {
+            var loByte = Fetch1(_ddInstructions);
+            var hiByte = (ushort)Fetch1(_ddInstructions);
+            var loAddr = (hiByte << 8) + loByte;
+            var hiAddr = loAddr + 1;
+
+            _absoluteAddress = (ushort)loAddr;
+            var lo = Fetch2(_ddInstructions);
+            _absoluteAddress = (ushort)hiAddr;
+            var hi = Fetch2(_ddInstructions);
+
+            var operand = (ushort)((hi << 8) + lo);
+
+            IX = operand;
+
+            return 0;
+        }
+
+        // Instruction   : LD IY,(nn)
+        // Operation     : IY <- (nn+1), <- (nn)
+        // Flags Affected: None
+        private byte LDIYFNN(byte opCode)
+        {
+            var loByte = Fetch1(_fdInstructions);
+            var hiByte = (ushort)Fetch1(_fdInstructions);
+            var loAddr = (hiByte << 8) + loByte;
+            var hiAddr = loAddr + 1;
+
+            _absoluteAddress = (ushort)loAddr;
+            var lo = Fetch2(_fdInstructions);
+            _absoluteAddress = (ushort)hiAddr;
+            var hi = Fetch2(_fdInstructions);
+
+            var operand = (ushort)((hi << 8) + lo);
+
+            IY = operand;
+
+            return 0;
+        }
+
 
 
 
