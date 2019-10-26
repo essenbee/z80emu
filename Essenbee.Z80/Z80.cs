@@ -98,215 +98,215 @@ namespace Essenbee.Z80
         {
             _rootInstructions = new Dictionary<byte, Instruction>
             {
-                { 0x00, new Instruction("NOP", IMP, IMP, NOP, 4) },
+                { 0x00, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4 }) },
 
-                { 0x02, new Instruction("LD (BC),A", IMP, IMP, LDBCA, 7) },
-                { 0x06, new Instruction("LD B,n", IMM, IMM, LDRN, 7) },
-                { 0x0A, new Instruction("LD A,(BC)", IDX, IMP, LDABC, 7) },
-                { 0x0E, new Instruction("LD C,n", IMM, IMM, LDRN, 7) },
-                { 0x12, new Instruction("LD (DE),A", IMP, IMP, LDDEA, 7) },
-                { 0x16, new Instruction("LD D,n", IMM, IMM, LDRN, 7) },
-                { 0x1A, new Instruction("LD A,(DE)", IDX, IMP, LDADE, 7) },
-                { 0x1E, new Instruction("LD E,n", IMM, IMM, LDRN, 7) },
-                { 0x26, new Instruction("LD H,n", IMM, IMM, LDRN, 7) },
-                { 0x2E, new Instruction("LD L,n", IMM, IMM, LDRN, 7) },
-                { 0x32, new Instruction("LD (nn),A", IMM, IMP, LDNNA, 13) },
-                { 0x36, new Instruction("LD (HL),n", IMM, IMM, LDHLN, 10) },
+                { 0x02, new Instruction("LD (BC),A", IMP, IMP, LDBCA, new List<int>{ 4, 3 }) },
+                { 0x06, new Instruction("LD B,n", IMM, IMM, LDRN, new List<int>{ 4, 3 }) },
+                { 0x0A, new Instruction("LD A,(BC)", IDX, IMP, LDABC, new List<int>{ 4, 3 }) },
+                { 0x0E, new Instruction("LD C,n", IMM, IMM, LDRN, new List<int>{ 4, 3 }) },
+                { 0x12, new Instruction("LD (DE),A", IMP, IMP, LDDEA, new List<int>{ 4, 3 }) },
+                { 0x16, new Instruction("LD D,n", IMM, IMM, LDRN, new List<int>{ 4, 3 }) },
+                { 0x1A, new Instruction("LD A,(DE)", IDX, IMP, LDADE, new List<int>{ 4, 3 }) },
+                { 0x1E, new Instruction("LD E,n", IMM, IMM, LDRN, new List<int>{ 4, 3 }) },
+                { 0x26, new Instruction("LD H,n", IMM, IMM, LDRN, new List<int>{ 4, 3 }) },
+                { 0x2E, new Instruction("LD L,n", IMM, IMM, LDRN, new List<int>{ 4, 3 }) },
+                { 0x32, new Instruction("LD (nn),A", IMM, IMP, LDNNA, new List<int>{ 4, 3, 3, 3 }) },
+                { 0x36, new Instruction("LD (HL),n", IMM, IMM, LDHLN, new List<int>{ 4, 3, 3 }) },
 
-                { 0x3A, new Instruction("LD A,(nn)", IMM, IDX, LDANN, 13) },
+                { 0x3A, new Instruction("LD A,(nn)", IMM, IDX, LDANN, new List<int>{ 4, 3, 3, 3 }) },
 
-                { 0x3E, new Instruction("LD A,n", IMM, IMM, LDRN, 7) },
+                { 0x3E, new Instruction("LD A,n", IMM, IMM, LDRN, new List<int>{ 4, 3 }) },
 
-                { 0x40, new Instruction("LD B,B", REG, REG, LDRR, 4) },
-                { 0x41, new Instruction("LD B,C", REG, REG, LDRR, 4) },
-                { 0x42, new Instruction("LD B,D", REG, REG, LDRR, 4) },
-                { 0x43, new Instruction("LD B,E", REG, REG, LDRR, 4) },
-                { 0x44, new Instruction("LD B,H", REG, REG, LDRR, 4) },
-                { 0x45, new Instruction("LD B,L", REG, REG, LDRR, 4) },
+                { 0x40, new Instruction("LD B,B", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x41, new Instruction("LD B,C", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x42, new Instruction("LD B,D", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x43, new Instruction("LD B,E", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x44, new Instruction("LD B,H", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x45, new Instruction("LD B,L", REG, REG, LDRR, new List<int>{ 4 }) },
 
-                { 0x46, new Instruction("LD B,(HL)", RGIHL, RGIHL, LDRHL, 7) },
+                { 0x46, new Instruction("LD B,(HL)", RGIHL, RGIHL, LDRHL, new List<int>{ 4, 3 }) },
 
-                { 0x47, new Instruction("LD B,A", REG, REG, LDRR, 4) },
-                { 0x48, new Instruction("LD C,B", REG, REG, LDRR, 4) },
-                { 0x49, new Instruction("LD C,C", REG, REG, LDRR, 4) },
-                { 0x4A, new Instruction("LD C,D", REG, REG, LDRR, 4) },
-                { 0x4B, new Instruction("LD C,E", REG, REG, LDRR, 4) },
-                { 0x4C, new Instruction("LD C,H", REG, REG, LDRR, 4) },
-                { 0x4D, new Instruction("LD C,L", REG, REG, LDRR, 4) },
+                { 0x47, new Instruction("LD B,A", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x48, new Instruction("LD C,B", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x49, new Instruction("LD C,C", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x4A, new Instruction("LD C,D", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x4B, new Instruction("LD C,E", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x4C, new Instruction("LD C,H", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x4D, new Instruction("LD C,L", REG, REG, LDRR, new List<int>{ 4 }) },
 
-                { 0x4E, new Instruction("LD C,(HL)", RGIHL, RGIHL, LDRHL, 7) },
+                { 0x4E, new Instruction("LD C,(HL)", RGIHL, RGIHL, LDRHL, new List<int>{ 4, 3 }) },
 
-                { 0x4F, new Instruction("LD C,A", REG, REG, LDRR, 4) },
-                { 0x50, new Instruction("LD D,B", REG, REG, LDRR, 4) },
-                { 0x51, new Instruction("LD D,C", REG, REG, LDRR, 4) },
-                { 0x52, new Instruction("LD D,D", REG, REG, LDRR, 4) },
-                { 0x53, new Instruction("LD D,E", REG, REG, LDRR, 4) },
-                { 0x54, new Instruction("LD D,H", REG, REG, LDRR, 4) },
-                { 0x55, new Instruction("LD D,L", REG, REG, LDRR, 4) },
+                { 0x4F, new Instruction("LD C,A", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x50, new Instruction("LD D,B", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x51, new Instruction("LD D,C", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x52, new Instruction("LD D,D", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x53, new Instruction("LD D,E", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x54, new Instruction("LD D,H", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x55, new Instruction("LD D,L", REG, REG, LDRR, new List<int>{ 4 }) },
 
-                { 0x56, new Instruction("LD D,(HL)", RGIHL, RGIHL, LDRHL, 7) },
+                { 0x56, new Instruction("LD D,(HL)", RGIHL, RGIHL, LDRHL, new List<int>{ 4, 3 }) },
 
-                { 0x57, new Instruction("LD D,A", REG, REG, LDRR, 4) },
-                { 0x58, new Instruction("LD E,B", REG, REG, LDRR, 4) },
-                { 0x59, new Instruction("LD E,C", REG, REG, LDRR, 4) },
-                { 0x5A, new Instruction("LD E,D", REG, REG, LDRR, 4) },
-                { 0x5B, new Instruction("LD E,E", REG, REG, LDRR, 4) },
-                { 0x5C, new Instruction("LD E,H", REG, REG, LDRR, 4) },
-                { 0x5D, new Instruction("LD E,L", REG, REG, LDRR, 4) },
+                { 0x57, new Instruction("LD D,A", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x58, new Instruction("LD E,B", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x59, new Instruction("LD E,C", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x5A, new Instruction("LD E,D", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x5B, new Instruction("LD E,E", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x5C, new Instruction("LD E,H", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x5D, new Instruction("LD E,L", REG, REG, LDRR, new List<int>{ 4 }) },
 
-                { 0x5E, new Instruction("LD E,(HL)", RGIHL, RGIHL, LDRHL, 7) },
+                { 0x5E, new Instruction("LD E,(HL)", RGIHL, RGIHL, LDRHL, new List<int>{ 4, 3 }) },
 
-                { 0x5F, new Instruction("LD E,A", REG, REG, LDRR, 4) },
-                { 0x60, new Instruction("LD H,B", REG, REG, LDRR, 4) },
-                { 0x61, new Instruction("LD H,C", REG, REG, LDRR, 4) },
-                { 0x62, new Instruction("LD H,D", REG, REG, LDRR, 4) },
-                { 0x63, new Instruction("LD H,E", REG, REG, LDRR, 4) },
-                { 0x64, new Instruction("LD H,H", REG, REG, LDRR, 4) },
-                { 0x65, new Instruction("LD H,L", REG, REG, LDRR, 4) },
+                { 0x5F, new Instruction("LD E,A", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x60, new Instruction("LD H,B", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x61, new Instruction("LD H,C", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x62, new Instruction("LD H,D", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x63, new Instruction("LD H,E", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x64, new Instruction("LD H,H", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x65, new Instruction("LD H,L", REG, REG, LDRR, new List<int>{ 4 }) },
 
-                { 0x66, new Instruction("LD H,(HL)", RGIHL, RGIHL, LDRHL, 7) },
+                { 0x66, new Instruction("LD H,(HL)", RGIHL, RGIHL, LDRHL, new List<int>{ 4, 3 }) },
 
-                { 0x67, new Instruction("LD H,A", REG, REG, LDRR, 4) },
-                { 0x68, new Instruction("LD L,B", REG, REG, LDRR, 4) },
-                { 0x69, new Instruction("LD L,C", REG, REG, LDRR, 4) },
-                { 0x6A, new Instruction("LD L,D", REG, REG, LDRR, 4) },
-                { 0x6B, new Instruction("LD L,E", REG, REG, LDRR, 4) },
-                { 0x6C, new Instruction("LD L,H", REG, REG, LDRR, 4) },
-                { 0x6D, new Instruction("LD L,L", REG, REG, LDRR, 4) },
+                { 0x67, new Instruction("LD H,A", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x68, new Instruction("LD L,B", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x69, new Instruction("LD L,C", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x6A, new Instruction("LD L,D", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x6B, new Instruction("LD L,E", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x6C, new Instruction("LD L,H", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x6D, new Instruction("LD L,L", REG, REG, LDRR, new List<int>{ 4 }) },
 
-                { 0x6E, new Instruction("LD L,(HL)", RGIHL, RGIHL, LDRHL, 7) },
+                { 0x6E, new Instruction("LD L,(HL)", RGIHL, RGIHL, LDRHL, new List<int>{ 4, 3 }) },
 
-                { 0x6F, new Instruction("LD L,A", REG, REG, LDRR, 4) },
+                { 0x6F, new Instruction("LD L,A", REG, REG, LDRR, new List<int>{ 4 }) },
 
-                { 0x70, new Instruction("LD (HL),B", IMP, IMP, LDHLR, 7) },
-                { 0x71, new Instruction("LD (HL),C", IMP, IMP, LDHLR, 7) },
-                { 0x72, new Instruction("LD (HL),D", IMP, IMP, LDHLR, 7) },
-                { 0x73, new Instruction("LD (HL),E", IMP, IMP, LDHLR, 7) },
-                { 0x74, new Instruction("LD (HL),H", IMP, IMP, LDHLR, 7) },
-                { 0x75, new Instruction("LD (HL),L", IMP, IMP, LDHLR, 7) },
+                { 0x70, new Instruction("LD (HL),B", IMP, IMP, LDHLR, new List<int>{ 4, 3 }) },
+                { 0x71, new Instruction("LD (HL),C", IMP, IMP, LDHLR, new List<int>{ 4, 3 }) },
+                { 0x72, new Instruction("LD (HL),D", IMP, IMP, LDHLR, new List<int>{ 4, 3 }) },
+                { 0x73, new Instruction("LD (HL),E", IMP, IMP, LDHLR, new List<int>{ 4, 3 }) },
+                { 0x74, new Instruction("LD (HL),H", IMP, IMP, LDHLR, new List<int>{ 4, 3 }) },
+                { 0x75, new Instruction("LD (HL),L", IMP, IMP, LDHLR, new List<int>{ 4, 3 }) },
 
-                { 0x76, new Instruction("HALT", IMP, IMP, HALT, 4) },
+                { 0x76, new Instruction("HALT", IMP, IMP, HALT, new List<int>{ 4 }) },
 
-                { 0x77, new Instruction("LD (HL),A", IMP, IMP, LDHLR, 7) },
+                { 0x77, new Instruction("LD (HL),A", IMP, IMP, LDHLR, new List<int>{ 4, 3 }) },
 
-                { 0x78, new Instruction("LD A,B", REG, REG, LDRR, 4) },
-                { 0x79, new Instruction("LD A,C", REG, REG, LDRR, 4) },
-                { 0x7A, new Instruction("LD A,D", REG, REG, LDRR, 4) },
-                { 0x7B, new Instruction("LD A,E", REG, REG, LDRR, 4) },
-                { 0x7C, new Instruction("LD A,H", REG, REG, LDRR, 4) },
-                { 0x7D, new Instruction("LD A,L", REG, REG, LDRR, 4) },
+                { 0x78, new Instruction("LD A,B", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x79, new Instruction("LD A,C", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x7A, new Instruction("LD A,D", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x7B, new Instruction("LD A,E", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x7C, new Instruction("LD A,H", REG, REG, LDRR, new List<int>{ 4 }) },
+                { 0x7D, new Instruction("LD A,L", REG, REG, LDRR, new List<int>{ 4 }) },
 
-                { 0x7E, new Instruction("LD A,(HL)", RGIHL, RGIHL, LDRHL, 7) },
+                { 0x7E, new Instruction("LD A,(HL)", RGIHL, RGIHL, LDRHL, new List<int>{ 4, 3 }) },
 
-                { 0x7F, new Instruction("LD A,A", REG, REG, LDRR, 4) },
+                { 0x7F, new Instruction("LD A,A", REG, REG, LDRR, new List<int>{ 4 }) },
 
-                { 0x80, new Instruction("ADD A,B", REG, REG, ADDAR, 4) },
-                { 0x81, new Instruction("ADD A,C", REG, REG, ADDAR, 4) },
-                { 0x82, new Instruction("ADD A,D", REG, REG, ADDAR, 4) },
-                { 0x83, new Instruction("ADD A,E", REG, REG, ADDAR, 4) },
-                { 0x84, new Instruction("ADD A,H", REG, REG, ADDAR, 4) },
-                { 0x85, new Instruction("ADD A,L", REG, REG, ADDAR, 4) },
-                { 0x86, new Instruction("ADD A,(HL)", RGIHL, RGIHL, ADDAHL, 7) },
-                { 0x87, new Instruction("ADD A,A", REG, REG, ADDAR, 4) },
-                { 0x88, new Instruction("ADC A,B", REG, REG, ADCAR, 4) },
-                { 0x89, new Instruction("ADC A,C", REG, REG, ADCAR, 4) },
-                { 0x8A, new Instruction("ADC A,D", REG, REG, ADCAR, 4) },
-                { 0x8B, new Instruction("ADC A,E", REG, REG, ADCAR, 4) },
-                { 0x8C, new Instruction("ADC A,H", REG, REG, ADCAR, 4) },
-                { 0x8D, new Instruction("ADC A,L", REG, REG, ADCAR, 4) },
-                { 0x8E, new Instruction("ADC A,(HL)", RGIHL, RGIHL, ADCAHL, 7) },
-                { 0x8F, new Instruction("ADC A,A", REG, REG, ADCAR, 4) },
-                { 0x90, new Instruction("SUB A,B", REG, REG, SUBAR, 4) },
-                { 0x91, new Instruction("SUB A,C", REG, REG, SUBAR, 4) },
-                { 0x92, new Instruction("SUB A,D", REG, REG, SUBAR, 4) },
-                { 0x93, new Instruction("SUB A,E", REG, REG, SUBAR, 4) },
-                { 0x94, new Instruction("SUB A,H", REG, REG, SUBAR, 4) },
-                { 0x95, new Instruction("SUB A,L", REG, REG, SUBAR, 4) },
-                { 0x96, new Instruction("SUB A,(HL)", RGIHL, RGIHL, SUBAHL, 7) },
-                { 0x97, new Instruction("SUB A,A", REG, REG, SUBAR, 4) },
-                { 0x98, new Instruction("SBC A,B", REG, REG, SBCAR, 4) },
-                { 0x99, new Instruction("SBC A,C", REG, REG, SBCAR, 4) },
-                { 0x9A, new Instruction("SBC A,D", REG, REG, SBCAR, 4) },
-                { 0x9B, new Instruction("SBC A,E", REG, REG, SBCAR, 4) },
-                { 0x9C, new Instruction("SBC A,H", REG, REG, SBCAR, 4) },
-                { 0x9D, new Instruction("SBC A,L", REG, REG, SBCAR, 4) },
-                { 0x9E, new Instruction("SBC A,(HL)", RGIHL, RGIHL, SBCAHL, 7) },
-                { 0x9F, new Instruction("SBC A,A", REG, REG, SBCAR, 4) },
+                { 0x80, new Instruction("ADD A,B", REG, REG, ADDAR, new List<int>{ 4 }) },
+                { 0x81, new Instruction("ADD A,C", REG, REG, ADDAR, new List<int>{ 4 }) },
+                { 0x82, new Instruction("ADD A,D", REG, REG, ADDAR, new List<int>{ 4 }) },
+                { 0x83, new Instruction("ADD A,E", REG, REG, ADDAR, new List<int>{ 4 }) },
+                { 0x84, new Instruction("ADD A,H", REG, REG, ADDAR, new List<int>{ 4 }) },
+                { 0x85, new Instruction("ADD A,L", REG, REG, ADDAR, new List<int>{ 4 }) },
+                { 0x86, new Instruction("ADD A,(HL)", RGIHL, RGIHL, ADDAHL, new List<int>{ 4, 3 }) },
+                { 0x87, new Instruction("ADD A,A", REG, REG, ADDAR, new List<int>{ 4 }) },
+                { 0x88, new Instruction("ADC A,B", REG, REG, ADCAR, new List<int>{ 4 }) },
+                { 0x89, new Instruction("ADC A,C", REG, REG, ADCAR, new List<int>{ 4 }) },
+                { 0x8A, new Instruction("ADC A,D", REG, REG, ADCAR, new List<int>{ 4 }) },
+                { 0x8B, new Instruction("ADC A,E", REG, REG, ADCAR, new List<int>{ 4 }) },
+                { 0x8C, new Instruction("ADC A,H", REG, REG, ADCAR, new List<int>{ 4 }) },
+                { 0x8D, new Instruction("ADC A,L", REG, REG, ADCAR, new List<int>{ 4 }) },
+                { 0x8E, new Instruction("ADC A,(HL)", RGIHL, RGIHL, ADCAHL, new List<int>{ 4, 3 }) },
+                { 0x8F, new Instruction("ADC A,A", REG, REG, ADCAR, new List<int>{ 4 }) },
+                { 0x90, new Instruction("SUB A,B", REG, REG, SUBAR, new List<int>{ 4 }) },
+                { 0x91, new Instruction("SUB A,C", REG, REG, SUBAR, new List<int>{ 4 }) },
+                { 0x92, new Instruction("SUB A,D", REG, REG, SUBAR, new List<int>{ 4 }) },
+                { 0x93, new Instruction("SUB A,E", REG, REG, SUBAR, new List<int>{ 4 }) },
+                { 0x94, new Instruction("SUB A,H", REG, REG, SUBAR, new List<int>{ 4 }) },
+                { 0x95, new Instruction("SUB A,L", REG, REG, SUBAR, new List<int>{ 4 }) },
+                { 0x96, new Instruction("SUB A,(HL)", RGIHL, RGIHL, SUBAHL, new List<int>{ 4, 3 }) },
+                { 0x97, new Instruction("SUB A,A", REG, REG, SUBAR, new List<int>{ 4 }) },
+                { 0x98, new Instruction("SBC A,B", REG, REG, SBCAR, new List<int>{ 4 }) },
+                { 0x99, new Instruction("SBC A,C", REG, REG, SBCAR, new List<int>{ 4 }) },
+                { 0x9A, new Instruction("SBC A,D", REG, REG, SBCAR, new List<int>{ 4 }) },
+                { 0x9B, new Instruction("SBC A,E", REG, REG, SBCAR, new List<int>{ 4 }) },
+                { 0x9C, new Instruction("SBC A,H", REG, REG, SBCAR, new List<int>{ 4 }) },
+                { 0x9D, new Instruction("SBC A,L", REG, REG, SBCAR, new List<int>{ 4 }) },
+                { 0x9E, new Instruction("SBC A,(HL)", RGIHL, RGIHL, SBCAHL, new List<int>{ 4, 3 }) },
+                { 0x9F, new Instruction("SBC A,A", REG, REG, SBCAR, new List<int>{ 4 }) },
 
-                { 0xC6, new Instruction("ADD A,n", IMM, IMM, ADDAN, 7) },
-                { 0xCE, new Instruction("ADC A,n", IMM, IMM, ADCAN, 7) },
-                { 0xD6, new Instruction("SUB A,n", IMM, IMM, SUBAN, 7) },
-                { 0xDE, new Instruction("SBC A,n", IMM, IMM, SBCAN, 7) },
+                { 0xC6, new Instruction("ADD A,n", IMM, IMM, ADDAN, new List<int>{ 4, 3 }) },
+                { 0xCE, new Instruction("ADC A,n", IMM, IMM, ADCAN, new List<int>{ 4, 3 }) },
+                { 0xD6, new Instruction("SUB A,n", IMM, IMM, SUBAN, new List<int>{ 4, 3 }) },
+                { 0xDE, new Instruction("SBC A,n", IMM, IMM, SBCAN, new List<int>{ 4, 3 }) },
 
                 // Multi-byte Opcode Prefixes
-                { 0xCB, new Instruction("NOP", IMP, IMP, NOP, 4) },
-                { 0xDD, new Instruction("NOP", IMP, IMP, NOP, 4) },
-                { 0xED, new Instruction("NOP", IMP, IMP, NOP, 4) },
-                { 0xFD, new Instruction("NOP", IMP, IMP, NOP, 4) },
+                { 0xCB, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4 }) },
+                { 0xDD, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4 }) },
+                { 0xED, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4 }) },
+                { 0xFD, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4 }) },
             };
 
             _ddInstructions = new Dictionary<byte, Instruction>
             {
-                { 0x36, new Instruction("LD (IX+d),n", IMM, IMM, LDIXDN, 19) },
+                { 0x36, new Instruction("LD (IX+d),n", IMM, IMM, LDIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
 
-                { 0x46, new Instruction("LD B,(IX+d)", IMM, IDX, LDRIXD, 19) },
-                { 0x4E, new Instruction("LD C,(IX+d)", IMM, IDX, LDRIXD, 19) },
-                { 0x56, new Instruction("LD D,(IX+d)", IMM, IDX, LDRIXD, 19) },
-                { 0x5E, new Instruction("LD E,(IX+d)", IMM, IDX, LDRIXD, 19) },
-                { 0x66, new Instruction("LD H,(IX+d)", IMM, IDX, LDRIXD, 19) },
-                { 0x6E, new Instruction("LD L,(IX+d)", IMM, IDX, LDRIXD, 19) },
+                { 0x46, new Instruction("LD B,(IX+d)", IMM, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x4E, new Instruction("LD C,(IX+d)", IMM, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x56, new Instruction("LD D,(IX+d)", IMM, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x5E, new Instruction("LD E,(IX+d)", IMM, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x66, new Instruction("LD H,(IX+d)", IMM, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x6E, new Instruction("LD L,(IX+d)", IMM, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
 
-                { 0x70, new Instruction("LD (IX+d),B", IMM, IDX, LDIXDR, 19) },
-                { 0x71, new Instruction("LD (IX+d),C", IMM, IDX, LDIXDR, 19) },
-                { 0x72, new Instruction("LD (IX+d),D", IMM, IDX, LDIXDR, 19) },
-                { 0x73, new Instruction("LD (IX+d),E", IMM, IDX, LDIXDR, 19) },
-                { 0x74, new Instruction("LD (IX+d),H", IMM, IDX, LDIXDR, 19) },
-                { 0x75, new Instruction("LD (IX+d),L", IMM, IDX, LDIXDR, 10) },
+                { 0x70, new Instruction("LD (IX+d),B", IMM, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x71, new Instruction("LD (IX+d),C", IMM, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x72, new Instruction("LD (IX+d),D", IMM, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x73, new Instruction("LD (IX+d),E", IMM, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x74, new Instruction("LD (IX+d),H", IMM, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x75, new Instruction("LD (IX+d),L", IMM, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
 
-                { 0x77, new Instruction("LD (IX+d),A", IMM, IDX, LDIXDR, 19) },
+                { 0x77, new Instruction("LD (IX+d),A", IMM, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
 
-                { 0x7E, new Instruction("LD A,(IX+d)", IMM, IDX, LDRIXD, 19) },
+                { 0x7E, new Instruction("LD A,(IX+d)", IMM, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
 
-                { 0x86, new Instruction("ADD A,(IX+d)", IMM, IDX, ADDAIXDN, 19) },
-                { 0x8E, new Instruction("ADC A,(IX+d)", IMM, IDX, ADCAIXDN, 19) },
-                { 0x96, new Instruction("SUB A,(IX+d)", IMM, IDX, SUBAIXDN, 19) },
-                { 0x9E, new Instruction("SBC A,(IX+d)", IMM, IDX, SBCAIXDN, 19) },
+                { 0x86, new Instruction("ADD A,(IX+d)", IMM, IDX, ADDAIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x8E, new Instruction("ADC A,(IX+d)", IMM, IDX, ADCAIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x96, new Instruction("SUB A,(IX+d)", IMM, IDX, SUBAIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x9E, new Instruction("SBC A,(IX+d)", IMM, IDX, SBCAIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
             };
 
             _fdInstructions = new Dictionary<byte, Instruction>
             {
-                { 0x36, new Instruction("LD (IY+d),n", IMM, IMM, LDIYDN, 19) },
+                { 0x36, new Instruction("LD (IY+d),n", IMM, IMM, LDIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
 
-                { 0x46, new Instruction("LD B,(IY+d)", IMM, IDX, LDRIYD, 19) },
-                { 0x4E, new Instruction("LD C,(IY+d)", IMM, IDX, LDRIYD, 19) },
-                { 0x56, new Instruction("LD D,(IY+d)", IMM, IDX, LDRIYD, 19) },
-                { 0x5E, new Instruction("LD E,(IY+d)", IMM, IDX, LDRIYD, 19) },
-                { 0x66, new Instruction("LD H,(IY+d)", IMM, IDX, LDRIYD, 19) },
-                { 0x6E, new Instruction("LD L,(IY+d)", IMM, IDX, LDRIYD, 19) },
+                { 0x46, new Instruction("LD B,(IY+d)", IMM, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x4E, new Instruction("LD C,(IY+d)", IMM, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x56, new Instruction("LD D,(IY+d)", IMM, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x5E, new Instruction("LD E,(IY+d)", IMM, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x66, new Instruction("LD H,(IY+d)", IMM, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x6E, new Instruction("LD L,(IY+d)", IMM, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
 
-                { 0x70, new Instruction("LD (IY+d),B", IMM, IDX, LDIYDR, 19) },
-                { 0x71, new Instruction("LD (IY+d),C", IMM, IDX, LDIYDR, 19) },
-                { 0x72, new Instruction("LD (IY+d),D", IMM, IDX, LDIYDR, 19) },
-                { 0x73, new Instruction("LD (IY+d),E", IMM, IDX, LDIYDR, 19) },
-                { 0x74, new Instruction("LD (IY+d),H", IMM, IDX, LDIYDR, 19) },
-                { 0x75, new Instruction("LD (IY+d),L", IMM, IDX, LDIYDR, 10) },
+                { 0x70, new Instruction("LD (IY+d),B", IMM, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x71, new Instruction("LD (IY+d),C", IMM, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x72, new Instruction("LD (IY+d),D", IMM, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x73, new Instruction("LD (IY+d),E", IMM, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x74, new Instruction("LD (IY+d),H", IMM, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x75, new Instruction("LD (IY+d),L", IMM, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
 
-                { 0x77, new Instruction("LD (IY+d),A", IMM, IDX, LDIYDR, 19) },
+                { 0x77, new Instruction("LD (IY+d),A", IMM, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
 
-                { 0x7E, new Instruction("LD A,(IY+d)", IMM, IDX, LDRIYD, 19) },
+                { 0x7E, new Instruction("LD A,(IY+d)", IMM, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
 
-                { 0x86, new Instruction("ADD A,(IY+d)", IMM, IDX, ADDAIYDN, 19) },
-                { 0x8E, new Instruction("ADC A,(IY+d)", IMM, IDX, ADCAIYDN, 19) },
-                { 0x96, new Instruction("SUB A,(IY+d)", IMM, IDX, SUBAIYDN, 19) },
-                { 0x9E, new Instruction("SBC A,(IY+d)", IMM, IDX, SBCAIYDN, 19) },
+                { 0x86, new Instruction("ADD A,(IY+d)", IMM, IDX, ADDAIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x8E, new Instruction("ADC A,(IY+d)", IMM, IDX, ADCAIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x96, new Instruction("SUB A,(IY+d)", IMM, IDX, SUBAIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x9E, new Instruction("SBC A,(IY+d)", IMM, IDX, SBCAIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
             };
 
             _edInstructions = new Dictionary<byte, Instruction>
             {
-                { 0x47, new Instruction("ADD I,A", REG, REG, LDIA, 9) },
-                { 0x57, new Instruction("ADD A,I", REG, REG, LDAI, 9) },
-                { 0x4F, new Instruction("ADD R,A", REG, REG, LDRA, 9) },
-                { 0x5F, new Instruction("ADD A,R", REG, REG, LDAR, 9) },
+                { 0x47, new Instruction("ADD I,A", REG, REG, LDIA, new List<int>{ 4, 5 }) },
+                { 0x57, new Instruction("ADD A,I", REG, REG, LDAI, new List<int>{ 4, 5 }) },
+                { 0x4F, new Instruction("ADD R,A", REG, REG, LDRA, new List<int>{ 4, 5 }) },
+                { 0x5F, new Instruction("ADD A,R", REG, REG, LDAR, new List<int>{ 4, 5 }) },
             };
         }
 
@@ -335,23 +335,23 @@ namespace Essenbee.Z80
                     case 0xDD:
                         _currentOpCode = ReadFromBus(PC);
                         PC++;
-                        _clockCycles = _ddInstructions[_currentOpCode].TCycles;
+                        _clockCycles = _ddInstructions[_currentOpCode].TStates;
                         _ddInstructions[_currentOpCode].Op(_currentOpCode);
                         break;
                     case 0xED:
                         _currentOpCode = ReadFromBus(PC);
                         PC++;
-                        _clockCycles = _edInstructions[_currentOpCode].TCycles;
+                        _clockCycles = _edInstructions[_currentOpCode].TStates;
                         _edInstructions[_currentOpCode].Op(_currentOpCode);
                         break;
                     case 0xFD:
                         _currentOpCode = ReadFromBus(PC);
                         PC++;
-                        _clockCycles = _fdInstructions[_currentOpCode].TCycles;
+                        _clockCycles = _fdInstructions[_currentOpCode].TStates;
                         _fdInstructions[_currentOpCode].Op(_currentOpCode);
                         break;
                     default:
-                        _clockCycles = _rootInstructions[_currentOpCode].TCycles;
+                        _clockCycles = _rootInstructions[_currentOpCode].TStates;
                         _rootInstructions[_currentOpCode].Op(_currentOpCode);
                         break;
                 }
