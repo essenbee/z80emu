@@ -78,10 +78,17 @@ namespace Essenbee.Z80
         public ushort BC1 => (ushort)((B1 << 8) + C1);
         public ushort DE1 => (ushort)((D1 << 8) + E1);
 
+        // Interrupt Flip-flops
+        public bool IFF1;
+        public bool IFF2;
+
         private IBus _bus = null!;
+
         private Dictionary<byte, Instruction> _rootInstructions = new Dictionary<byte, Instruction>();
         private Dictionary<byte, Instruction> _ddInstructions = new Dictionary<byte, Instruction>();
+        private Dictionary<byte, Instruction> _edInstructions = new Dictionary<byte, Instruction>();
         private Dictionary<byte, Instruction> _fdInstructions = new Dictionary<byte, Instruction>();
+
         private ushort _absoluteAddress = 0x0000;
         private ushort _relativeAddress = 0x0000;
         private byte _currentOpCode = 0x00;
@@ -293,6 +300,11 @@ namespace Essenbee.Z80
                 { 0x96, new Instruction("SUB A,(IY+d)", IMM, IDX, SUBAIYDN, 19) },
                 { 0x9E, new Instruction("SBC A,(IY+d)", IMM, IDX, SBCAIYDN, 19) },
             };
+
+            _edInstructions = new Dictionary<byte, Instruction>
+            {
+                { 0x57, new Instruction("ADD A,I", REG, REG, LDAI, 9) },
+            };
         }
 
         public void ConnectToBus(IBus bus) => _bus = bus;
@@ -322,6 +334,12 @@ namespace Essenbee.Z80
                         PC++;
                         _clockCycles = _ddInstructions[_currentOpCode].TCycles;
                         _ddInstructions[_currentOpCode].Op(_currentOpCode);
+                        break;
+                    case 0xED:
+                        _currentOpCode = ReadFromBus(PC);
+                        PC++;
+                        _clockCycles = _edInstructions[_currentOpCode].TCycles;
+                        _edInstructions[_currentOpCode].Op(_currentOpCode);
                         break;
                     case 0xFD:
                         _currentOpCode = ReadFromBus(PC);

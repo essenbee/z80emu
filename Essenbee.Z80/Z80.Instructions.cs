@@ -53,7 +53,6 @@ namespace Essenbee.Z80
             return 0;
         }
 
-
         // Instruction   : LD r, n
         // Operation     : r <- n
         // Flags Affected: None
@@ -269,7 +268,25 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction    : LD A,I
+        // Operation      : A <- I (interrupt vector)
+        // Flags Affected : S,Z,H,P/V,N
+        private byte LDAI(byte opCode)
+        {
+            A = I;
 
+            var signedI = (sbyte)I;
+
+            SetFlag(Flags.S, signedI < 0);
+            SetFlag(Flags.Z, I == 0);
+            SetFlag(Flags.H, false);
+            SetFlag(Flags.N, false);
+
+            // ToDo: if an interrupt occurs during this instruction, reset P/V
+            SetFlag(Flags.P, IFF2);
+
+            return 0;
+        }
 
 
 
