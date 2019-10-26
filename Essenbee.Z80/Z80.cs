@@ -99,17 +99,20 @@ namespace Essenbee.Z80
             _rootInstructions = new Dictionary<byte, Instruction>
             {
                 { 0x00, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4 }) },
-
+                { 0x01, new Instruction("LD BC,nn", IMM, IMP, LDBCNN, new List<int>{ 4, 3, 3 }) },
                 { 0x02, new Instruction("LD (BC),A", IMP, IMP, LDBCA, new List<int>{ 4, 3 }) },
                 { 0x06, new Instruction("LD B,n", IMM, IMM, LDRN, new List<int>{ 4, 3 }) },
                 { 0x0A, new Instruction("LD A,(BC)", IDX, IMP, LDABC, new List<int>{ 4, 3 }) },
                 { 0x0E, new Instruction("LD C,n", IMM, IMM, LDRN, new List<int>{ 4, 3 }) },
+                { 0x11, new Instruction("LD DE,nn", IMM, IMP, LDDENN, new List<int>{ 4, 3, 3 }) },
                 { 0x12, new Instruction("LD (DE),A", IMP, IMP, LDDEA, new List<int>{ 4, 3 }) },
                 { 0x16, new Instruction("LD D,n", IMM, IMM, LDRN, new List<int>{ 4, 3 }) },
                 { 0x1A, new Instruction("LD A,(DE)", IDX, IMP, LDADE, new List<int>{ 4, 3 }) },
                 { 0x1E, new Instruction("LD E,n", IMM, IMM, LDRN, new List<int>{ 4, 3 }) },
+                { 0x21, new Instruction("LD HL,nn", IMM, IMP, LDHLNN, new List<int>{ 4, 3, 3 }) },
                 { 0x26, new Instruction("LD H,n", IMM, IMM, LDRN, new List<int>{ 4, 3 }) },
                 { 0x2E, new Instruction("LD L,n", IMM, IMM, LDRN, new List<int>{ 4, 3 }) },
+                { 0x31, new Instruction("LD SP,nn", IMM, IMP, LDSPNN, new List<int>{ 4, 3, 3 }) },
                 { 0x32, new Instruction("LD (nn),A", IMM, IMP, LDNNA, new List<int>{ 4, 3, 3, 3 }) },
                 { 0x36, new Instruction("LD (HL),n", IMM, IMM, LDHLN, new List<int>{ 4, 3, 3 }) },
 

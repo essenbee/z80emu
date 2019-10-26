@@ -329,6 +329,69 @@ namespace Essenbee.Z80
         }
 
         // ========================================
+        // 16-bit Load Group
+        // ========================================
+
+        // Instruction   : LD BC,nn
+        // Operation     : BC <- nn
+        // Flags Affected: None
+        private byte LDBCNN(byte opCode)
+        {
+            var loByte = Fetch1(_rootInstructions);
+            var hiByte = Fetch1(_rootInstructions);
+
+            B = hiByte;
+            C = loByte;
+
+            return 0;
+        }
+
+        // Instruction   : LD DE,nn
+        // Operation     : DE <- nn
+        // Flags Affected: None
+        private byte LDDENN(byte opCode)
+        {
+            var loByte = Fetch1(_rootInstructions);
+            var hiByte = Fetch1(_rootInstructions);
+
+            D = hiByte;
+            E = loByte;
+
+            return 0;
+        }
+
+        // Instruction   : LD HL,nn
+        // Operation     : HL <- nn
+        // Flags Affected: None
+        private byte LDHLNN(byte opCode)
+        {
+            var loByte = Fetch1(_rootInstructions);
+            var hiByte = Fetch1(_rootInstructions);
+
+            H = hiByte;
+            L = loByte;
+
+            return 0;
+        }
+
+        // Instruction   : LD SP,nn
+        // Operation     : SP <- nn
+        // Flags Affected: None
+        private byte LDSPNN(byte opCode)
+        {
+            var loByte = Fetch1(_rootInstructions);
+            var hiByte = (ushort)Fetch1(_rootInstructions);
+
+            SP = (ushort)((hiByte << 8) + loByte);
+
+            return 0;
+        }
+
+
+
+
+
+        // ========================================
         // 8-bit Arithmetic and Logic Group
         // ========================================
 
