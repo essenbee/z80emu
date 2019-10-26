@@ -304,6 +304,7 @@ namespace Essenbee.Z80
             _edInstructions = new Dictionary<byte, Instruction>
             {
                 { 0x57, new Instruction("ADD A,I", REG, REG, LDAI, 9) },
+                { 0x5F, new Instruction("ADD A,R", REG, REG, LDAR, 9) },
             };
         }
 

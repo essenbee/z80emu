@@ -288,7 +288,25 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction    : LD A,R
+        // Operation      : A <- R (interrupt vector)
+        // Flags Affected : S,Z,H,P/V,N
+        private byte LDAR(byte opCode)
+        {
+            A = R;
 
+            var signedR = (sbyte)R;
+
+            SetFlag(Flags.S, signedR < 0);
+            SetFlag(Flags.Z, R == 0);
+            SetFlag(Flags.H, false);
+            SetFlag(Flags.N, false);
+
+            // ToDo: if an interrupt occurs during this instruction, reset P/V
+            SetFlag(Flags.P, IFF2);
+
+            return 0;
+        }
 
 
 
