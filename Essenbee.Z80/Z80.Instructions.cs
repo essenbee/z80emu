@@ -234,6 +234,16 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction   : LD (BC),A
+        // Operation     : (BC) <- A - that is, r is loaded into the memory address pointed to by BC
+        // Flags Affected: None
+        private byte LDBCA(byte opCode)
+        {
+            WriteToBus(BC, A);
+
+            return 0;
+        }
+
 
 
 

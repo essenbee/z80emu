@@ -93,6 +93,7 @@ namespace Essenbee.Z80
             {
                 { 0x00, new Instruction("NOP", IMP, IMP, NOP, 4) },
 
+                { 0x02, new Instruction("LD (BC),A", IMP, IMP, LDBCA, 7) },
                 { 0x06, new Instruction("LD B,n", IMM, IMM, LDRN, 7) },
 
                 { 0x0A, new Instruction("LD A,(BC)", IDX, IMP, LDABC, 7) },
