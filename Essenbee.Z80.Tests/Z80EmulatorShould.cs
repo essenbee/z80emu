@@ -9,10 +9,10 @@ using Xunit;
 
 namespace Essenbee.Z80.Tests
 {
-    public class TestProgramsShould
+    public class Z80EmulatorShould
     {
         [Fact]
-        private void RunArithmeticTestRoutine1Successfully()
+        private void ExecuteArithmeticTestRoutine1Successfully()
         {
             var fakeBus = A.Fake<IBus>();
 
