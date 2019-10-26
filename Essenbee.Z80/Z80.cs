@@ -108,6 +108,8 @@ namespace Essenbee.Z80
 
                 { 0x36, new Instruction("LD (HL),n", IMM, IMM, LDHLN, 10) },
 
+                { 0x3A, new Instruction("LD A,(nn)", IMM, IDX, LDANN, 13) },
+
                 { 0x3E, new Instruction("LD A,n", IMM, IMM, LDRN, 7) },
 
                 { 0x40, new Instruction("LD B,B", REG, REG, LDRR, 4) },

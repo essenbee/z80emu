@@ -218,6 +218,22 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction   : LD A,(nn)
+        // Operation     : A <- (nn)
+        // Flags Affected: None
+        private byte LDANN(byte opCode)
+        {
+            var loByte = Fetch1(_rootInstructions);
+            var hiByte = (ushort)Fetch1(_rootInstructions);
+
+            var addr = (hiByte << 8) + loByte;
+            _absoluteAddress = (ushort)addr;
+            var n = Fetch2(_rootInstructions);
+            A = n;
+
+            return 0;
+        }
+
 
 
 
