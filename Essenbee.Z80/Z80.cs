@@ -99,6 +99,9 @@ namespace Essenbee.Z80
 
                 { 0x0E, new Instruction("LD C,n", IMM, IMM, LDRN, 7) },
                 { 0x16, new Instruction("LD D,n", IMM, IMM, LDRN, 7) },
+
+                { 0x1A, new Instruction("LD A,(DE)", IDX, IMP, LDADE, 7) },
+
                 { 0x1E, new Instruction("LD E,n", IMM, IMM, LDRN, 7) },
                 { 0x26, new Instruction("LD H,n", IMM, IMM, LDRN, 7) },
                 { 0x2E, new Instruction("LD L,n", IMM, IMM, LDRN, 7) },
