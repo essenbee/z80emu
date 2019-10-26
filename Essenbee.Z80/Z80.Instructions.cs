@@ -431,6 +431,82 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction   : LD BC,(nn)
+        // Operation     : B <- (nn+1), C <- (nn)
+        // Flags Affected: None
+        private byte LDBCFNN(byte opCode)
+        {
+            var loByte = Fetch1(_edInstructions);
+            var hiByte = (ushort)Fetch1(_edInstructions);
+            var loAddr = (hiByte << 8) + loByte;
+            var hiAddr = loAddr + 1;
+
+            _absoluteAddress = (ushort)loAddr;
+            C = Fetch2(_edInstructions);
+            _absoluteAddress = (ushort)hiAddr;
+            B = Fetch2(_edInstructions);
+
+            return 0;
+        }
+
+        // Instruction   : LD DE,(nn)
+        // Operation     : B <- (nn+1), C <- (nn)
+        // Flags Affected: None
+        private byte LDDEFNN(byte opCode)
+        {
+            var loByte = Fetch1(_edInstructions);
+            var hiByte = (ushort)Fetch1(_edInstructions);
+            var loAddr = (hiByte << 8) + loByte;
+            var hiAddr = loAddr + 1;
+
+            _absoluteAddress = (ushort)loAddr;
+            E = Fetch2(_edInstructions);
+            _absoluteAddress = (ushort)hiAddr;
+            D = Fetch2(_edInstructions);
+
+            return 0;
+        }
+
+        // Instruction   : LD HL,(nn)
+        // Operation     : H <- (nn+1), L <- (nn)
+        // Flags Affected: None
+        private byte LDHLFNN2(byte opCode)
+        {
+            var loByte = Fetch1(_edInstructions);
+            var hiByte = (ushort)Fetch1(_edInstructions);
+            var loAddr = (hiByte << 8) + loByte;
+            var hiAddr = loAddr + 1;
+
+            _absoluteAddress = (ushort)loAddr;
+            L = Fetch2(_edInstructions);
+            _absoluteAddress = (ushort)hiAddr;
+            H = Fetch2(_edInstructions);
+
+            return 0;
+        }
+
+        // Instruction   : LD SP,(nn)
+        // Operation     : SP <- (nn+1), <- (nn)
+        // Flags Affected: None
+        private byte LDSPFNN(byte opCode)
+        {
+            var loByte = Fetch1(_edInstructions);
+            var hiByte = (ushort)Fetch1(_edInstructions);
+            var loAddr = (hiByte << 8) + loByte;
+            var hiAddr = loAddr + 1;
+
+            _absoluteAddress = (ushort)loAddr;
+            var lo = Fetch2(_edInstructions);
+            _absoluteAddress = (ushort)hiAddr;
+            var hi = Fetch2(_edInstructions);
+
+            var operand = (ushort)((hi << 8) + lo);
+
+            SP = operand;
+
+            return 0;
+        }
+
 
 
 
