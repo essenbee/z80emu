@@ -387,6 +387,33 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction   : LD IX,nn
+        // Operation     : IX <- nn
+        // Flags Affected: None
+        private byte LDIXNN(byte opCode)
+        {
+            var loByte = Fetch1(_rootInstructions);
+            var hiByte = (ushort)Fetch1(_rootInstructions);
+
+            IX = (ushort)((hiByte << 8) + loByte);
+
+            return 0;
+        }
+
+        // Instruction   : LD IY,nn
+        // Operation     : IY <- nn
+        // Flags Affected: None
+        private byte LDIYNN(byte opCode)
+        {
+            var loByte = Fetch1(_rootInstructions);
+            var hiByte = (ushort)Fetch1(_rootInstructions);
+
+            IY = (ushort)((hiByte << 8) + loByte);
+
+            return 0;
+        }
+
+
 
 
 
