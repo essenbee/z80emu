@@ -316,10 +316,14 @@ namespace Essenbee.Z80
 
             _edInstructions = new Dictionary<byte, Instruction>
             {
+                { 0x43, new Instruction("LD (nn),BC", IMM, IDX, LDNNBC, new List<int>{ 4, 4, 3, 3, 3, 3 }) },
                 { 0x47, new Instruction("ADD I,A", REG, REG, LDIA, new List<int>{ 4, 5 }) },
                 { 0x4B, new Instruction("LD BC,(nn)", IMM, IDX, LDBCFNN, new List<int>{ 4, 4, 3, 3, 3, 3 }) },
+                { 0x53, new Instruction("LD (nn),DE", IMM, IDX, LDNNDE, new List<int>{ 4, 4, 3, 3, 3, 3 }) },
                 { 0x5B, new Instruction("LD DE,(nn)", IMM, IDX, LDDEFNN, new List<int>{ 4, 4, 3, 3, 3, 3 }) },
+                { 0x63, new Instruction("LD (nn),HL", IMM, IDX, LDNNHL2, new List<int>{ 4, 4, 3, 3, 3, 3 }) },
                 { 0x6B, new Instruction("LD HL,(nn)", IMM, IDX, LDHLFNN2, new List<int>{ 4, 4, 3, 3, 3, 3 }) },
+                { 0x73, new Instruction("LD (nn),SP", IMM, IDX, LDNNSP, new List<int>{ 4, 4, 3, 3, 3, 3 }) },
                 { 0x7B, new Instruction("LD SP,(nn)", IMM, IDX, LDSPFNN, new List<int>{ 4, 4, 3, 3, 3, 3 }) },
                 { 0x57, new Instruction("ADD A,I", REG, REG, LDAI, new List<int>{ 4, 5 }) },
                 { 0x4F, new Instruction("ADD R,A", REG, REG, LDRA, new List<int>{ 4, 5 }) },

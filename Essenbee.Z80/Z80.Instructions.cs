@@ -567,6 +567,70 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction   : LD (nn), BC
+        // Operation     : (nn+1) <- C, (nn) <- C
+        // Flags Affected: None
+        private byte LDNNBC(byte opCode)
+        {
+            var loByte = Fetch1(_edInstructions);
+            var hiByte = (ushort)Fetch1(_edInstructions);
+            var loAddr = (ushort)((hiByte << 8) + loByte);
+            var hiAddr = (ushort)(loAddr + 1);
+
+            WriteToBus(loAddr, C);
+            WriteToBus(hiAddr, B);
+
+            return 0;
+        }
+
+        // Instruction   : LD (nn), DE
+        // Operation     : (nn+1) <- D, (nn) <- E
+        // Flags Affected: None
+        private byte LDNNDE(byte opCode)
+        {
+            var loByte = Fetch1(_edInstructions);
+            var hiByte = (ushort)Fetch1(_edInstructions);
+            var loAddr = (ushort)((hiByte << 8) + loByte);
+            var hiAddr = (ushort)(loAddr + 1);
+
+            WriteToBus(loAddr, E);
+            WriteToBus(hiAddr, D);
+
+            return 0;
+        }
+
+        // Instruction   : LD (nn), HL
+        // Operation     : (nn+1) <- H, (nn) <- L
+        // Flags Affected: None
+        private byte LDNNHL2(byte opCode)
+        {
+            var loByte = Fetch1(_edInstructions);
+            var hiByte = (ushort)Fetch1(_edInstructions);
+            var loAddr = (ushort)((hiByte << 8) + loByte);
+            var hiAddr = (ushort)(loAddr + 1);
+
+            WriteToBus(loAddr, L);
+            WriteToBus(hiAddr, H);
+
+            return 0;
+        }
+
+        // Instruction   : LD (nn), SP
+        // Operation     : (nn+1) <- S, (nn) <- P
+        // Flags Affected: None
+        private byte LDNNSP(byte opCode)
+        {
+            var loByte = Fetch1(_edInstructions);
+            var hiByte = (ushort)Fetch1(_edInstructions);
+            var loAddr = (ushort)((hiByte << 8) + loByte);
+            var hiAddr = (ushort)(loAddr + 1);
+
+            WriteToBus(loAddr, (byte)(SP & 0xff)); // P
+            WriteToBus(hiAddr, (byte)((SP >> 8) & 0xff)); // S
+
+            return 0;
+        }
+
 
 
 
