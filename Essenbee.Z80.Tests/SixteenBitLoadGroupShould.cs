@@ -1237,5 +1237,313 @@ namespace Essenbee.Z80.Tests
                 program[addr] = data;
             }
         }
+
+        [Fact]
+        public void PopBC()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xC1 },
+                { 0x0081, 0x00 },
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+
+                // Stack
+                { 0x0FFB, 0x00 },
+                { 0x0FFC, 0x00 },
+                { 0x0FFD, 0x00 },
+                { 0x0FFE, 0x00 },
+                { 0x0FFF, 0x00 },
+                { 0x1000, 0x55 }, // <- SP
+                { 0x1001, 0x33 },
+                { 0x1002, 0x00 },
+                { 0x1003, 0x00 },
+                { 0x1004, 0x00 },
+                { 0x1005, 0x00 }, 
+                { 0x1006, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+            A.CallTo(() => fakeBus.Write(A<ushort>._, A<byte>._))
+                .Invokes((ushort addr, byte data) => UpdateMemory(addr, data));
+
+            var cpu = new Z80() { A = 0x00, SP = 0x1000, B = 0x00, C = 0x00, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+            cpu.Tick();
+
+            Assert.Equal(0x1002, cpu.SP);
+            Assert.Equal(0x3355, cpu.BC);
+
+            // No affect on Condition Flags
+            FlagsUnchanged(cpu);
+
+            void UpdateMemory(ushort addr, byte data)
+            {
+                program[addr] = data;
+            }
+        }
+
+        [Fact]
+        public void PopDE()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xD1 },
+                { 0x0081, 0x00 },
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+
+                // Stack
+                { 0x0FFB, 0x00 },
+                { 0x0FFC, 0x00 },
+                { 0x0FFD, 0x00 },
+                { 0x0FFE, 0x00 },
+                { 0x0FFF, 0x00 },
+                { 0x1000, 0x55 }, // <- SP
+                { 0x1001, 0x33 },
+                { 0x1002, 0x00 },
+                { 0x1003, 0x00 },
+                { 0x1004, 0x00 },
+                { 0x1005, 0x00 },
+                { 0x1006, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+            A.CallTo(() => fakeBus.Write(A<ushort>._, A<byte>._))
+                .Invokes((ushort addr, byte data) => UpdateMemory(addr, data));
+
+            var cpu = new Z80() { A = 0x00, SP = 0x1000, D = 0x00, E = 0x00, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+            cpu.Tick();
+
+            Assert.Equal(0x1002, cpu.SP);
+            Assert.Equal(0x3355, cpu.DE);
+
+            // No affect on Condition Flags
+            FlagsUnchanged(cpu);
+
+            void UpdateMemory(ushort addr, byte data)
+            {
+                program[addr] = data;
+            }
+        }
+
+        [Fact]
+        public void PopHL()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xE1 },
+                { 0x0081, 0x00 },
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+
+                // Stack
+                { 0x0FFB, 0x00 },
+                { 0x0FFC, 0x00 },
+                { 0x0FFD, 0x00 },
+                { 0x0FFE, 0x00 },
+                { 0x0FFF, 0x00 },
+                { 0x1000, 0x55 }, // <- SP
+                { 0x1001, 0x33 },
+                { 0x1002, 0x00 },
+                { 0x1003, 0x00 },
+                { 0x1004, 0x00 },
+                { 0x1005, 0x00 },
+                { 0x1006, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+            A.CallTo(() => fakeBus.Write(A<ushort>._, A<byte>._))
+                .Invokes((ushort addr, byte data) => UpdateMemory(addr, data));
+
+            var cpu = new Z80() { A = 0x00, SP = 0x1000, H = 0x00, L = 0x00, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+            cpu.Tick();
+
+            Assert.Equal(0x1002, cpu.SP);
+            Assert.Equal(0x3355, cpu.HL);
+
+            // No affect on Condition Flags
+            FlagsUnchanged(cpu);
+
+            void UpdateMemory(ushort addr, byte data)
+            {
+                program[addr] = data;
+            }
+        }
+
+        [Fact]
+        public void PopAF()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xF1 },
+                { 0x0081, 0x00 },
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+
+                // Stack
+                { 0x0FFB, 0x00 },
+                { 0x0FFC, 0x00 },
+                { 0x0FFD, 0x00 },
+                { 0x0FFE, 0x00 },
+                { 0x0FFF, 0x00 },
+                { 0x1000, 0x55 }, // <- SP
+                { 0x1001, 0x33 },
+                { 0x1002, 0x00 },
+                { 0x1003, 0x00 },
+                { 0x1004, 0x00 },
+                { 0x1005, 0x00 },
+                { 0x1006, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+            A.CallTo(() => fakeBus.Write(A<ushort>._, A<byte>._))
+                .Invokes((ushort addr, byte data) => UpdateMemory(addr, data));
+
+            var cpu = new Z80() { A = 0x00, SP = 0x1000, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+            cpu.Tick();
+
+            Assert.Equal(0x1002, cpu.SP);
+            Assert.Equal(0x33, cpu.A);
+            Assert.Equal(0x55, (byte)cpu.F);
+
+            // Condition Flags = 01010101
+            Assert.True((cpu.F & Z80.Flags.C) == Z80.Flags.C);
+            Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
+            Assert.True((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
+            Assert.True((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
+            Assert.True((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+
+            void UpdateMemory(ushort addr, byte data)
+            {
+                program[addr] = data;
+            }
+        }
+
+        [Fact]
+        public void PopIX()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xDD },
+                { 0x0081, 0xE1 },
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+
+                // Stack
+                { 0x0FFB, 0x00 },
+                { 0x0FFC, 0x00 },
+                { 0x0FFD, 0x00 },
+                { 0x0FFE, 0x00 },
+                { 0x0FFF, 0x00 },
+                { 0x1000, 0x55 }, // <- SP
+                { 0x1001, 0x33 },
+                { 0x1002, 0x00 },
+                { 0x1003, 0x00 },
+                { 0x1004, 0x00 },
+                { 0x1005, 0x00 },
+                { 0x1006, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+            A.CallTo(() => fakeBus.Write(A<ushort>._, A<byte>._))
+                .Invokes((ushort addr, byte data) => UpdateMemory(addr, data));
+
+            var cpu = new Z80() { A = 0x00, SP = 0x1000, IX = 0x0000, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+            cpu.Tick();
+
+            Assert.Equal(0x1002, cpu.SP);
+            Assert.Equal(0x3355, cpu.IX);
+
+            // No affect on Condition Flags
+            FlagsUnchanged(cpu);
+
+            void UpdateMemory(ushort addr, byte data)
+            {
+                program[addr] = data;
+            }
+        }
+
+        [Fact]
+        public void PopIY()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xFD },
+                { 0x0081, 0xE1 },
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+
+                // Stack
+                { 0x0FFB, 0x00 },
+                { 0x0FFC, 0x00 },
+                { 0x0FFD, 0x00 },
+                { 0x0FFE, 0x00 },
+                { 0x0FFF, 0x00 },
+                { 0x1000, 0x55 }, // <- SP
+                { 0x1001, 0x33 },
+                { 0x1002, 0x00 },
+                { 0x1003, 0x00 },
+                { 0x1004, 0x00 },
+                { 0x1005, 0x00 },
+                { 0x1006, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+            A.CallTo(() => fakeBus.Write(A<ushort>._, A<byte>._))
+                .Invokes((ushort addr, byte data) => UpdateMemory(addr, data));
+
+            var cpu = new Z80() { A = 0x00, SP = 0x1000, IY = 0x0000, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+            cpu.Tick();
+
+            Assert.Equal(0x1002, cpu.SP);
+            Assert.Equal(0x3355, cpu.IY);
+
+            // No affect on Condition Flags
+            FlagsUnchanged(cpu);
+
+            void UpdateMemory(ushort addr, byte data)
+            {
+                program[addr] = data;
+            }
+        }
     }
 }

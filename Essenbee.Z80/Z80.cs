@@ -238,17 +238,21 @@ namespace Essenbee.Z80
                 { 0x9E, new Instruction("SBC A,(HL)", RGIHL, RGIHL, SBCAHL, new List<int>{ 4, 3 }) },
                 { 0x9F, new Instruction("SBC A,A", REG, REG, SBCAR, new List<int>{ 4 }) },
 
+                { 0xC1, new Instruction("POP BC", IMM, IMM, POPBC, new List<int>{ 4, 3, 3 }) },
                 { 0xC5, new Instruction("PUSH BC", IMM, IMM, PUSHBC, new List<int>{ 5, 3, 3 }) },
 
                 { 0xC6, new Instruction("ADD A,n", IMM, IMM, ADDAN, new List<int>{ 4, 3 }) },
                 { 0xCE, new Instruction("ADC A,n", IMM, IMM, ADCAN, new List<int>{ 4, 3 }) },
 
+                { 0xD1, new Instruction("POP DE", IMM, IMM, POPDE, new List<int>{ 4, 3, 3 }) },
                 { 0xD5, new Instruction("PUSH DE", IMM, IMM, PUSHDE, new List<int>{ 5, 3, 3 }) },
 
                 { 0xD6, new Instruction("SUB A,n", IMM, IMM, SUBAN, new List<int>{ 4, 3 }) },
                 { 0xDE, new Instruction("SBC A,n", IMM, IMM, SBCAN, new List<int>{ 4, 3 }) },
 
+                { 0xE1, new Instruction("POP HL", IMM, IMM, POPHL, new List<int>{ 4, 3, 3 }) },
                 { 0xE5, new Instruction("PUSH HL", IMM, IMM, PUSHHL, new List<int>{ 5, 3, 3 }) },
+                { 0xF1, new Instruction("POP AF", IMM, IMM, POPAF, new List<int>{ 4, 3, 3 }) },
                 { 0xF5, new Instruction("PUSH AF", IMM, IMM, PUSHAF, new List<int>{ 5, 3, 3 }) },
 
                 { 0xF9, new Instruction("LD SP,HL", IMM, IMM, LDSPHL, new List<int>{ 6 }) },
@@ -292,6 +296,7 @@ namespace Essenbee.Z80
                 { 0x96, new Instruction("SUB A,(IX+d)", IMM, IDX, SUBAIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
                 { 0x9E, new Instruction("SBC A,(IX+d)", IMM, IDX, SBCAIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
 
+                { 0xE1, new Instruction("POP IX", IMM, IMM, POPIX, new List<int>{ 4, 3, 3, 3 }) },
                 { 0xE5, new Instruction("PUSH IX", IMM, IMM, PUSHIX, new List<int>{ 4, 5, 3, 3 }) },
 
                 { 0xF9, new Instruction("LD SP,IX", IMM, IMM, LDSPIX, new List<int>{ 4, 6 }) },
@@ -329,6 +334,7 @@ namespace Essenbee.Z80
                 { 0x96, new Instruction("SUB A,(IY+d)", IMM, IDX, SUBAIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
                 { 0x9E, new Instruction("SBC A,(IY+d)", IMM, IDX, SBCAIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
 
+                { 0xE1, new Instruction("POP IY", IMM, IMM, POPIY, new List<int>{ 4, 3, 3, 3 }) },
                 { 0xE5, new Instruction("PUSH IY", IMM, IMM, PUSHIY, new List<int>{ 4, 5, 3, 3 }) },
 
                 { 0xF9, new Instruction("LD SP,IY", IMM, IMM, LDSPIY, new List<int>{ 4, 6 }) },

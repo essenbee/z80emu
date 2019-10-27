@@ -777,8 +777,87 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction   : POP BC
+        // Operation     : B <- (SP+1), C <- (SP)
+        // Flags Affected: None
+        private byte POPBC(byte opCode)
+        {
+            C = ReadFromBus(SP);
+            SP++;
+            B = ReadFromBus(SP);
+            SP++;
 
+            return 0;
+        }
 
+        // Instruction   : POP DE
+        // Operation     : D <- (SP+1), E <- (SP)
+        // Flags Affected: None
+        private byte POPDE(byte opCode)
+        {
+            E = ReadFromBus(SP);
+            SP++;
+            D = ReadFromBus(SP);
+            SP++;
+
+            return 0;
+        }
+
+        // Instruction   : POP HL
+        // Operation     : H <- (SP+1), L <- (SP)
+        // Flags Affected: None
+        private byte POPHL(byte opCode)
+        {
+            L = ReadFromBus(SP);
+            SP++;
+            H = ReadFromBus(SP);
+            SP++;
+
+            return 0;
+        }
+
+        // Instruction   : POP AF
+        // Operation     : A <- (SP+1), F <- (SP)
+        // Flags Affected: None
+        private byte POPAF(byte opCode)
+        {
+            F = (Flags)ReadFromBus(SP);
+            SP++;
+            A = ReadFromBus(SP);
+            SP++;
+
+            return 0;
+        }
+
+        // Instruction   : POP IX
+        // Operation     : I <- (SP+1), X <- (SP)
+        // Flags Affected: None
+        private byte POPIX(byte opCode)
+        {
+            var x = ReadFromBus(SP);
+            SP++;
+            var i = ReadFromBus(SP);
+            SP++;
+
+            IX = (ushort)((i << 8) + x);
+
+            return 0;
+        }
+
+        // Instruction   : POP IY
+        // Operation     : I <- (SP+1), Y <- (SP)
+        // Flags Affected: None
+        private byte POPIY(byte opCode)
+        {
+            var y = ReadFromBus(SP);
+            SP++;
+            var i = ReadFromBus(SP);
+            SP++;
+
+            IY = (ushort)((i << 8) + y);
+
+            return 0;
+        }
 
 
 
