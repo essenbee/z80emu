@@ -693,6 +693,91 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction   : PUSH BC
+        // Operation     : (SP-2) <- C, (SP-1) <- B
+        // Flags Affected: None
+        private byte PUSHBC(byte opCode)
+        {
+            SP--;
+            WriteToBus(SP, B);
+            SP--;
+            WriteToBus(SP, C);
+
+            return 0;
+        }
+
+        // Instruction   : PUSH DE
+        // Operation     : (SP-2) <- E, (SP-1) <- D
+        // Flags Affected: None
+        private byte PUSHDE(byte opCode)
+        {
+            SP--;
+            WriteToBus(SP, D);
+            SP--;
+            WriteToBus(SP, E);
+
+            return 0;
+        }
+
+        // Instruction   : PUSH HL
+        // Operation     : (SP-2) <- L, (SP-1) <- H
+        // Flags Affected: None
+        private byte PUSHHL(byte opCode)
+        {
+            SP--;
+            WriteToBus(SP, H);
+            SP--;
+            WriteToBus(SP, L);
+
+            return 0;
+        }
+
+        // Instruction   : PUSH AF
+        // Operation     : (SP-2) <- F, (SP-1) <- A
+        // Flags Affected: None
+        private byte PUSHAF(byte opCode)
+        {
+            SP--;
+            WriteToBus(SP, A);
+            SP--;
+            WriteToBus(SP, (byte)F);
+
+            return 0;
+        }
+
+        // Instruction   : PUSH IX
+        // Operation     : (SP-2) <- X, (SP-1) <- I
+        // Flags Affected: None
+        private byte PUSHIX(byte opCode)
+        {
+            var x = (byte)(IX & 0xff);
+            var i = (byte)((IX >> 8) & 0xff);
+
+            SP--;
+            WriteToBus(SP, i);
+            SP--;
+            WriteToBus(SP, x);
+
+            return 0;
+        }
+
+        // Instruction   : PUSH IY
+        // Operation     : (SP-2) <- Y, (SP-1) <- I
+        // Flags Affected: None
+        private byte PUSHIY(byte opCode)
+        {
+            var y = (byte)(IY & 0xff);
+            var i = (byte)((IY >> 8) & 0xff);
+
+            SP--;
+            WriteToBus(SP, i);
+            SP--;
+            WriteToBus(SP, y);
+
+            return 0;
+        }
+
+
 
 
 
