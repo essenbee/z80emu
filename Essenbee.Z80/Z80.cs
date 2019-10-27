@@ -243,6 +243,8 @@ namespace Essenbee.Z80
                 { 0xD6, new Instruction("SUB A,n", IMM, IMM, SUBAN, new List<int>{ 4, 3 }) },
                 { 0xDE, new Instruction("SBC A,n", IMM, IMM, SBCAN, new List<int>{ 4, 3 }) },
 
+                { 0xF9, new Instruction("LD SP,HL", IMM, IMM, LDSPHL, new List<int>{ 6 }) },
+
                 // Multi-byte Opcode Prefixes
                 { 0xCB, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4 }) },
                 { 0xDD, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4 }) },
@@ -281,6 +283,8 @@ namespace Essenbee.Z80
                 { 0x8E, new Instruction("ADC A,(IX+d)", IMM, IDX, ADCAIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
                 { 0x96, new Instruction("SUB A,(IX+d)", IMM, IDX, SUBAIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
                 { 0x9E, new Instruction("SBC A,(IX+d)", IMM, IDX, SBCAIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
+
+                { 0xF9, new Instruction("LD SP,IX", IMM, IMM, LDSPIX, new List<int>{ 4, 6 }) },
             };
 
             _fdInstructions = new Dictionary<byte, Instruction>
@@ -314,6 +318,8 @@ namespace Essenbee.Z80
                 { 0x8E, new Instruction("ADC A,(IY+d)", IMM, IDX, ADCAIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
                 { 0x96, new Instruction("SUB A,(IY+d)", IMM, IDX, SUBAIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
                 { 0x9E, new Instruction("SBC A,(IY+d)", IMM, IDX, SBCAIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
+
+                { 0xF9, new Instruction("LD SP,IY", IMM, IMM, LDSPIY, new List<int>{ 4, 6 }) },
             };
 
             _edInstructions = new Dictionary<byte, Instruction>

@@ -663,6 +663,39 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction   : LD SP, HL
+        // Operation     : SP <- HL
+        // Flags Affected: None
+        private byte LDSPHL(byte opCode)
+        {
+            SP = HL;
+
+            return 0;
+        }
+
+        // Instruction   : LD SP, IX
+        // Operation     : SP <- IX
+        // Flags Affected: None
+        private byte LDSPIX(byte opCode)
+        {
+            SP = IX;
+
+            return 0;
+        }
+
+        // Instruction   : LD SP, IY
+        // Operation     : SP <- IY
+        // Flags Affected: None
+        private byte LDSPIY(byte opCode)
+        {
+            SP = IY;
+
+            return 0;
+        }
+
+
+
+
 
         // ========================================
         // 8-bit Arithmetic and Logic Group

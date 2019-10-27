@@ -835,5 +835,92 @@ namespace Essenbee.Z80.Tests
                 program[addr] = data;
             }
         }
+
+        [Fact]
+        public void LoadSPwithHL()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xF9 },
+                { 0x0081, 0x00 },
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+
+            var cpu = new Z80() { A = 0x00, SP = 0x0000, H = 0xAA, L = 0xCC, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+            cpu.Tick();
+
+            Assert.Equal(0xAACC, cpu.HL);
+            Assert.Equal(0xAACC, cpu.SP);
+
+            // No affect on Condition Flags
+            FlagsUnchanged(cpu);
+        }
+
+        [Fact]
+        public void LoadSPwithIX()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xDD },
+                { 0x0081, 0xF9 },
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+
+            var cpu = new Z80() { A = 0x00, SP = 0x0000, IX = 0xAACC, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+            cpu.Tick();
+
+            Assert.Equal(0xAACC, cpu.IX);
+            Assert.Equal(0xAACC, cpu.SP);
+
+            // No affect on Condition Flags
+            FlagsUnchanged(cpu);
+        }
+
+        [Fact]
+        public void LoadSPwithIY()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xFD },
+                { 0x0081, 0xF9 },
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+
+            var cpu = new Z80() { A = 0x00, SP = 0x0000, IY = 0xAACC, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+            cpu.Tick();
+
+            Assert.Equal(0xAACC, cpu.IY);
+            Assert.Equal(0xAACC, cpu.SP);
+
+            // No affect on Condition Flags
+            FlagsUnchanged(cpu);
+        }
     }
 }
