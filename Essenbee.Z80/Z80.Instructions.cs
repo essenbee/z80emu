@@ -631,9 +631,37 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction   : LD (nn), IX
+        // Operation     : (nn+1) <- I, (nn) <- X
+        // Flags Affected: None
+        private byte LDNNIX(byte opCode)
+        {
+            var loByte = Fetch1(_ddInstructions);
+            var hiByte = (ushort)Fetch1(_ddInstructions);
+            var loAddr = (ushort)((hiByte << 8) + loByte);
+            var hiAddr = (ushort)(loAddr + 1);
 
+            WriteToBus(loAddr, (byte)(IX & 0xff)); // X
+            WriteToBus(hiAddr, (byte)((IX >> 8) & 0xff)); // I
 
+            return 0;
+        }
 
+        // Instruction   : LD (nn), IY
+        // Operation     : (nn+1) <- I, (nn) <- Y
+        // Flags Affected: None
+        private byte LDNNIY(byte opCode)
+        {
+            var loByte = Fetch1(_fdInstructions);
+            var hiByte = (ushort)Fetch1(_fdInstructions);
+            var loAddr = (ushort)((hiByte << 8) + loByte);
+            var hiAddr = (ushort)(loAddr + 1);
+
+            WriteToBus(loAddr, (byte)(IY & 0xff)); // Y
+            WriteToBus(hiAddr, (byte)((IY >> 8) & 0xff)); // I
+
+            return 0;
+        }
 
 
         // ========================================
