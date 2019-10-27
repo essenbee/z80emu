@@ -408,8 +408,9 @@ namespace Essenbee.Z80
         }
 
         private byte ReadFromBus(ushort addr) => _bus.Read(addr, false);
-
         private void WriteToBus(ushort addr, byte data) => _bus.Write(addr, data);
+        private byte ReadFromBusPort(byte port) => _bus.ReadPeripheral(port);
+        private void WriteToBusPort(byte port, byte data) => _bus.WritePeripheral(port, data);
 
         private bool CheckFlag(Flags flag, bool isAlternate = false)
         {
