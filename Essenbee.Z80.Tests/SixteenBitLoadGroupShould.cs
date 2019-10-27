@@ -485,5 +485,55 @@ namespace Essenbee.Z80.Tests
             // No affect on Condition Flags
             FlagsUnchanged(cpu);
         }
+
+        [Fact]
+        public void LoadNNwith16BitOperandFromHL()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0x22 },
+                { 0x0081, 0xFF },
+                { 0x0082, 0x08 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+
+                // Data
+                { 0x08FB, 0x00 },
+                { 0x08FC, 0x00 },
+                { 0x08FD, 0x00 },
+                { 0x08FE, 0x00 },
+                { 0x08FF, 0x00 }, // (nn)
+                { 0x0900, 0x00 }, // (nn + 1)
+                { 0x0901, 0x00 },
+                { 0x0902, 0x00 },
+                { 0x0903, 0x00 },
+                { 0x0904, 0x00 },
+                { 0x0905, 0x00 },
+                { 0x0906, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+            A.CallTo(() => fakeBus.Write(A<ushort>._, A<byte>._))
+                .Invokes((ushort addr, byte data) => UpdateMemory(addr, data));
+
+            var cpu = new Z80() { A = 0x00, H = 0xAA, L = 0xCC, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+            cpu.Tick();
+
+            Assert.Equal(0xCC, program[0x08FF]);
+            Assert.Equal(0xAA, program[0x08FF + 1]);
+
+            // No affect on Condition Flags
+            FlagsUnchanged(cpu);
+
+            void UpdateMemory(ushort addr, byte data)
+            {
+                program[addr] = data;
+            }
+        }
     }
 }
