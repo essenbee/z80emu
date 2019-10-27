@@ -112,6 +112,7 @@ namespace Essenbee.Z80
                 { 0x21, new Instruction("LD HL,nn", IMM, IMP, LDHLNN, new List<int>{ 4, 3, 3 }) },
                 { 0x22, new Instruction("LD (nn),HL", IMM, IDX, LDNNHL, new List<int>{ 4, 3, 3, 3, 3 }) },
                 { 0x26, new Instruction("LD H,n", IMM, IMM, LDRN, new List<int>{ 4, 3 }) },
+                { 0x27, new Instruction("DAA", IMM, IMM, DAA, new List<int>{ 4 }) },
                 { 0x2A, new Instruction("LD HL,(nn)", IMM, IDX, LDHLFNN, new List<int>{ 4, 3, 3, 3, 3 }) },
                 { 0x2E, new Instruction("LD L,n", IMM, IMM, LDRN, new List<int>{ 4, 3 }) },
                 { 0x31, new Instruction("LD SP,nn", IMM, IMP, LDSPNN, new List<int>{ 4, 3, 3 }) },

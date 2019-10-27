@@ -985,7 +985,7 @@ namespace Essenbee.Z80
             _absoluteAddress = (ushort)(IY + d);
             var n = Fetch2(_ddInstructions);
             byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
-            A = Add8(A, n,c );
+            A = Add8(A, n, c);
 
             return 0;
         }
@@ -1115,6 +1115,77 @@ namespace Essenbee.Z80
             return 0;
         }
 
+
+
+
+        // Instruction   : DAA
+        // Operation     : Conditionally adjusts A for BCD arithmetic.
+        // Flags Affected: S,Z,H,P,C
+        private byte DAA(byte opCode)
+        {
+            var t = 0;
+
+            if (CheckFlag(Flags.H) || ((A & 0xF) > 9))
+            {
+                t++;
+            }
+
+            // Set the Carry flag here ...
+            if (CheckFlag(Flags.C) || (A > 0x99))
+            {
+                t += 2;
+                SetFlag(Flags.C, true);
+            }
+
+            // Determine the Half-carry Flag here...
+            if (CheckFlag(Flags.N) && !CheckFlag(Flags.H))
+            {
+                SetFlag(Flags.H, false);
+            }
+            else
+            {
+                if (CheckFlag(Flags.N) && CheckFlag(Flags.H))
+                {
+                    SetFlag(Flags.H, (A & 0x0F) < 6);
+                }
+                else
+                {
+                    SetFlag(Flags.H, (A & 0x0F) >= 0x0A);
+                }
+            }
+
+            // Add or subtract 6 to/from nibbles as required, to adjust A for BCD correctness...
+            switch (t)
+            {
+                case 1:
+                    A += CheckFlag(Flags.N) ? (byte)0xFA : (byte)0x06; // -6:6
+                    break;
+                case 2:
+                    A += CheckFlag(Flags.N) ? (byte)0xA0 : (byte)0x60; // -0x60:0x60
+                    break;
+                case 3:
+                    A += CheckFlag(Flags.N) ? (byte)0x9A : (byte)0x66; // -0x66:0x66
+                    break;
+            }
+
+            // Other Flags
+            SetFlag(Flags.S, (A & 0x80) > 0 ? true : false);
+            SetFlag(Flags.Z, A == 0);
+            SetFlag(Flags.P, Parity(A));
+
+            // Undocumented Flags
+            SetFlag(Flags.X, (A & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (A & 0x20) > 0 ? true : false); //Copy of bit 5
+
+            return 0;
+        }
+
+
+
+
+
+
+
         private byte Add8(byte a, byte b, byte c = 0)
         {
             var sum = a + b + c;
@@ -1124,7 +1195,7 @@ namespace Essenbee.Z80
             SetFlag(Flags.S, (sum & 0x80) > 0 ? true : false);
             SetFlag(Flags.H, (a & 0x0F) + (b & 0x0F) > 0xF ? true : false);
             SetFlag(Flags.P, (a >= 0x80 && b >= 0x80) ||
-                (a < 0x80 && b < 0x80 && sum < 0) 
+                (a < 0x80 && b < 0x80 && sum < 0)
                 ? true : false);
             SetFlag(Flags.C, sum > 0xFF ? true : false); // Set if there is a carry into bit 8
 
@@ -1143,7 +1214,7 @@ namespace Essenbee.Z80
             SetFlag(Flags.Z, diff == 0 ? true : false);
             SetFlag(Flags.S, (diff & 0x80) > 0 ? true : false);
             SetFlag(Flags.H, ((a & 0x0F) < (b & 0x0F) + c) ? true : false);
-            SetFlag(Flags.P, (a >= 0x80 && b >= 0x80 && (sbyte)diff > 0 || 
+            SetFlag(Flags.P, (a >= 0x80 && b >= 0x80 && (sbyte)diff > 0 ||
                 (a < 0x80 && b < 0x80 && (sbyte)diff < 0))
                 ? true : false);
             SetFlag(Flags.C, diff > 0xFF ? true : false); // Set if there is not a borrow from bit 8
@@ -1155,6 +1226,18 @@ namespace Essenbee.Z80
             return (byte)diff;
         }
 
+        private bool Parity(ushort res)
+        {
+            var retVal = true;
+
+            while (res > 0)
+            {
+                if ((res & 0x01) == 1) retVal = !retVal;
+                res = (byte)(res >> 1);
+            }
+
+            return retVal;
+        }
 
         private byte ReadFromRegister(int src) => 
             src switch
