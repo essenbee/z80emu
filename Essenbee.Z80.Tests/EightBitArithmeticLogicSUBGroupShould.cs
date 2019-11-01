@@ -27,10 +27,8 @@ namespace Essenbee.Z80.Tests
             var cpu = new Z80() { A = 0x00, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
 
-            for (int i = 0; i < 14; i++)
-            {
-                cpu.Tick();
-            }
+            cpu.Step();
+            cpu.Step();
 
             Assert.Equal(0x01, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -64,10 +62,8 @@ namespace Essenbee.Z80.Tests
             var cpu = new Z80() { A = 0x00, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
 
-            for (int i = 0; i < 14; i++)
-            {
-                cpu.Tick();
-            }
+            cpu.Step();
+            cpu.Step();
 
             Assert.Equal(0x02, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N); // Subtraction set
@@ -114,7 +110,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x08, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x03, cpu.A);
             sbyte signedResult = (sbyte)cpu.A;
@@ -169,7 +165,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x06, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0xFA, cpu.A); // FA = 1111 10101 = -6 in 2s complement
             sbyte signedResult = (sbyte)cpu.A;
@@ -220,7 +216,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x00, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x00, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N); // Set due to a subtraction
@@ -269,7 +265,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x83, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x81, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N); // Set due to a subtraction
@@ -318,7 +314,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x81, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x00, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -366,7 +362,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x08, F = Z80.Flags.C, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x02, cpu.A);
             sbyte signedResult = (sbyte)cpu.A;
@@ -421,7 +417,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x06, F = Z80.Flags.C, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0xF9, cpu.A); 
             sbyte signedResult = (sbyte)cpu.A;
@@ -472,7 +468,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x02, F = Z80.Flags.C, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x00, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N); // Set due to a subtraction
@@ -521,7 +517,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x83, F = Z80.Flags.C, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x80, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N); // Set due to a subtraction
@@ -570,7 +566,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x0C, B = 0x04, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x08, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -619,7 +615,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x0C, B = 0x04, F = Z80.Flags.C, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x07, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -668,7 +664,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x0E, H = 0x08, L = 0xFF, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x0A, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -717,7 +713,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x0E, H = 0x08, L = 0xFF, F = Z80.Flags.C, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x09, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -766,7 +762,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x0A, IX = 0x08FF, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x06, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -815,7 +811,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x0E, IY = 0x08FF, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x0A, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -864,7 +860,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x0A, IX = 0x08FF, F = Z80.Flags.C, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x05, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -913,7 +909,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x0E, IY = 0x08FF, F = Z80.Flags.C, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x09, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N);

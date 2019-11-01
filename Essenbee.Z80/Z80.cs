@@ -85,9 +85,12 @@ namespace Essenbee.Z80
         private IBus _bus = null!;
 
         private Dictionary<byte, Instruction> _rootInstructions = new Dictionary<byte, Instruction>();
+        private Dictionary<byte, Instruction> _cbInstructions = new Dictionary<byte, Instruction>();
         private Dictionary<byte, Instruction> _ddInstructions = new Dictionary<byte, Instruction>();
+        private Dictionary<byte, Instruction> _ddcbInstructions = new Dictionary<byte, Instruction>();
         private Dictionary<byte, Instruction> _edInstructions = new Dictionary<byte, Instruction>();
         private Dictionary<byte, Instruction> _fdInstructions = new Dictionary<byte, Instruction>();
+        private Dictionary<byte, Instruction> _fdcbInstructions = new Dictionary<byte, Instruction>();
 
         private ushort _absoluteAddress = 0x0000;
         private ushort _relativeAddress = 0x0000;
@@ -360,49 +363,26 @@ namespace Essenbee.Z80
 
         public void ConnectToBus(IBus bus) => _bus = bus;
 
-        public void Tick()
+        public void Step()
+        {
+            var nextIns = PeekNextInstruction(ReadFromBus(PC));
+            var tStates = nextIns.operation.TStates;
+
+            for (int i = 0; i < tStates; i++)
+            {
+                Tick();
+            }
+        }
+
+        private void Tick()
         {
             if (_clockCycles == 0)
             {
                 _currentOpCode = ReadFromBus(PC);
-
-                // ToDo: Need to handle interrupts to release CPU from HALT state!
-                if (!_rootInstructions[_currentOpCode].Mnemonic.Equals("HALT"))
-                {
-                    PC++;
-                }
-
-                // ToDo: Need to handle the following multi-byte extended opcodes:
-                // - 0xCB prefix
-                // - 0xED prefix
-                // - 0xDDCB prefix
-                // - 0xFDCB prefix
-
-                switch (_currentOpCode)
-                {
-                    case 0xDD:
-                        _currentOpCode = ReadFromBus(PC);
-                        PC++;
-                        _clockCycles = _ddInstructions[_currentOpCode].TStates;
-                        _ddInstructions[_currentOpCode].Op(_currentOpCode);
-                        break;
-                    case 0xED:
-                        _currentOpCode = ReadFromBus(PC);
-                        PC++;
-                        _clockCycles = _edInstructions[_currentOpCode].TStates;
-                        _edInstructions[_currentOpCode].Op(_currentOpCode);
-                        break;
-                    case 0xFD:
-                        _currentOpCode = ReadFromBus(PC);
-                        PC++;
-                        _clockCycles = _fdInstructions[_currentOpCode].TStates;
-                        _fdInstructions[_currentOpCode].Op(_currentOpCode);
-                        break;
-                    default:
-                        _clockCycles = _rootInstructions[_currentOpCode].TStates;
-                        _rootInstructions[_currentOpCode].Op(_currentOpCode);
-                        break;
-                }
+                var nextIns = FetchNextInstruction(_currentOpCode);
+                _currentOpCode = nextIns.opCode;
+                _clockCycles = nextIns.operation.TStates;
+                nextIns.operation.Op(_currentOpCode);
             }
 
             _clockCycles--;
@@ -481,6 +461,53 @@ namespace Essenbee.Z80
             }
 
             return 0x00;
+        }
+
+        private (byte opCode, Instruction operation) PeekNextInstruction(byte code) => FetchNextInstruction(code, false);
+
+        private (byte opCode, Instruction operation) FetchNextInstruction(byte code, bool incPC = true)
+        {
+            // ToDo: Need to handle interrupts to release CPU from HALT state!
+            if (!_rootInstructions[code].Mnemonic.Equals("HALT"))
+            {
+                if (incPC) PC++;
+            }
+
+            switch (code)
+            {
+                case 0xCB:
+                    var opCB = incPC ? ReadFromBus(PC) : ReadFromBus((ushort)(PC + 1));
+                    if (incPC) PC++;
+                    return (opCB, _cbInstructions[opCB]);
+                case 0xDD:
+                    var opDD = incPC ? ReadFromBus(PC) : ReadFromBus((ushort)(PC + 1));
+                    if (incPC) PC++;
+                    if (opDD == 0xCB)
+                    {
+                        var opDDCB = incPC ? ReadFromBus((ushort)(PC + 1)) : ReadFromBus((ushort)(PC + 2));
+                        if (incPC) PC++;
+                        return (opDDCB, _ddcbInstructions[opDDCB]);
+                    }
+
+                    return (opDD, _ddInstructions[opDD]);
+                case 0xED:
+                    var opED = incPC ? ReadFromBus(PC) : ReadFromBus((ushort)(PC + 1));
+                    if (incPC) PC++;
+                    return (opED, _edInstructions[opED]);
+                case 0xFD:
+                    var opFD = incPC ? ReadFromBus(PC) : ReadFromBus((ushort)(PC + 1));
+                    if (incPC) PC++;
+                    if (opFD == 0xCB)
+                    {
+                        var opFDCB = incPC ? ReadFromBus((ushort)(PC + 1)) : ReadFromBus((ushort)(PC + 2));
+                        if (incPC) PC++;
+                        return (opFDCB, _fdcbInstructions[opFDCB]);
+                    }
+
+                    return (opFD, _fdInstructions[opFD]);
+                default:
+                    return (code, _rootInstructions[code]);
+            }
         }
     }
 }

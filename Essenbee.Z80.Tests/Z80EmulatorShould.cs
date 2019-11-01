@@ -16,7 +16,7 @@ namespace Essenbee.Z80.Tests
         {
             var fakeBus = A.Fake<IBus>();
 
-            //` Arithmetic Test Routine #1 - 58 T-Cycles
+            //` Arithmetic Test Routine #1 - 10 instructions
             //` Filename: Arithmetic1.hex
             //`
             //` 0080                          .ORG   0080h
@@ -43,10 +43,10 @@ namespace Essenbee.Z80.Tests
             var cpu = new Z80() { A = 0x00, B = 0x00, C = 0x00, H = 0x00, L = 0x00, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
 
-            // Run 58 T-cycles = 54 + NOP
-            for (int i = 0; i < 58; i++)
+            // Run 10 instructions
+            for (int i = 0; i < 10; i++)
             {
-                cpu.Tick();
+                cpu.Step();
                 Debug.WriteLine($"A = {cpu.A} B = {cpu.B} C = {cpu.C} H = {cpu.H} L = {cpu.L}");
             }
             

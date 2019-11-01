@@ -27,10 +27,8 @@ namespace Essenbee.Z80.Tests
             var cpu = new Z80() { A = 0x00, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
 
-            for (int i = 0; i < 14; i++)
-            {
-                cpu.Tick();
-            }
+            cpu.Step();
+            cpu.Step();
             
             Assert.Equal(0x81, cpu.A);
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -64,10 +62,8 @@ namespace Essenbee.Z80.Tests
             var cpu = new Z80() { A = 0x00, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
 
-            for (int i = 0; i < 14; i++)
-            {
-                cpu.Tick();
-            }
+            cpu.Step();
+            cpu.Step();
 
             // We expect "underflow", since actual result (-189) 
             // is too large to reside in 8 bits (signed)
@@ -104,10 +100,8 @@ namespace Essenbee.Z80.Tests
             var cpu = new Z80() { A = 0x00, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
 
-            for (int i = 0; i < 14; i++)
-            {
-                cpu.Tick();
-            }
+            cpu.Step();
+            cpu.Step();
 
             // We expect "underflow", since actual result (-189) 
             // is too large to reside in 8 bits (signed)
@@ -156,7 +150,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x01, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x03, cpu.A);
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -203,7 +197,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x00, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x00, cpu.A);
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -250,7 +244,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x7F, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x81, cpu.A);
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -297,7 +291,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x81, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x02, cpu.A);
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -344,7 +338,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x1E, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x20, cpu.A);
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -391,7 +385,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x04, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x08, cpu.A);
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -438,7 +432,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x01, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x03, cpu.A);
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -485,7 +479,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x00, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x00, cpu.A);
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -532,7 +526,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x7F, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x81, cpu.A);
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -579,7 +573,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x81, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x02, cpu.A);
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -626,7 +620,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x1E, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x20, cpu.A);
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -673,7 +667,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x04, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x08, cpu.A);
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -720,7 +714,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x04, F = Z80.Flags.C, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x09, cpu.A);
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -767,7 +761,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x04, B = 0x04, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x08, cpu.A);
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -814,7 +808,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x04, B = 0x04, F = Z80.Flags.C, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x09, cpu.A);
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -861,7 +855,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x04, H = 0x08, L = 0xFF, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x0A, cpu.A);
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -908,7 +902,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x04, H = 0x08, L = 0xFF, F = Z80.Flags.C, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x0B, cpu.A);
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -955,7 +949,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x04, IX = 0x08FF, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x0A, cpu.A);
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -1002,7 +996,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x04, IY = 0x08FF, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x0A, cpu.A);
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -1049,7 +1043,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x04, IX = 0x08FF, F = Z80.Flags.C, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x0B, cpu.A);
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
@@ -1096,7 +1090,7 @@ namespace Essenbee.Z80.Tests
 
             var cpu = new Z80() { A = 0x04, IY = 0x08FF, F = Z80.Flags.C, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
-            cpu.Tick();
+            cpu.Step();
 
             Assert.Equal(0x0B, cpu.A);
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);

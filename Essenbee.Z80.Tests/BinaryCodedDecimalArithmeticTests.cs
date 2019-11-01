@@ -31,10 +31,9 @@ namespace Essenbee.Z80.Tests
             var cpu = new Z80() { A = 0x00, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
 
-            // Run 26 T-cycles = 22 + NOP
-            for (int i = 0; i < 26; i++)
+            for (int i = 0; i < 5; i++)
             {
-                cpu.Tick();
+                cpu.Step();
             }
 
             // BCD 42 is the answer... 0100 0010
@@ -76,10 +75,9 @@ namespace Essenbee.Z80.Tests
             var cpu = new Z80() { A = 0x00, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
 
-            // Run 26 T-cycles = 22 + NOP
-            for (int i = 0; i < 26; i++)
+            for (int i = 0; i < 5; i++)
             {
-                cpu.Tick();
+                cpu.Step();
             }
 
             // BCD -12 is the answer (represented as the 10s complement form, 88) with sign bit set
@@ -125,10 +123,9 @@ namespace Essenbee.Z80.Tests
             var cpu = new Z80() { A = 0x00, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
 
-            // Run 26 T-cycles = 22 + NOP
-            for (int i = 0; i < 26; i++)
+            for (int i = 0; i < 5; i++)
             {
-                cpu.Tick();
+                cpu.Step();
             }
 
             // BCD 12 is the answer... 00001 0010

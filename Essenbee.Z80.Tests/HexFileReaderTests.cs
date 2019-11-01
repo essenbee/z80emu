@@ -40,10 +40,9 @@ namespace Essenbee.Z80.Tests
             var cpu = new Z80() { A = 0x00, B = 0x00, C = 0x00, H = 0x00, L = 0x00, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
 
-            // Run 58 T-cycles = 54 + NOP
-            for (int i = 0; i < 58; i++)
+            for (int i = 0; i < 10; i++)
             {
-                cpu.Tick();
+                cpu.Step();
             }
 
             Assert.Equal(0x0F, ram[0x08FF]);
