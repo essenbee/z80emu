@@ -1,32 +1,83 @@
 ﻿using FakeItEasy;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace Essenbee.Z80.Tests
 {
     public class EightBitArithmeticLogicSUBGroupShould
     {
-        private static void CheckFlags(Z80 cpu, int a, int b, int c = 0)
+        [Fact]
+        public void FlagTestOnSubtraction1()
         {
-            // Checks values of S, Z, H, P and C flags
-            var trueDiff = (a - b - c);
-            var byteDiff = (byte)trueDiff % 256;
-            var sbyteDiff = (sbyte)byteDiff;
+            var fakeBus = A.Fake<IBus>();
 
-            Assert.Equal(byteDiff, cpu.A);
-            Assert.Equal(sbyteDiff < 0, (cpu.F & Z80.Flags.S) == Z80.Flags.S);
-            Assert.Equal(cpu.A == 0x00, (cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
-            Assert.Equal(((a & 0xF) < (b & 0xF) + c), (cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0x3E }, // LD A, 0xFE
+                { 0x0081, 0xFE }, // SUB 0xFD
+                { 0x0082, 0xD6 },
+                { 0x0083, 0xFD },
+                { 0x0084, 0x00 },
+            };
 
-            // If both operands are positive and result is negative 
-            // or if both operands are negative and result is positive
-            var overflow = (a < 0x7F && b < 0x7F && sbyteDiff < 0) || 
-                           (a >= 0x80 && b > 0x80 && sbyteDiff > 0);
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
 
-            Assert.Equal(overflow, (cpu.F & Z80.Flags.P) == Z80.Flags.P);
-            Assert.Equal(trueDiff > 0xFF, (cpu.F & Z80.Flags.C) == Z80.Flags.C);
+            var cpu = new Z80() { A = 0x00, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+
+            for (int i = 0; i < 14; i++)
+            {
+                cpu.Tick();
+            }
+
+            Assert.Equal(0x01, cpu.A);
+            Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N);
+            Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
+            Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
+            Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
+        }
+
+        [Fact]
+        public void FlagTestOnSubtraction2()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0x3E }, // LD A, -127
+                { 0x0081, 0x81 }, // SUB 127
+                { 0x0082, 0xD6 },
+                { 0x0083, 0x7F },
+                { 0x0084, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+
+            var cpu = new Z80() { A = 0x00, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+
+            for (int i = 0; i < 14; i++)
+            {
+                cpu.Tick();
+            }
+
+            Assert.Equal(0x02, cpu.A);
+            Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N); // Subtraction set
+            Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+            Assert.True((cpu.F & Z80.Flags.H) == Z80.Flags.H); // Half-carry set
+            Assert.True((cpu.F & Z80.Flags.P) == Z80.Flags.P); // Overflow set
+            Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
+            Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
+            Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
 
         [Fact]
@@ -65,12 +116,17 @@ namespace Essenbee.Z80.Tests
             cpu.ConnectToBus(fakeBus);
             cpu.Tick();
 
-            CheckFlags(cpu, 8, 5);
-
             Assert.Equal(0x03, cpu.A);
             sbyte signedResult = (sbyte)cpu.A;
             Assert.Equal(3, signedResult);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N); // Set due to a subtraction
+
+            Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
+
             Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
@@ -115,12 +171,17 @@ namespace Essenbee.Z80.Tests
             cpu.ConnectToBus(fakeBus);
             cpu.Tick();
 
-            CheckFlags(cpu, 6, 12);
-
             Assert.Equal(0xFA, cpu.A); // FA = 1111 10101 = -6 in 2s complement
             sbyte signedResult = (sbyte)cpu.A;
             Assert.Equal(-6, signedResult);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N); // Set due to a subtraction
+
+            Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.True((cpu.F & Z80.Flags.S) == Z80.Flags.S); // Sign set
+            Assert.True((cpu.F & Z80.Flags.H) == Z80.Flags.H); // Half-carry set
+            Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.True((cpu.F & Z80.Flags.C) == Z80.Flags.C); // Carry set
+
             Assert.True((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.True((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
@@ -161,10 +222,15 @@ namespace Essenbee.Z80.Tests
             cpu.ConnectToBus(fakeBus);
             cpu.Tick();
 
-            CheckFlags(cpu, 0, 0);
-
             Assert.Equal(0x00, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N); // Set due to a subtraction
+
+            Assert.True((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
+
             Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
@@ -205,10 +271,15 @@ namespace Essenbee.Z80.Tests
             cpu.ConnectToBus(fakeBus);
             cpu.Tick();
 
-            CheckFlags(cpu, 131, 2);
-
             Assert.Equal(0x81, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N); // Set due to a subtraction
+
+            Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.True((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
+
             Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
@@ -249,10 +320,14 @@ namespace Essenbee.Z80.Tests
             cpu.ConnectToBus(fakeBus);
             cpu.Tick();
 
-            CheckFlags(cpu, 129, 129);
-
             Assert.Equal(0x00, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N);
+
+            Assert.True((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
             Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
@@ -293,12 +368,17 @@ namespace Essenbee.Z80.Tests
             cpu.ConnectToBus(fakeBus);
             cpu.Tick();
 
-            CheckFlags(cpu, 8, 5, 1);
-
             Assert.Equal(0x02, cpu.A);
             sbyte signedResult = (sbyte)cpu.A;
             Assert.Equal(2, signedResult);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N); // Set due to a subtraction
+
+            Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
+
             Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
@@ -343,12 +423,17 @@ namespace Essenbee.Z80.Tests
             cpu.ConnectToBus(fakeBus);
             cpu.Tick();
 
-            CheckFlags(cpu, 6, 12, 1);
-
             Assert.Equal(0xF9, cpu.A); 
             sbyte signedResult = (sbyte)cpu.A;
             Assert.Equal(-7, signedResult);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N); // Set due to a subtraction
+
+            Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.True((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+            Assert.True((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.True((cpu.F & Z80.Flags.C) == Z80.Flags.C);
+
             Assert.True((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.True((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
@@ -389,10 +474,15 @@ namespace Essenbee.Z80.Tests
             cpu.ConnectToBus(fakeBus);
             cpu.Tick();
 
-            CheckFlags(cpu, 2, 1, 1);
-
             Assert.Equal(0x00, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N); // Set due to a subtraction
+
+            Assert.True((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
+
             Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
@@ -433,10 +523,15 @@ namespace Essenbee.Z80.Tests
             cpu.ConnectToBus(fakeBus);
             cpu.Tick();
 
-            CheckFlags(cpu, 131, 2, 1);
-
             Assert.Equal(0x80, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N); // Set due to a subtraction
+
+            Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.True((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
+
             Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
@@ -477,10 +572,15 @@ namespace Essenbee.Z80.Tests
             cpu.ConnectToBus(fakeBus);
             cpu.Tick();
 
-            CheckFlags(cpu, 12, 4);
-
             Assert.Equal(0x08, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N);
+
+            Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
+
             Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.True((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
@@ -521,10 +621,15 @@ namespace Essenbee.Z80.Tests
             cpu.ConnectToBus(fakeBus);
             cpu.Tick();
 
-            CheckFlags(cpu, 12, 4, 1);
-
             Assert.Equal(0x07, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N);
+
+            Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
+
             Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
@@ -565,10 +670,15 @@ namespace Essenbee.Z80.Tests
             cpu.ConnectToBus(fakeBus);
             cpu.Tick();
 
-         CheckFlags(cpu, 14, 4);
-
             Assert.Equal(0x0A, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N);
+
+            Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
+
             Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.True((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
@@ -611,6 +721,13 @@ namespace Essenbee.Z80.Tests
 
             Assert.Equal(0x09, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N);
+
+            Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
+
             Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.True((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
@@ -651,10 +768,15 @@ namespace Essenbee.Z80.Tests
             cpu.ConnectToBus(fakeBus);
             cpu.Tick();
 
-            CheckFlags(cpu, 10, 4);
-
             Assert.Equal(0x06, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N);
+
+            Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
+
             Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
@@ -695,10 +817,15 @@ namespace Essenbee.Z80.Tests
             cpu.ConnectToBus(fakeBus);
             cpu.Tick();
 
-            CheckFlags(cpu, 14, 4);
-
             Assert.Equal(0x0A, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N);
+
+            Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
+
             Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.True((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
@@ -739,10 +866,15 @@ namespace Essenbee.Z80.Tests
             cpu.ConnectToBus(fakeBus);
             cpu.Tick();
 
-            CheckFlags(cpu, 10, 4, 1);
-
             Assert.Equal(0x05, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N);
+
+            Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
+
             Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
@@ -783,10 +915,15 @@ namespace Essenbee.Z80.Tests
             cpu.ConnectToBus(fakeBus);
             cpu.Tick();
 
-            CheckFlags(cpu, 14, 4, 1);
-
             Assert.Equal(0x09, cpu.A);
             Assert.True((cpu.F & Z80.Flags.N) == Z80.Flags.N);
+
+            Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
+
             Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.True((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }

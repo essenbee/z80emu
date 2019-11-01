@@ -1188,15 +1188,24 @@ namespace Essenbee.Z80
 
         private byte Add8(byte a, byte b, byte c = 0)
         {
-            var sum = a + b + c;
+            var sum = (a + b + c);
 
             SetFlag(Flags.N, false);
             SetFlag(Flags.Z, sum == 0 ? true : false);
             SetFlag(Flags.S, (sum & 0x80) > 0 ? true : false);
             SetFlag(Flags.H, (a & 0x0F) + (b & 0x0F) > 0xF ? true : false);
-            SetFlag(Flags.P, (a >= 0x80 && b >= 0x80) ||
-                (a < 0x80 && b < 0x80 && sum < 0)
-                ? true : false);
+
+            // Overflow flag
+            if (((a ^ (b + c)) & 0x80) == 0 /* Same sign */
+                && ((a ^ sum) & 0x80) != 0) /* Not same sign */
+            {
+                SetFlag(Flags.P, true);
+            }
+            else
+            {
+                SetFlag(Flags.P, false);
+            }
+
             SetFlag(Flags.C, sum > 0xFF ? true : false); // Set if there is a carry into bit 8
 
             // Undocumented Flags
@@ -1213,11 +1222,20 @@ namespace Essenbee.Z80
             SetFlag(Flags.N, true);
             SetFlag(Flags.Z, diff == 0 ? true : false);
             SetFlag(Flags.S, (diff & 0x80) > 0 ? true : false);
-            SetFlag(Flags.H, ((a & 0x0F) < (b & 0x0F) + c) ? true : false);
-            SetFlag(Flags.P, (a >= 0x80 && b >= 0x80 && (sbyte)diff > 0 ||
-                (a < 0x80 && b < 0x80 && (sbyte)diff < 0))
-                ? true : false);
-            SetFlag(Flags.C, diff > 0xFF ? true : false); // Set if there is not a borrow from bit 8
+            SetFlag(Flags.H, ((a & 0x0F) < ((b + c) & 0x0F)) ? true : false);
+
+            // Overflow flag
+            if (((a ^ (b + c)) & 0x80) != 0 /* Not same sign */
+                && (((b + c) ^ (byte)diff) & 0x80) == 0) /* Same sign */
+            {
+                SetFlag(Flags.P, true);
+            }
+            else
+            {
+                SetFlag(Flags.P, false);
+            }
+
+            SetFlag(Flags.C, diff < 0 ? true : false); // Set if there is not a borrow from bit 8
 
             // Undocumented Flags
             SetFlag(Flags.X, (diff & 0x08) > 0 ? true : false); //Copy of bit 3
