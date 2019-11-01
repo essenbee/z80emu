@@ -7,7 +7,7 @@ namespace Essenbee.Z80.Tests
     public class EightBitArithmeticLogicADDGroupShould
     {
         [Fact]
-        public void OverflowFlagTestOnAddition()
+        public void FlagTestOnAddition1()
         {
             var fakeBus = A.Fake<IBus>();
 
@@ -44,7 +44,7 @@ namespace Essenbee.Z80.Tests
         }
 
         [Fact]
-        public void OverflowFlagTestOnAddition2()
+        public void FlagTestOnAddition2()
         {
             var fakeBus = A.Fake<IBus>();
 
@@ -77,6 +77,46 @@ namespace Essenbee.Z80.Tests
             Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
             Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
             Assert.True((cpu.F & Z80.Flags.P) == Z80.Flags.P); // Overflow set
+            Assert.True((cpu.F & Z80.Flags.C) == Z80.Flags.C); // Carry set
+            Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
+            Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
+        }
+
+
+        [Fact]
+        public void FlagTestOnAddition3()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0x3E }, // LD A, 1
+                { 0x0081, 0x01 }, // ADD -1
+                { 0x0082, 0xC6 },
+                { 0x0083, 0xFF },
+                { 0x0084, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+
+            var cpu = new Z80() { A = 0x00, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+
+            for (int i = 0; i < 14; i++)
+            {
+                cpu.Tick();
+            }
+
+            // We expect "underflow", since actual result (-189) 
+            // is too large to reside in 8 bits (signed)
+            Assert.Equal(0x00, cpu.A);
+            Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
+            Assert.True((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+            Assert.True((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
             Assert.True((cpu.F & Z80.Flags.C) == Z80.Flags.C); // Carry set
             Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);

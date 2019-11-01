@@ -1191,8 +1191,8 @@ namespace Essenbee.Z80
             var sum = (a + b + c);
 
             SetFlag(Flags.N, false);
-            SetFlag(Flags.Z, sum == 0 ? true : false);
-            SetFlag(Flags.S, (sum & 0x80) > 0 ? true : false);
+            SetFlag(Flags.Z, (byte)sum == 0 ? true : false);
+            SetFlag(Flags.S, ((byte)sum & 0x80) > 0 ? true : false);
             SetFlag(Flags.H, (a & 0x0F) + (b & 0x0F) > 0xF ? true : false);
 
             // Overflow flag
@@ -1209,8 +1209,8 @@ namespace Essenbee.Z80
             SetFlag(Flags.C, sum > 0xFF ? true : false); // Set if there is a carry into bit 8
 
             // Undocumented Flags
-            SetFlag(Flags.X, (sum & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (sum & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((byte)sum & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((byte)sum & 0x20) > 0 ? true : false); //Copy of bit 5
 
             return (byte)sum;
         }
@@ -1220,8 +1220,8 @@ namespace Essenbee.Z80
             var diff = a - b - c;
 
             SetFlag(Flags.N, true);
-            SetFlag(Flags.Z, diff == 0 ? true : false);
-            SetFlag(Flags.S, (diff & 0x80) > 0 ? true : false);
+            SetFlag(Flags.Z, (byte)diff == 0 ? true : false);
+            SetFlag(Flags.S, ((byte)diff & 0x80) > 0 ? true : false);
             SetFlag(Flags.H, ((a & 0x0F) < ((b + c) & 0x0F)) ? true : false);
 
             // Overflow flag
@@ -1238,8 +1238,8 @@ namespace Essenbee.Z80
             SetFlag(Flags.C, diff < 0 ? true : false); // Set if there is not a borrow from bit 8
 
             // Undocumented Flags
-            SetFlag(Flags.X, (diff & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (diff & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((byte)diff & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((byte)diff & 0x20) > 0 ? true : false); //Copy of bit 5
 
             return (byte)diff;
         }
