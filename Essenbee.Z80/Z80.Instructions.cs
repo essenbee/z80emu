@@ -14,7 +14,7 @@ namespace Essenbee.Z80
         // - CB and ED enable extra instructions
         // - DD or FD selects IX+d or IY+d respectively (in some cases without the displacement d) in place of HL
         //
-        // This means that we have to read another byte in order to detrmine the operation in this four cases.
+        // This means that we have to read another byte in order to determine the operation in these four cases.
 
         // Instruction    : NOP
         // Operation      : No Operation
@@ -25,7 +25,7 @@ namespace Essenbee.Z80
         // Operation      : Execute NOPs until a subsequent interrupt or reset is received
         // Flags Affected : None
         // Notes          : The HALT instruction halts the Z80; it does not increase the PC so that the
-        //                  instruction is reexecuted, until a maskable or non-maskable interrupt is accepted.
+        //                  instruction is re-executed, until a maskable or non-maskable interrupt is accepted.
         //                  Only then does the Z80 increase the PC again and continues with the next instruction.
         //                  During the HALT state, the HALT line is set. The PC is increased before the interrupt
         //                  routine is called.
@@ -1184,7 +1184,7 @@ namespace Essenbee.Z80
 
 
 
-
+        // =========================== H E L P E R S ===========================
 
         private byte Add8(byte a, byte b, byte c = 0)
         {
@@ -1196,8 +1196,8 @@ namespace Essenbee.Z80
             SetFlag(Flags.H, (a & 0x0F) + (b & 0x0F) > 0xF ? true : false);
 
             // Overflow flag
-            if (((a ^ (b + c)) & 0x80) == 0 /* Same sign */
-                && ((a ^ sum) & 0x80) != 0) /* Not same sign */
+            if (((a ^ (b + c)) & 0x80) == 0 // Same sign
+                && ((a ^ sum) & 0x80) != 0) // Different sign
             {
                 SetFlag(Flags.P, true);
             }
@@ -1225,8 +1225,8 @@ namespace Essenbee.Z80
             SetFlag(Flags.H, ((a & 0x0F) < ((b + c) & 0x0F)) ? true : false);
 
             // Overflow flag
-            if (((a ^ (b + c)) & 0x80) != 0 /* Not same sign */
-                && (((b + c) ^ (byte)diff) & 0x80) == 0) /* Same sign */
+            if (((a ^ (b + c)) & 0x80) != 0              // Different sign
+                && (((b + c) ^ (byte)diff) & 0x80) == 0) // Same sign
             {
                 SetFlag(Flags.P, true);
             }

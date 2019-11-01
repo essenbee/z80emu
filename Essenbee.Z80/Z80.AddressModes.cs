@@ -19,28 +19,12 @@ namespace Essenbee.Z80
         // Indexed Mode
         private byte IDX() => 0;
 
-        // Immediate Mode
+        // Immediate Mode (called twice for Immediate Extended Mode)
         private byte IMM()
         {
             _absoluteAddress = PC++;
             return 0;
         }
-
-        // Immediate Extended Mode
-        private byte IMX()
-        {
-            var loByte = PC++;
-            var hiByte = PC++;
-            _absoluteAddress = (ushort)(((hiByte) & 0xFF) << 8 | (loByte) & 0xFF);
-
-            return 0;
-        }
-
-        // Modified Zero Page Mode
-
-        // Relative Mode
-
-        // Extended Mode
 
         // Register Addressing:
         // The opcode contains bits of information that determine the registers involved
