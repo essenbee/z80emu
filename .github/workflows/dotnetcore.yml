@@ -14,5 +14,4 @@ jobs:
       with:
         dotnet-version: 3.0.100
     - name: Build with dotnet
-      working-directory: essenbee.z80
-      run: dotnet build --configuration Release
+      run: dotnet build essenbee.z80 --configuration Release
