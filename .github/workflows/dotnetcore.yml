@@ -15,4 +15,5 @@ jobs:
         dotnet-version: 3.0.100
     - name: Build with dotnet
       run: dotnet build ./Essenbee.Z80 --configuration Release
-      run: dotnet test ./Essenbee.Z80.Tests/Essenbee.Z80.Tests.csproj
+    - name: Tests
+      run: dotnet test ./Essenbee.Z80.Tests
