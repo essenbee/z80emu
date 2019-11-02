@@ -251,7 +251,7 @@ namespace Essenbee.Z80.Tests
             var program = new Dictionary<ushort, byte>
             {
                 // Program Code
-                { 0x0080, 0xED }, // IM 0
+                { 0x0080, 0xED }, // IM 2
                 { 0x0081, 0x5E },
                 { 0x0082, 0x00 },
                 { 0x0083, 0x00 },
