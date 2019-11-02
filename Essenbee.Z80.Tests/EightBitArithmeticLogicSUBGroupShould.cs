@@ -6,6 +6,7 @@ namespace Essenbee.Z80.Tests
 {
     public class EightBitArithmeticLogicSUBGroupShould
     {
+#pragma warning disable CA1707 // Identifiers should not contain underscores
         [Fact]
         public void FlagTestOnSubtraction1()
         {
@@ -923,5 +924,7 @@ namespace Essenbee.Z80.Tests
             Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.True((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
+
+#pragma warning restore CA1707 // Identifiers should not contain underscores
     }
 }

@@ -12,11 +12,16 @@ namespace Essenbee.Z80
         public Func<byte, byte> Op { get; set; }
         public int TStates { get; set; }
         public int MCycles { get; set; }
-        public List<int> Timing { get; set; }
+        public List<int> Timing { get; }
 
         public Instruction(string mnemonic, Func<byte> addrMode1, Func<byte> addrMode2, Func<byte, byte> op, 
             List<int> timing)
         {
+            if (timing is null)
+            {
+                throw new ArgumentNullException($"Parameter {nameof(timing)} cannot be null.");
+            }
+
             Mnemonic = mnemonic;
             AddressingMode1 = addrMode1;
             AddressingMode2 = addrMode2;

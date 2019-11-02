@@ -79,8 +79,8 @@ namespace Essenbee.Z80
         public ushort DE1 => (ushort)((D1 << 8) + E1);
 
         // Interrupt Flip-flops
-        public bool IFF1;
-        public bool IFF2;
+        public bool IFF1 { get; set; }
+        public bool IFF2 { get; set; }
 
         private IBus _bus = null!;
 
@@ -93,7 +93,6 @@ namespace Essenbee.Z80
         private Dictionary<byte, Instruction> _fdcbInstructions = new Dictionary<byte, Instruction>();
 
         private ushort _absoluteAddress = 0x0000;
-        private ushort _relativeAddress = 0x0000;
         private byte _currentOpCode = 0x00;
         private int _clockCycles = 0;
 
@@ -495,7 +494,7 @@ namespace Essenbee.Z80
         private (byte opCode, Instruction operation) FetchNextInstruction(byte code, bool incPC = true)
         {
             // ToDo: Need to handle interrupts to release CPU from HALT state!
-            if (!_rootInstructions[code].Mnemonic.Equals("HALT"))
+            if (!_rootInstructions[code].Mnemonic.Equals("HALT", StringComparison.InvariantCultureIgnoreCase))
             {
                 if (incPC) PC++;
             }

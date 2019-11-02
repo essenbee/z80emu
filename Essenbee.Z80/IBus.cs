@@ -2,7 +2,7 @@
 {
     public interface IBus
     {
-        byte Read(ushort addr, bool readOnly = false);
+        byte Read(ushort addr, bool ro = false);
         void Write(ushort addr, byte data);
         byte ReadPeripheral(byte port);
         void WritePeripheral(byte port, byte data);

@@ -28,9 +28,7 @@ namespace Essenbee.Z80.Tests
             // LD(HL),A
             // NOP
 
-            var reader = new HexFileReader();
-
-            var ram = reader.Read("../../../HexFiles/Arithmetic1.hex");
+            var ram = HexFileReader.Read("../../../HexFiles/Arithmetic1.hex");
 
             A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
                 .ReturnsLazily((ushort addr, bool ro) => ram[addr]);

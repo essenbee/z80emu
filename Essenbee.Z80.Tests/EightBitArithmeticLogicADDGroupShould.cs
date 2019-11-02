@@ -6,6 +6,8 @@ namespace Essenbee.Z80.Tests
 {
     public class EightBitArithmeticLogicADDGroupShould
     {
+#pragma warning disable CA1707 // Identifiers should not contain underscores
+
         [Fact]
         public void FlagTestOnAddition1()
         {
@@ -1334,5 +1336,7 @@ namespace Essenbee.Z80.Tests
                 program[addr] = data;
             }
         }
+
+#pragma warning restore CA1707 // Identifiers should not contain underscores
     }
 }

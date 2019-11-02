@@ -4,16 +4,16 @@ using System.IO;
 
 namespace Essenbee.Z80.Tests.Classes
 {
-    public class HexFileReader
+    public static class HexFileReader
     {
-        public byte[] Read(string filePath)
+        public static byte[] Read(string filePath)
         {
             var RAM = new byte[48 * 1024];
             var lines = File.ReadAllLines(filePath);
 
             foreach (var line in lines)
             {
-                if (line.Equals(":00000001FF"))
+                if (line.Equals(":00000001FF", StringComparison.InvariantCultureIgnoreCase))
                 {
                     break;
                 }

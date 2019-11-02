@@ -8,6 +8,7 @@ namespace Essenbee.Z80.Tests
 {
     public class EightBitLoadGroupShould
     {
+#pragma warning disable CA1707 // Identifiers should not contain underscores
         private static void FlagsUnchanged(Z80 cpu)
         {
             Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
@@ -1457,5 +1458,6 @@ namespace Essenbee.Z80.Tests
             // No affect on Condition Flags
             FlagsUnchanged(cpu);
         }
+#pragma warning restore CA1707 // Identifiers should not contain underscores
     }
 }

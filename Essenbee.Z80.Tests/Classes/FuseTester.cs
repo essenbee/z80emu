@@ -47,7 +47,7 @@ namespace Essenbee.Z80.Tests.Classes
                     newTest = false;
                 }
 
-                if (line.StartsWith("-1"))
+                if (line.StartsWith("-1", StringComparison.InvariantCultureIgnoreCase))
                 {
                     _tests.Add(testName, aTest);
                     newTest = true;
@@ -67,7 +67,7 @@ namespace Essenbee.Z80.Tests.Classes
                 {
                     // Registers
                     var regs = line.Split(' ').ToList();
-                    regs.RemoveAll(x => x.Equals(string.Empty));
+                    regs.RemoveAll(x => string.IsNullOrEmpty(x));
                     var regsHex = regs.Select(hex => Convert.ToInt32(hex, 16)).ToList();
                     
                     aTest.Registers = regsHex;
@@ -79,7 +79,7 @@ namespace Essenbee.Z80.Tests.Classes
                 {
                     // State data
                     var states = line.Split(' ').ToList();
-                    states.RemoveAll(x => x.Equals(string.Empty));
+                    states.RemoveAll(x => string.IsNullOrEmpty(x));
                     var statesHex = states.Select(hex => Convert.ToInt32(hex, 16)).ToList();
                     aTest.States = statesHex;
                     lineType++;
@@ -90,8 +90,8 @@ namespace Essenbee.Z80.Tests.Classes
                 {
                     // Memory (1 or more records of this type)
                     var mem = line.Split(' ').ToList();
-                    mem.RemoveAll(x => x.Equals(string.Empty));
-                    mem.RemoveAll(x => x.Equals("-1"));
+                    mem.RemoveAll(x => string.IsNullOrEmpty(x));
+                    mem.RemoveAll(x => x.Equals("-1", StringComparison.InvariantCultureIgnoreCase));
                     var memHex = mem.Select(hex => Convert.ToInt32(hex, 16)).ToList();
                     aTest.Memory.Add(memHex);
                     continue;
@@ -134,11 +134,11 @@ namespace Essenbee.Z80.Tests.Classes
 
                 if (lineType == 2)
                 {
-                    if (line.StartsWith(" "))
+                    if (line.StartsWith(" ", StringComparison.InvariantCultureIgnoreCase))
                     {
                         // Event
                         var anEvent = line.Split(' ').ToList();
-                        anEvent.RemoveAll(x => x.Equals(string.Empty));
+                        anEvent.RemoveAll(x => string.IsNullOrEmpty(x));
 
                         anExpected.Events.Add(anEvent);
                         continue;
@@ -151,7 +151,7 @@ namespace Essenbee.Z80.Tests.Classes
                 {
                     // Registers
                     var regs = line.Split(' ').ToList();
-                    regs.RemoveAll(x => x.Equals(string.Empty));
+                    regs.RemoveAll(x => string.IsNullOrEmpty(x));
                     var regsHex = regs.Select(hex => Convert.ToInt32(hex, 16)).ToList();
 
                     anExpected.Registers = regsHex;
@@ -163,7 +163,7 @@ namespace Essenbee.Z80.Tests.Classes
                 {
                     // State data
                     var states = line.Split(' ').ToList();
-                    states.RemoveAll(x => x.Equals(string.Empty));
+                    states.RemoveAll(x => string.IsNullOrEmpty(x));
                     var statesHex = states.Select(hex => Convert.ToInt32(hex, 16)).ToList();
                     anExpected.States = statesHex;
                     lineType++;
@@ -174,8 +174,8 @@ namespace Essenbee.Z80.Tests.Classes
                 {
                     // Memory (1 or more records of this type)
                     var mem = line.Split(' ').ToList();
-                    mem.RemoveAll(x => x.Equals(string.Empty));
-                    mem.RemoveAll(x => x.Equals("-1"));
+                    mem.RemoveAll(x => string.IsNullOrEmpty(x));
+                    mem.RemoveAll(x => x.Equals("-1", StringComparison.InvariantCultureIgnoreCase));
                     var memHex = mem.Select(hex => Convert.ToInt32(hex, 16)).ToList();
                     anExpected.Memory.Add(memHex);
                     continue;

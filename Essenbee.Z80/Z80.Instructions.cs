@@ -1326,7 +1326,7 @@ namespace Essenbee.Z80
             SetFlag(Flags.U, (incVal & 0x20) > 0 ? true : false); //Copy of bit 5
         }
 
-        private bool Parity(ushort res)
+        private static bool Parity(ushort res)
         {
             var retVal = true;
 
