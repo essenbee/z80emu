@@ -1402,7 +1402,7 @@ namespace Essenbee.Z80
 
         // Instruction   : NEG
         // Operation     : A <- Twos Complement of A (negation)
-        // Flags Affected: H,N
+        // Flags Affected: All
         private byte NEG(byte opCode)
         {
             var temp = A;
@@ -1423,6 +1423,30 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction   : CCF
+        // Operation     : Invert Carry Flag
+        // Flags Affected: H,N,C
+        private byte CCF(byte opCode)
+        {
+            var temp = CheckFlag(Flags.C);
+            SetFlag(Flags.C, !temp);
+            SetFlag(Flags.N, false);;
+            SetFlag(Flags.H, temp);
+
+            return 0;
+        }
+
+        // Instruction   : SCF
+        // Operation     : Set Carry Flag
+        // Flags Affected: H,N,C
+        private byte SCF(byte opCode)
+        {
+            SetFlag(Flags.C, true);
+            SetFlag(Flags.N, false); ;
+            SetFlag(Flags.H, false);
+
+            return 0;
+        }
 
 
         // =========================== H E L P E R S ===========================

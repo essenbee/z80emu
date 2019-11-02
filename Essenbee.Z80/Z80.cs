@@ -151,13 +151,14 @@ namespace Essenbee.Z80
                 { 0x35, new Instruction("DEC (HL)", RGIHL, IMP, DECHL, new List<int>{ 4, 4, 3 }) },
 
                 { 0x36, new Instruction("LD (HL),n", IMM, IMM, LDHLN, new List<int>{ 4, 3, 3 }) },
-
+                { 0x37, new Instruction("SCF", IMP, IMP, SCF, new List<int>{ 4 }) },
                 { 0x3A, new Instruction("LD A,(nn)", IMM, IDX, LDANN, new List<int>{ 4, 3, 3, 3 }) },
 
                 { 0x3C, new Instruction("INC A", IMP, IMP, INCR, new List<int>{ 4 }) },
                 { 0x3D, new Instruction("DEC A", IMP, IMP, DECR, new List<int>{ 4 }) },
 
                 { 0x3E, new Instruction("LD A,n", IMM, IMM, LDRN, new List<int>{ 4, 3 }) },
+                { 0x3F, new Instruction("CCF", IMP, IMP, CCF, new List<int>{ 4 }) },
 
                 { 0x40, new Instruction("LD B,B", REG, REG, LDRR, new List<int>{ 4 }) },
                 { 0x41, new Instruction("LD B,C", REG, REG, LDRR, new List<int>{ 4 }) },
