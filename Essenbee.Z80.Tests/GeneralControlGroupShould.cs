@@ -190,5 +190,83 @@ namespace Essenbee.Z80.Tests
             Assert.True(cpu.IFF1);
             Assert.True(cpu.IFF2);
         }
+
+        [Fact]
+        private void SetInterruptMode0()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xED }, // IM 0
+                { 0x0081, 0x46 },
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+
+            var cpu = new Z80() { A = 0x00, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+
+            cpu.Step();
+
+            Assert.True(cpu.InterruptMode == InterruptMode.Mode0);
+        }
+
+        [Fact]
+        private void SetInterruptMode1()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xED }, // IM 1
+                { 0x0081, 0x56 },
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+
+            var cpu = new Z80() { A = 0x00, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+
+            cpu.Step();
+
+            Assert.True(cpu.InterruptMode == InterruptMode.Mode1);
+        }
+
+        [Fact]
+        private void SetInterruptMode2()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xED }, // IM 0
+                { 0x0081, 0x5E },
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+
+            var cpu = new Z80() { A = 0x00, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+
+            cpu.Step();
+
+            Assert.True(cpu.InterruptMode == InterruptMode.Mode2);
+        }
     }
 }
