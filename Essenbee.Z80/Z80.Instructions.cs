@@ -1181,7 +1181,71 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction    : DEC r
+        // Operation      : r <- r - 1
+        // Flags Affected : S,Z,H,P/V,N
+        private byte DECR(byte opCode)
+        {
+            var dest = (opCode & 0b00111000) >> 3;
+            var src = dest;
 
+            byte val = ReadFromRegister(src);
+            var decVal = (byte)(val - 1);
+            AssignToRegister(dest, decVal);
+
+            SetDecFlags(val, decVal);
+
+            return 0;
+        }
+
+        // Instruction    : DEC (HL)
+        // Operation      : (HL) <- (HL) - 1
+        // Flags Affected : S,Z,H,P/V,N
+        private byte DECHL(byte opCode)
+        {
+            var val = Fetch1(_rootInstructions);
+
+            var incVal = (byte)(val - 1);
+            WriteToBus(HL, incVal);
+
+            SetDecFlags(val, incVal);
+
+            return 0;
+        }
+
+        // Instruction   : DEC (IX+d)
+        // Operation     : (IX+d) <- (IX+d) - 1
+        // Flags Affected: S,Z,H,P/V,N
+        private byte DECIXD(byte opCode)
+        {
+            sbyte d = (sbyte)Fetch1(_ddInstructions); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IX + d);
+            var val = Fetch2(_ddInstructions);
+
+            var incVal = (byte)(val - 1);
+            WriteToBus(_absoluteAddress, incVal);
+
+            SetDecFlags(val, incVal);
+
+            return 0;
+        }
+
+        // Instruction   : DEC (IY+d)
+        // Operation     : (IY+d) <- (IY+d) - 1
+        // Flags Affected: S,Z,H,P/V,N
+        private byte DECIYD(byte opCode)
+        {
+            sbyte d = (sbyte)Fetch1(_fdInstructions); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IY + d);
+            var val = Fetch2(_fdInstructions);
+
+            var incVal = (byte)(val - 1);
+            WriteToBus(_absoluteAddress, incVal);
+
+            SetDecFlags(val, incVal);
+
+            return 0;
+        }
 
 
 
@@ -1324,6 +1388,19 @@ namespace Essenbee.Z80
             // Undocumented Flags
             SetFlag(Flags.X, (incVal & 0x08) > 0 ? true : false); //Copy of bit 3
             SetFlag(Flags.U, (incVal & 0x20) > 0 ? true : false); //Copy of bit 5
+        }
+
+        private void SetDecFlags(byte val, byte decVal)
+        {
+            SetFlag(Flags.N, true);
+            SetFlag(Flags.S, (sbyte)decVal < 0);
+            SetFlag(Flags.P, val == 0x80);
+            SetFlag(Flags.Z, decVal == 0);
+            SetFlag(Flags.H, ((val & 0x0F) < (0x01 & 0x0F)) ? true : false);
+
+            // Undocumented Flags
+            SetFlag(Flags.X, (decVal & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (decVal & 0x20) > 0 ? true : false); //Copy of bit 5
         }
 
         private static bool Parity(ushort res)
