@@ -1247,10 +1247,83 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction    : CP r
+        // Operation      : Compare r with A
+        // Flags Affected : S,Z,H,P/V,N,C
+        private byte CPR(byte opCode)
+        {
+            var src = opCode & 0b00000111;
+            byte n = ReadFromRegister(src);
+            var diff = A - n;
+
+            SetComparisonFlags(n, diff);
+
+            return 0;
+        }
+
+        // Instruction    : CP n
+        // Operation      : Compare n with A
+        // Flags Affected : S,Z,H,P/V,N,C
+        private byte CPN(byte opCode)
+        {
+            byte n = Fetch1(_rootInstructions);
+            var diff = A - n;
+
+            SetComparisonFlags(n, diff);
+
+            return 0;
+        }
+
+        // Instruction    : CP (HL)
+        // Operation      : Compare (HL) with A
+        // Flags Affected : S,Z,H,P/V,N,C
+        private byte CPHL(byte opCode)
+        {
+            var n = Fetch1(_rootInstructions);
+            var diff = A - n;
+
+            SetComparisonFlags(n, diff); ;
+
+            return 0;
+        }
+
+        // Instruction   : CP (IX+d)
+        // Operation     : Compare (IX+d) with A
+        // Flags Affected: S,Z,H,P/V,N,C
+        private byte CPIXD(byte opCode)
+        {
+            sbyte d = (sbyte)Fetch1(_ddInstructions); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IX + d);
+            var n = Fetch2(_ddInstructions);
+            var diff = A - n;
+
+            SetComparisonFlags(n, diff);
+
+            return 0;
+        }
+
+        // Instruction   : CP (IY+d)
+        // Operation     : Compare (IY+d) with A
+        // Flags Affected: S,Z,H,P/V,N,C
+        private byte CPIYD(byte opCode)
+        {
+            sbyte d = (sbyte)Fetch1(_fdInstructions); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IY + d);
+            var n = Fetch2(_fdInstructions);
+            var diff = A - n;
+
+            SetComparisonFlags(n, diff);
+
+            return 0;
+        }
 
 
 
 
+
+
+
+                     
         // Instruction   : DAA
         // Operation     : Conditionally adjusts A for BCD arithmetic.
         // Flags Affected: S,Z,H,P,C
@@ -1401,6 +1474,32 @@ namespace Essenbee.Z80
             // Undocumented Flags
             SetFlag(Flags.X, (decVal & 0x08) > 0 ? true : false); //Copy of bit 3
             SetFlag(Flags.U, (decVal & 0x20) > 0 ? true : false); //Copy of bit 5
+        }
+
+        private void SetComparisonFlags(byte n, int diff)
+        {
+            SetFlag(Flags.N, true);
+            SetFlag(Flags.Z, diff == 0);
+            SetFlag(Flags.S, diff < 0);
+
+            SetFlag(Flags.H, ((A & 0x0F) < (n & 0x0F)) ? true : false);
+
+            // Overflow flag
+            if (((A ^ n) & 0x80) != 0              // Different sign
+                && ((n ^ (byte)diff) & 0x80) == 0) // Same sign
+            {
+                SetFlag(Flags.P, true);
+            }
+            else
+            {
+                SetFlag(Flags.P, false);
+            }
+
+            SetFlag(Flags.C, diff < 0 ? true : false); // Set if there is not a borrow from bit 8
+
+            // Undocumented Flags
+            SetFlag(Flags.X, ((byte)diff & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((byte)diff & 0x20) > 0 ? true : false); //Copy of bit 5
         }
 
         private static bool Parity(ushort res)
