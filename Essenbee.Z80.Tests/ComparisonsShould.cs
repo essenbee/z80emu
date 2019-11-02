@@ -501,8 +501,6 @@ namespace Essenbee.Z80.Tests
             Assert.True((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
 
-        // ------------------
-
         [Fact]
         private void SetZeroFlagWhenTrueForCPIYD()
         {
@@ -646,6 +644,5 @@ namespace Essenbee.Z80.Tests
             Assert.True((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.True((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
-
     }
 }

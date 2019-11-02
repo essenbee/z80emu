@@ -141,6 +141,9 @@ namespace Essenbee.Z80
                 { 0x2D, new Instruction("DEC L", IMP, IMP, DECR, new List<int>{ 4 }) },
 
                 { 0x2E, new Instruction("LD L,n", IMM, IMM, LDRN, new List<int>{ 4, 3 }) },
+
+                { 0x2F, new Instruction("CPL", IMP, IMP, CPL, new List<int>{ 4 }) },
+
                 { 0x31, new Instruction("LD SP,nn", IMM, IMP, LDSPNN, new List<int>{ 4, 3, 3 }) },
                 { 0x32, new Instruction("LD (nn),A", IMM, IMP, LDNNA, new List<int>{ 4, 3, 3, 3 }) },
 
@@ -400,6 +403,7 @@ namespace Essenbee.Z80
             _edInstructions = new Dictionary<byte, Instruction>
             {
                 { 0x43, new Instruction("LD (nn),BC", IMM, IDX, LDNNBC, new List<int>{ 4, 4, 3, 3, 3, 3 }) },
+                { 0x44, new Instruction("NEG", IMP, IMP, NEG, new List<int>{ 4, 4 }) },
                 { 0x47, new Instruction("ADD I,A", REG, REG, LDIA, new List<int>{ 4, 5 }) },
                 { 0x4B, new Instruction("LD BC,(nn)", IMM, IDX, LDBCFNN, new List<int>{ 4, 4, 3, 3, 3, 3 }) },
                 { 0x53, new Instruction("LD (nn),DE", IMM, IDX, LDNNDE, new List<int>{ 4, 4, 3, 3, 3, 3 }) },

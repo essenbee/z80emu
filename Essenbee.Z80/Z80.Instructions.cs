@@ -1321,9 +1321,10 @@ namespace Essenbee.Z80
 
 
 
+        // ========================================
+        // General Purpose Arithmetic/CPU Control
+        // ========================================
 
-
-                     
         // Instruction   : DAA
         // Operation     : Conditionally adjusts A for BCD arithmetic.
         // Flags Affected: S,Z,H,P,C
@@ -1386,7 +1387,41 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction   : CPL
+        // Operation     : A <- Ones Complement of A
+        // Flags Affected: H,N
+        private byte CPL(byte opCode)
+        {
+            A = (byte)~A;
 
+            SetFlag(Flags.H, true);
+            SetFlag(Flags.N, true);
+
+            return 0;
+        }
+
+        // Instruction   : NEG
+        // Operation     : A <- Twos Complement of A (negation)
+        // Flags Affected: H,N
+        private byte NEG(byte opCode)
+        {
+            var temp = A;
+            A = (byte)~A;
+            A++;
+
+            SetFlag(Flags.N, true);
+            SetFlag(Flags.S, (A & 0x80) > 0 ? true : false);
+            SetFlag(Flags.C, temp != 0 ? true : false);
+            SetFlag(Flags.P, temp == 0x80 ? true : false);
+            SetFlag(Flags.Z, A == 0 ? true : false);
+            SetFlag(Flags.H, (temp & 0x0F) + ((~temp + 1) & 0x0F) > 0xF ? true : false);
+
+            // Undocumented Flags
+            SetFlag(Flags.X, (A & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (A & 0x20) > 0 ? true : false); //Copy of bit 5
+
+            return 0;
+        }
 
 
 
