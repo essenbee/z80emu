@@ -136,5 +136,59 @@ namespace Essenbee.Z80.Tests
             Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
             Assert.True((cpu.F & Z80.Flags.C) == Z80.Flags.C);
         }
+
+        [Fact]
+        private void DisableInterruptByResettingIFF()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xF3 }, // DI
+                { 0x0081, 0x00 },
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+
+            var cpu = new Z80() { A = 0x00, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+
+            cpu.Step();
+
+            Assert.False(cpu.IFF1);
+            Assert.False(cpu.IFF2);
+        }
+
+        [Fact]
+        private void EnableInterruptBySettingIFF()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xFB }, // EI
+                { 0x0081, 0x00 },
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+
+            var cpu = new Z80() { A = 0x00, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+
+            cpu.Step();
+
+            Assert.True(cpu.IFF1);
+            Assert.True(cpu.IFF2);
+        }
     }
 }

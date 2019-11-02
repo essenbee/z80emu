@@ -16,25 +16,6 @@ namespace Essenbee.Z80
         //
         // This means that we have to read another byte in order to determine the operation in these four cases.
 
-        // Instruction    : NOP
-        // Operation      : No Operation
-        // Flags Affected : None
-        private byte NOP(byte opCode) => 0;
-
-        // Instruction    : HALT
-        // Operation      : Execute NOPs until a subsequent interrupt or reset is received
-        // Flags Affected : None
-        // Notes          : The HALT instruction halts the Z80; it does not increase the PC so that the
-        //                  instruction is re-executed, until a maskable or non-maskable interrupt is accepted.
-        //                  Only then does the Z80 increase the PC again and continues with the next instruction.
-        //                  During the HALT state, the HALT line is set. The PC is increased before the interrupt
-        //                  routine is called.
-        private byte HALT(byte opCode)
-        {
-            // ToDo: Figure this out!
-            return 0;
-        }
-
         // ========================================
         // 8-bit Load Group
         // ========================================
@@ -1448,6 +1429,115 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction    : NOP
+        // Operation      : No Operation
+        // Flags Affected : None
+        private byte NOP(byte opCode) => 0;
+
+        // Instruction    : HALT
+        // Operation      : Execute NOPs until a subsequent interrupt or reset is received
+        // Flags Affected : None
+        // Notes          : The HALT instruction halts the Z80; it does not increase the PC so that the
+        //                  instruction is re-executed, until a maskable or non-maskable interrupt is accepted.
+        //                  Only then does the Z80 increase the PC again and continues with the next instruction.
+        //                  During the HALT state, the HALT line is set. The PC is increased before the interrupt
+        //                  routine is called.
+        private byte HALT(byte opCode)
+        {
+            // ToDo: Figure this out!
+            return 0;
+        }
+
+        // Instruction    : DI
+        // Operation      : Disable maskable interrupts
+        // Flags Affected : None
+        private byte DI(byte opCode)
+        {
+            IFF1 = false;
+            IFF2 = false;
+
+            return opCode;
+        }
+
+        // Instruction    : EI
+        // Operation      : Enable maskable interrupts
+        // Flags Affected : None
+        private byte EI(byte opCode)
+        {
+            IFF1 = true;
+            IFF2 = true;
+
+            return opCode;
+        }
+
+
+        // Instruction    : IM0
+        // Operation      : Set Interrupt Mode 0
+        // Flags Affected : None
+        // Notes          : In the maskable interrupt mode 0 the interrupting device places
+        //                  an instruction on the data  bus for execution by the Z80. The
+        //                  instruction is normally a Restart (RST) instruction since this is
+        //                  an efficient one byte call to any one of eight subroutines located
+        //                  in the first 64 bytes of memory. (Each subroutine is 8 bytes long).
+        //                  However, any instruction may be given to the Z80­. The first byte of
+        //                  a multi-byte instruction is read during the interrupt acknowledge cycle.
+        //                  Subsequent bytes are read in by a normal memory read sequence (the PC,
+        //                  however, remains at its pre­-interrupt state  and the user must insure
+        //                  that memory will not respond to these read sequences). When the
+        //                  interrupt is recognized, further interrupts are automatically disabled
+        //                  (IFF1 and  IFF2=0). Any time after the interrupt sequence begins an EI
+        //                  instruction can be executed so  that this subroutine itself can be 
+        //                  interrupted. This process may continue to any level as  long as all 
+        //                  pertinent data are saved and restored. A CPU reset will automatically 
+        //                  set interrupt mode 0.
+
+        private byte IM0(byte opCode)
+        {
+            InterruptMode = InterruptMode.Mode0;
+
+            return opCode;
+        }
+
+        // Instruction    : IM1
+        // Operation      : Set Interrupt Mode 0
+        // Flags Affected : None
+        // Notes          : This maskable mode allows peripherals of minimal complexity interrupt 
+        //                  access. In this respect, it is similar to the /NMI interrupt except that
+        //                  the CPU does an automatic CALL to location 0038H instead of 0066H. As in 
+        //                  the NMI, the CPU automatically pushes the PC onto the Stack. Note, that 
+        //                  when doing programmed I/O the CPU will ignore any data put onto the data 
+        //                  bus during the interrupt acknowledge cycle.
+
+        private byte IM1(byte opCode)
+        {
+            InterruptMode = InterruptMode.Mode1;
+
+            return opCode;
+        }
+
+        // Instruction    : IM2
+        // Operation      : Set Interrupt Mode 0
+        // Flags Affected : None
+        // Notes          : The Z80­ supports an interrupt vectoring structure that allows the peripheral 
+        //                  device to identify the starting location of the interrupt service routine. 
+        //                  Mode 2 is the most powerful of the three maskable interrupt modes allowing an 
+        //                  indirect call to any memory location by a single 8 bit vector supplied from 
+        //                  the peripheral. In this mode  the peripheral generating the interrupt places 
+        //                  the vector on the data bus in response to an  interrupt acknowledge. This vector 
+        //                  then becomes the least significant 8 bits of he indirect  pointer while the I 
+        //                  register in the CPU provides the most significant 8 bits. This address in turn
+        //                  points to an address in a vector table which is the starting address of the interrupt 
+        //                  routine. Interrupt processing thus starts at an arbitrary 16 bit address allowing any 
+        //                  location in memory to be the start of the service routine. Notice that since the 
+        //                  vector is used to identify two adjacent bytes to form a 16 bit address, only 7 
+        //                  bits are required for the vector and the least significant bit is is zero.
+
+        private byte IM2(byte opCode)
+        {
+            InterruptMode = InterruptMode.Mode2;
+
+            return opCode;
+        }
 
         // =========================== H E L P E R S ===========================
 
