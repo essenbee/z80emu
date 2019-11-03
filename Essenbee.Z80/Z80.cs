@@ -81,6 +81,7 @@ namespace Essenbee.Z80
         // Interrupt Flip-flops
         public bool IFF1 { get; set; }
         public bool IFF2 { get; set; }
+        public bool IsHalted { get; set; }
         public InterruptMode InterruptMode { get; set; } = InterruptMode.Mode0;
 
         private IBus _bus = null!;
@@ -428,6 +429,27 @@ namespace Essenbee.Z80
         }
 
         public void ConnectToBus(IBus bus) => _bus = bus;
+
+        public void Reset(bool hardReset = false)
+        {
+            A = A1 = 0xFF;
+            F = F1 = (Flags)0b1111_1111;
+            I = R = 0x00;
+            PC = 0x0000;
+            SP = 0xFFFF;
+            IFF1 = IFF2 = false;
+            InterruptMode = InterruptMode.Mode0;
+            IsHalted = false;
+            Q = 0x00;
+
+            if (hardReset)
+            {
+                B = C = D = E = H = L = 0x00;
+                B1 = C1 = D1 = E1 = H1 = L1 = 0x00;
+                IX = IY = 0x00;
+                MEMPTR = 0x0000;
+            }
+        }
 
         public void Step()
         {

@@ -66,6 +66,7 @@ namespace Essenbee.Z80.Tests.Classes
                 if (lineType == 2)
                 {
                     // Registers
+                    // AF BC DE HL AF' BC' DE' HL' IX IY SP PC MEMPTR
                     var regs = line.Split(' ').ToList();
                     regs.RemoveAll(x => string.IsNullOrEmpty(x));
                     var regsHex = regs.Select(hex => Convert.ToInt32(hex, 16)).ToList();
@@ -78,6 +79,7 @@ namespace Essenbee.Z80.Tests.Classes
                 if (lineType == 3)
                 {
                     // State data
+                    // I R IFF1 IFF2 IM <halted> <t-states>
                     var states = line.Split(' ').ToList();
                     states.RemoveAll(x => string.IsNullOrEmpty(x));
                     var statesHex = states.Select(hex => Convert.ToInt32(hex, 16)).ToList();
@@ -89,6 +91,7 @@ namespace Essenbee.Z80.Tests.Classes
                 if (lineType == 4)
                 {
                     // Memory (1 or more records of this type)
+                    // <start address> <byte1> <byte2> ... -1
                     var mem = line.Split(' ').ToList();
                     mem.RemoveAll(x => string.IsNullOrEmpty(x));
                     mem.RemoveAll(x => x.Equals("-1", StringComparison.InvariantCultureIgnoreCase));
@@ -136,7 +139,8 @@ namespace Essenbee.Z80.Tests.Classes
                 {
                     if (line.StartsWith(" ", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        // Event
+                        // Event - not used by my tests
+                        // <time> <type> <address> <data>
                         var anEvent = line.Split(' ').ToList();
                         anEvent.RemoveAll(x => string.IsNullOrEmpty(x));
 
@@ -150,6 +154,7 @@ namespace Essenbee.Z80.Tests.Classes
                 if (lineType == 3)
                 {
                     // Registers
+                    // AF BC DE HL AF' BC' DE' HL' IX IY SP PC MEMPTR
                     var regs = line.Split(' ').ToList();
                     regs.RemoveAll(x => string.IsNullOrEmpty(x));
                     var regsHex = regs.Select(hex => Convert.ToInt32(hex, 16)).ToList();
@@ -162,6 +167,7 @@ namespace Essenbee.Z80.Tests.Classes
                 if (lineType == 4)
                 {
                     // State data
+                    // I R IFF1 IFF2 IM <halted> <t-states>
                     var states = line.Split(' ').ToList();
                     states.RemoveAll(x => string.IsNullOrEmpty(x));
                     var statesHex = states.Select(hex => Convert.ToInt32(hex, 16)).ToList();
@@ -173,6 +179,7 @@ namespace Essenbee.Z80.Tests.Classes
                 if (lineType == 5)
                 {
                     // Memory (1 or more records of this type)
+                    // <start address> <byte1> <byte2> ... -1
                     var mem = line.Split(' ').ToList();
                     mem.RemoveAll(x => string.IsNullOrEmpty(x));
                     mem.RemoveAll(x => x.Equals("-1", StringComparison.InvariantCultureIgnoreCase));
