@@ -96,6 +96,8 @@ namespace Essenbee.Z80
         private ushort _absoluteAddress = 0x0000;
         private byte _currentOpCode = 0x00;
         private int _clockCycles = 0;
+        private Flags Q = 0x00; // See https://www.worldofspectrum.org/forums/discussion/41704/redirect/p1
+        private ushort MEMPTR { get; set; } = 0x0000;
 
         public Z80()
         {
@@ -573,5 +575,9 @@ namespace Essenbee.Z80
                     return (code, _rootInstructions[code]);
             }
         }
+
+        private void ResetQ() => Q = (Flags)(0b00000000);
+
+        private void SetQ() => Q = F;
     }
 }

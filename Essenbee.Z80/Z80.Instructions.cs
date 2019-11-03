@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Essenbee.Z80
+﻿namespace Essenbee.Z80
 {
     public partial class Z80
     {
@@ -30,6 +26,7 @@ namespace Essenbee.Z80
 
             byte srcReg = ReadFromRegister(src);
             AssignToRegister(dest, srcReg);
+            ResetQ();
 
             return 0;
         }
@@ -43,6 +40,7 @@ namespace Essenbee.Z80
             var n = Fetch1(_rootInstructions);
 
             AssignToRegister(dest, n);
+            ResetQ();
 
             return 0;
         }
@@ -56,6 +54,7 @@ namespace Essenbee.Z80
             var n = Fetch1(_rootInstructions);
 
             AssignToRegister(dest, n);
+            ResetQ();
 
             return 0;
         }
@@ -73,6 +72,9 @@ namespace Essenbee.Z80
 
             AssignToRegister(dest, n);
 
+            MEMPTR = _absoluteAddress;
+            ResetQ();
+
             return 0;
         }
 
@@ -89,6 +91,9 @@ namespace Essenbee.Z80
 
             AssignToRegister(dest, n);
 
+            MEMPTR = _absoluteAddress;
+            ResetQ();
+
             return 0;
         }
 
@@ -101,6 +106,7 @@ namespace Essenbee.Z80
             var n = ReadFromRegister(src);
 
             WriteToBus(HL, n);
+            ResetQ();
 
             return 0;
         }
@@ -117,6 +123,9 @@ namespace Essenbee.Z80
 
             WriteToBus(addr, n);
 
+            ResetQ();
+            MEMPTR = addr;
+
             return 0;
         }
 
@@ -132,6 +141,9 @@ namespace Essenbee.Z80
 
             WriteToBus(addr, n);
 
+            ResetQ();
+            MEMPTR = addr;
+
             return 0;
         }
 
@@ -142,6 +154,8 @@ namespace Essenbee.Z80
         {
             var n = Fetch1(_rootInstructions);
             WriteToBus(HL, n);
+
+            ResetQ();
 
             return 0;
         }
@@ -157,6 +171,9 @@ namespace Essenbee.Z80
 
             WriteToBus(addr, n);
 
+            ResetQ();
+            MEMPTR = addr;
+
             return 0;
         }
 
@@ -171,6 +188,9 @@ namespace Essenbee.Z80
 
             WriteToBus(addr, n);
 
+            ResetQ();
+            MEMPTR = addr;
+
             return 0;
         }
 
@@ -179,9 +199,12 @@ namespace Essenbee.Z80
         // Flags Affected: None
         private byte LDABC(byte opCode)
         {
-            _absoluteAddress = (ushort)(BC);
+            _absoluteAddress = BC;
             var n = Fetch1(_rootInstructions);
             A = n;
+
+            ResetQ();
+            MEMPTR = (ushort)(BC + 1);
 
             return 0;
         }
@@ -191,9 +214,12 @@ namespace Essenbee.Z80
         // Flags Affected: None
         private byte LDADE(byte opCode)
         {
-            _absoluteAddress = (ushort)(DE);
+            _absoluteAddress = DE;
             var n = Fetch1(_rootInstructions);
             A = n;
+
+            ResetQ();
+            MEMPTR = (ushort)(DE + 1);
 
             return 0;
         }
@@ -211,26 +237,35 @@ namespace Essenbee.Z80
             var n = Fetch2(_rootInstructions);
             A = n;
 
+            ResetQ();
+            MEMPTR = (ushort)(addr + 1);
+
             return 0;
         }
 
         // Instruction   : LD (BC),A
-        // Operation     : (BC) <- A - that is, r is loaded into the memory address pointed to by BC
+        // Operation     : (BC) <- A - that is, A is loaded into the memory address pointed to by BC
         // Flags Affected: None
         private byte LDBCA(byte opCode)
         {
             WriteToBus(BC, A);
+
+            ResetQ();
+            MEMPTR = (ushort)((A << 8) + ((BC + 1) & 0xFF));
 
             return 0;
         }
 
 
         // Instruction   : LD (DE),A
-        // Operation     : (DE) <- A - that is, r is loaded into the memory address pointed to by DE
+        // Operation     : (DE) <- A - that is, A is loaded into the memory address pointed to by DE
         // Flags Affected: None
         private byte LDDEA(byte opCode)
         {
             WriteToBus(DE, A);
+
+            ResetQ();
+            MEMPTR = (ushort)((A << 8) + ((DE + 1) & 0xFF));
 
             return 0;
         }
@@ -245,6 +280,9 @@ namespace Essenbee.Z80
 
             var addr = (ushort)((hiByte << 8) + loByte);
             WriteToBus(addr, A);
+
+            MEMPTR = (ushort)((A << 8) + ((addr + 1) & 0xFF));
+            ResetQ();
 
             return 0;
         }
@@ -265,12 +303,13 @@ namespace Essenbee.Z80
 
             // ToDo: if an interrupt occurs during this instruction, reset P/V
             SetFlag(Flags.P, IFF2);
+            SetQ();
 
             return 0;
         }
 
         // Instruction    : LD A,R
-        // Operation      : A <- R (interrupt vector)
+        // Operation      : A <- R (refresh)
         // Flags Affected : S,Z,H,P/V,N
         private byte LDAR(byte opCode)
         {
@@ -285,6 +324,7 @@ namespace Essenbee.Z80
 
             // ToDo: if an interrupt occurs during this instruction, reset P/V
             SetFlag(Flags.P, IFF2);
+            SetQ();
 
             return 0;
         }
@@ -295,6 +335,7 @@ namespace Essenbee.Z80
         private byte LDIA(byte opCode)
         {
             I = A;
+            ResetQ();
 
             return 0;
         }
@@ -305,6 +346,7 @@ namespace Essenbee.Z80
         private byte LDRA(byte opCode)
         {
             R = A;
+            ResetQ();
 
             return 0;
         }
@@ -324,6 +366,8 @@ namespace Essenbee.Z80
             B = hiByte;
             C = loByte;
 
+            ResetQ();
+
             return 0;
         }
 
@@ -338,6 +382,8 @@ namespace Essenbee.Z80
             D = hiByte;
             E = loByte;
 
+            ResetQ();
+
             return 0;
         }
 
@@ -351,6 +397,7 @@ namespace Essenbee.Z80
 
             H = hiByte;
             L = loByte;
+            ResetQ();
 
             return 0;
         }
@@ -364,6 +411,7 @@ namespace Essenbee.Z80
             var hiByte = (ushort)Fetch1(_rootInstructions);
 
             SP = (ushort)((hiByte << 8) + loByte);
+            ResetQ();
 
             return 0;
         }
@@ -377,6 +425,7 @@ namespace Essenbee.Z80
             var hiByte = (ushort)Fetch1(_rootInstructions);
 
             IX = (ushort)((hiByte << 8) + loByte);
+            ResetQ();
 
             return 0;
         }
@@ -390,6 +439,7 @@ namespace Essenbee.Z80
             var hiByte = (ushort)Fetch1(_rootInstructions);
 
             IY = (ushort)((hiByte << 8) + loByte);
+            ResetQ();
 
             return 0;
         }
@@ -409,6 +459,9 @@ namespace Essenbee.Z80
             _absoluteAddress = (ushort)hiAddr;
             H = Fetch2(_rootInstructions);
 
+            ResetQ();
+            // ToDo: MEMPTR
+
             return 0;
         }
 
@@ -426,6 +479,9 @@ namespace Essenbee.Z80
             C = Fetch2(_edInstructions);
             _absoluteAddress = (ushort)hiAddr;
             B = Fetch2(_edInstructions);
+
+            ResetQ();
+            // ToDo: MEMPTR
 
             return 0;
         }
@@ -445,6 +501,9 @@ namespace Essenbee.Z80
             _absoluteAddress = (ushort)hiAddr;
             D = Fetch2(_edInstructions);
 
+            ResetQ();
+            // ToDo: MEMPTR
+
             return 0;
         }
 
@@ -462,6 +521,9 @@ namespace Essenbee.Z80
             L = Fetch2(_edInstructions);
             _absoluteAddress = (ushort)hiAddr;
             H = Fetch2(_edInstructions);
+
+            ResetQ();
+            // ToDo: MEMPTR
 
             return 0;
         }
@@ -482,8 +544,10 @@ namespace Essenbee.Z80
             var hi = Fetch2(_edInstructions);
 
             var operand = (ushort)((hi << 8) + lo);
-
             SP = operand;
+
+            ResetQ();
+            // ToDo: MEMPTR
 
             return 0;
         }
@@ -507,6 +571,8 @@ namespace Essenbee.Z80
 
             IX = operand;
 
+            ResetQ();
+
             return 0;
         }
 
@@ -528,6 +594,7 @@ namespace Essenbee.Z80
             var operand = (ushort)((hi << 8) + lo);
 
             IY = operand;
+            ResetQ();
 
             return 0;
         }
@@ -545,6 +612,9 @@ namespace Essenbee.Z80
             WriteToBus(loAddr, L);
             WriteToBus(hiAddr, H);
 
+            ResetQ();
+            // ToDo: MEMPTR
+
             return 0;
         }
 
@@ -560,6 +630,9 @@ namespace Essenbee.Z80
 
             WriteToBus(loAddr, C);
             WriteToBus(hiAddr, B);
+
+            ResetQ();
+            // ToDo: MEMPTR
 
             return 0;
         }
@@ -577,6 +650,9 @@ namespace Essenbee.Z80
             WriteToBus(loAddr, E);
             WriteToBus(hiAddr, D);
 
+            ResetQ();
+            // ToDo: MEMPTR
+
             return 0;
         }
 
@@ -592,6 +668,9 @@ namespace Essenbee.Z80
 
             WriteToBus(loAddr, L);
             WriteToBus(hiAddr, H);
+
+            ResetQ();
+            // ToDo: MEMPTR
 
             return 0;
         }
@@ -609,6 +688,9 @@ namespace Essenbee.Z80
             WriteToBus(loAddr, (byte)(SP & 0xff)); // P
             WriteToBus(hiAddr, (byte)((SP >> 8) & 0xff)); // S
 
+            ResetQ();
+            // ToDo: MEMPTR
+
             return 0;
         }
 
@@ -624,6 +706,7 @@ namespace Essenbee.Z80
 
             WriteToBus(loAddr, (byte)(IX & 0xff)); // X
             WriteToBus(hiAddr, (byte)((IX >> 8) & 0xff)); // I
+            ResetQ();
 
             return 0;
         }
@@ -640,6 +723,7 @@ namespace Essenbee.Z80
 
             WriteToBus(loAddr, (byte)(IY & 0xff)); // Y
             WriteToBus(hiAddr, (byte)((IY >> 8) & 0xff)); // I
+            ResetQ();
 
             return 0;
         }
@@ -650,6 +734,7 @@ namespace Essenbee.Z80
         private byte LDSPHL(byte opCode)
         {
             SP = HL;
+            ResetQ();
 
             return 0;
         }
@@ -660,6 +745,7 @@ namespace Essenbee.Z80
         private byte LDSPIX(byte opCode)
         {
             SP = IX;
+            ResetQ();
 
             return 0;
         }
@@ -670,6 +756,7 @@ namespace Essenbee.Z80
         private byte LDSPIY(byte opCode)
         {
             SP = IY;
+            ResetQ();
 
             return 0;
         }
@@ -683,6 +770,7 @@ namespace Essenbee.Z80
             WriteToBus(SP, B);
             SP--;
             WriteToBus(SP, C);
+            ResetQ();
 
             return 0;
         }
@@ -696,6 +784,7 @@ namespace Essenbee.Z80
             WriteToBus(SP, D);
             SP--;
             WriteToBus(SP, E);
+            ResetQ();
 
             return 0;
         }
@@ -709,6 +798,7 @@ namespace Essenbee.Z80
             WriteToBus(SP, H);
             SP--;
             WriteToBus(SP, L);
+            ResetQ();
 
             return 0;
         }
@@ -722,6 +812,7 @@ namespace Essenbee.Z80
             WriteToBus(SP, A);
             SP--;
             WriteToBus(SP, (byte)F);
+            ResetQ();
 
             return 0;
         }
@@ -738,6 +829,7 @@ namespace Essenbee.Z80
             WriteToBus(SP, i);
             SP--;
             WriteToBus(SP, x);
+            ResetQ();
 
             return 0;
         }
@@ -754,6 +846,7 @@ namespace Essenbee.Z80
             WriteToBus(SP, i);
             SP--;
             WriteToBus(SP, y);
+            ResetQ();
 
             return 0;
         }
@@ -767,6 +860,7 @@ namespace Essenbee.Z80
             SP++;
             B = ReadFromBus(SP);
             SP++;
+            ResetQ();
 
             return 0;
         }
@@ -780,6 +874,7 @@ namespace Essenbee.Z80
             SP++;
             D = ReadFromBus(SP);
             SP++;
+            ResetQ();
 
             return 0;
         }
@@ -793,6 +888,7 @@ namespace Essenbee.Z80
             SP++;
             H = ReadFromBus(SP);
             SP++;
+            ResetQ();
 
             return 0;
         }
@@ -806,6 +902,7 @@ namespace Essenbee.Z80
             SP++;
             A = ReadFromBus(SP);
             SP++;
+            ResetQ();
 
             return 0;
         }
@@ -821,6 +918,7 @@ namespace Essenbee.Z80
             SP++;
 
             IX = (ushort)((i << 8) + x);
+            ResetQ();
 
             return 0;
         }
@@ -836,11 +934,10 @@ namespace Essenbee.Z80
             SP++;
 
             IY = (ushort)((i << 8) + y);
+            ResetQ();
 
             return 0;
         }
-
-
 
         // ========================================
         // 8-bit Arithmetic and Logic Group
@@ -890,6 +987,8 @@ namespace Essenbee.Z80
             var n = Fetch2(_ddInstructions);
             A = Add8(A, n);
 
+            MEMPTR = _absoluteAddress;
+
             return 0;
         }
 
@@ -902,6 +1001,8 @@ namespace Essenbee.Z80
             _absoluteAddress = (ushort)(IY + d);
             var n = Fetch2(_ddInstructions);
             A = Add8(A, n);
+
+            MEMPTR = _absoluteAddress;
 
             return 0;
         }
@@ -954,6 +1055,8 @@ namespace Essenbee.Z80
             byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
             A = Add8(A, n, c);
 
+            MEMPTR = _absoluteAddress;
+
             return 0;
         }
 
@@ -967,6 +1070,8 @@ namespace Essenbee.Z80
             var n = Fetch2(_ddInstructions);
             byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
             A = Add8(A, n, c);
+
+            MEMPTR = _absoluteAddress;
 
             return 0;
         }
@@ -1015,6 +1120,8 @@ namespace Essenbee.Z80
             var n = Fetch2(_ddInstructions);
             A = Sub8(A, n);
 
+            MEMPTR = _absoluteAddress;
+
             return 0;
         }
 
@@ -1027,6 +1134,8 @@ namespace Essenbee.Z80
             _absoluteAddress = (ushort)(IY + d);
             var n = Fetch2(_ddInstructions);
             A = Sub8(A, n);
+
+            MEMPTR = _absoluteAddress;
 
             return 0;
         }
@@ -1079,6 +1188,8 @@ namespace Essenbee.Z80
             byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
             A = Sub8(A, n, c);
 
+            MEMPTR = _absoluteAddress;
+
             return 0;
         }
 
@@ -1092,6 +1203,8 @@ namespace Essenbee.Z80
             var n = Fetch2(_ddInstructions);
             byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
             A = Sub8(A, n, c);
+
+            MEMPTR = _absoluteAddress;
 
             return 0;
         }
@@ -1141,6 +1254,7 @@ namespace Essenbee.Z80
             WriteToBus(_absoluteAddress, incVal);
 
             SetIncFlags(val, incVal);
+            MEMPTR = _absoluteAddress;
 
             return 0;
         }
@@ -1158,6 +1272,7 @@ namespace Essenbee.Z80
             WriteToBus(_absoluteAddress, incVal);
 
             SetIncFlags(val, incVal);
+            MEMPTR = _absoluteAddress;
 
             return 0;
         }
@@ -1207,6 +1322,7 @@ namespace Essenbee.Z80
             WriteToBus(_absoluteAddress, incVal);
 
             SetDecFlags(val, incVal);
+            MEMPTR = _absoluteAddress;
 
             return 0;
         }
@@ -1224,6 +1340,7 @@ namespace Essenbee.Z80
             WriteToBus(_absoluteAddress, incVal);
 
             SetDecFlags(val, incVal);
+            MEMPTR = _absoluteAddress;
 
             return 0;
         }
@@ -1279,6 +1396,7 @@ namespace Essenbee.Z80
             var diff = A - n;
 
             SetComparisonFlags(n, diff);
+            MEMPTR = _absoluteAddress;
 
             return 0;
         }
@@ -1294,6 +1412,7 @@ namespace Essenbee.Z80
             var diff = A - n;
 
             SetComparisonFlags(n, diff);
+            MEMPTR = _absoluteAddress;
 
             return 0;
         }
@@ -1364,6 +1483,7 @@ namespace Essenbee.Z80
             // Undocumented Flags
             SetFlag(Flags.X, (A & 0x08) > 0 ? true : false); //Copy of bit 3
             SetFlag(Flags.U, (A & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetQ();
 
             return 0;
         }
@@ -1377,6 +1497,7 @@ namespace Essenbee.Z80
 
             SetFlag(Flags.H, true);
             SetFlag(Flags.N, true);
+            SetQ();
 
             return 0;
         }
@@ -1400,6 +1521,7 @@ namespace Essenbee.Z80
             // Undocumented Flags
             SetFlag(Flags.X, (A & 0x08) > 0 ? true : false); //Copy of bit 3
             SetFlag(Flags.U, (A & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetQ();
 
             return 0;
         }
@@ -1414,6 +1536,14 @@ namespace Essenbee.Z80
             SetFlag(Flags.N, false);;
             SetFlag(Flags.H, temp);
 
+            // Undocumented Flags set as per Patrik Rak
+            //` https://www.worldofspectrum.org/forums/discussion/41704/redirect/p1
+            var x = (byte)(((byte)Q ^ (byte)F) | A);
+            SetFlag(Flags.X, (x & 0x08) > 0 ? true : false);
+            SetFlag(Flags.U, (x & 0x20) > 0 ? true : false);
+
+            SetQ();
+
             return 0;
         }
 
@@ -1425,6 +1555,14 @@ namespace Essenbee.Z80
             SetFlag(Flags.C, true);
             SetFlag(Flags.N, false); ;
             SetFlag(Flags.H, false);
+
+            // Undocumented Flags set as per Patrik Rak
+            //` https://www.worldofspectrum.org/forums/discussion/41704/redirect/p1
+            var x = (byte)(((byte)Q ^ (byte)F) | A);
+            SetFlag(Flags.X, (x & 0x08) > 0 ? true : false);
+            SetFlag(Flags.U, (x & 0x20) > 0 ? true : false);
+
+            SetQ();
 
             return 0;
         }
@@ -1445,6 +1583,8 @@ namespace Essenbee.Z80
         private byte HALT(byte opCode)
         {
             // ToDo: Figure this out!
+
+            ResetQ();
             return 0;
         }
 
@@ -1455,6 +1595,7 @@ namespace Essenbee.Z80
         {
             IFF1 = false;
             IFF2 = false;
+            ResetQ();
 
             return opCode;
         }
@@ -1466,6 +1607,7 @@ namespace Essenbee.Z80
         {
             IFF1 = true;
             IFF2 = true;
+            ResetQ();
 
             return opCode;
         }
@@ -1493,6 +1635,7 @@ namespace Essenbee.Z80
         private byte IM0(byte opCode)
         {
             InterruptMode = InterruptMode.Mode0;
+            ResetQ();
 
             return opCode;
         }
@@ -1510,6 +1653,7 @@ namespace Essenbee.Z80
         private byte IM1(byte opCode)
         {
             InterruptMode = InterruptMode.Mode1;
+            ResetQ();
 
             return opCode;
         }
@@ -1534,6 +1678,7 @@ namespace Essenbee.Z80
         private byte IM2(byte opCode)
         {
             InterruptMode = InterruptMode.Mode2;
+            ResetQ();
 
             return opCode;
         }
@@ -1572,6 +1717,7 @@ namespace Essenbee.Z80
             // Undocumented Flags
             SetFlag(Flags.X, ((byte)sum & 0x08) > 0 ? true : false); //Copy of bit 3
             SetFlag(Flags.U, ((byte)sum & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetQ();
 
             return (byte)sum;
         }
@@ -1601,6 +1747,7 @@ namespace Essenbee.Z80
             // Undocumented Flags
             SetFlag(Flags.X, ((byte)diff & 0x08) > 0 ? true : false); //Copy of bit 3
             SetFlag(Flags.U, ((byte)diff & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetQ();
 
             return (byte)diff;
         }
@@ -1616,6 +1763,7 @@ namespace Essenbee.Z80
             // Undocumented Flags
             SetFlag(Flags.X, (incVal & 0x08) > 0 ? true : false); //Copy of bit 3
             SetFlag(Flags.U, (incVal & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetQ();
         }
 
         private void SetDecFlags(byte val, byte decVal)
@@ -1629,6 +1777,7 @@ namespace Essenbee.Z80
             // Undocumented Flags
             SetFlag(Flags.X, (decVal & 0x08) > 0 ? true : false); //Copy of bit 3
             SetFlag(Flags.U, (decVal & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetQ();
         }
 
         private void SetComparisonFlags(byte n, int diff)
@@ -1655,6 +1804,7 @@ namespace Essenbee.Z80
             // Undocumented Flags
             SetFlag(Flags.X, ((byte)diff & 0x08) > 0 ? true : false); //Copy of bit 3
             SetFlag(Flags.U, ((byte)diff & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetQ();
         }
 
         private static bool Parity(ushort res)
