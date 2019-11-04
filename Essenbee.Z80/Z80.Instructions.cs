@@ -1,4 +1,6 @@
-﻿namespace Essenbee.Z80
+﻿using System;
+
+namespace Essenbee.Z80
 {
     public partial class Z80
     {
@@ -1692,6 +1694,105 @@
 
 
 
+        // ========================================
+        // Jump Group
+        // ========================================
+
+        // Instruction    : JP nn
+        // Operation      : PC <- nn
+        // Flags Affected : None
+        private byte JPNN(byte opCode)
+        {
+            var loByte = Fetch1(_rootInstructions);
+            var hiByte = Fetch1(_rootInstructions);
+            var addr = (ushort)((hiByte << 8) + loByte);
+
+            PC = addr;
+
+            ResetQ();
+            MEMPTR = addr;
+
+            return 0;
+        }
+
+        // Instruction    : JP cc, nn
+        // Operation      : PC <- nn if cc is true
+        // Flags Affected : None
+        private byte JPCCNN(byte opCode)
+        {
+            var loByte = Fetch1(_rootInstructions);
+            var hiByte = Fetch1(_rootInstructions);
+            var addr = (ushort)((hiByte << 8) + loByte);
+
+            var cc = (opCode & 0b00111000) >> 3;
+
+            if (EvaluateCC(cc))
+            {
+                PC = addr;
+                MEMPTR = addr;
+            }
+
+            ResetQ();
+            return 0;
+        }
+
+        // Instruction    : JR e
+        // Operation      : PC <- PC + e
+        // Flags Affected : None
+        // Notes          : Assembler with compensate automatically for the twice-incremented PC
+        private byte JR(byte opCode)
+        {
+            var e = (sbyte)Fetch1(_rootInstructions);
+
+            PC = (ushort)(PC + e);
+
+            ResetQ();
+            MEMPTR = PC;
+
+            return 0;
+        }
+
+        // Instruction    : JR C, e
+        // Operation      : PC <- PC + e if Carry set
+        // Flags Affected : None
+        // Notes          : Assembler with compensate automatically for the twice-incremented PC
+        private byte JRC(byte opCode)
+        {
+            var e = (sbyte)Fetch1(_rootInstructions);
+
+            if (CheckFlag(Flags.C))
+            {
+                PC = (ushort)(PC + e);
+                MEMPTR = PC;
+            }
+
+            ResetQ();
+            return 0;
+        }
+
+        // Instruction    : JR NC, e
+        // Operation      : PC <- PC + e if Carry not set
+        // Flags Affected : None
+        // Notes          : Assembler with compensate automatically for the twice-incremented PC
+        private byte JRNC(byte opCode)
+        {
+            var e = (sbyte)Fetch1(_rootInstructions);
+
+            if (!CheckFlag(Flags.C))
+            {
+                PC = (ushort)(PC + e);
+                MEMPTR = PC;
+            }
+
+            ResetQ();
+            return 0;
+        }
+
+
+
+
+
+
 
         // =========================== H E L P E R S ===========================
 
@@ -1863,5 +1964,19 @@
                     break;
             }
         }
+
+        private bool EvaluateCC(int cc) =>
+            cc switch
+            {
+                0 => !CheckFlag(Flags.Z),
+                1 => CheckFlag(Flags.Z),
+                2 => !CheckFlag(Flags.C),
+                3 => CheckFlag(Flags.C),
+                4 => !Parity(A),
+                5 => Parity(A),
+                6 => !CheckFlag(Flags.S),
+                7 => CheckFlag(Flags.S),
+                _ => false
+            };
     }
 }
