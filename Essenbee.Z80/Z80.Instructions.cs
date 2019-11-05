@@ -1483,7 +1483,69 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction   : OR r
+        // Operation     : A <- A | r
+        // Flags Affected: All
+        private byte ORR(byte opCode)
+        {
+            var src = (opCode & 0b00000111);
+            var n = ReadFromRegister(src);
+            A = Or(A, n);
 
+            return 0;
+        }
+
+        // Instruction   : OR n
+        // Operation     : A <- A | n
+        // Flags Affected: All
+        private byte ORN(byte opCode)
+        {
+            var n = Fetch1(_rootInstructions);
+            A = Or(A, n);
+
+            return 0;
+        }
+
+        // Instruction   : OR (HL)
+        // Operation     : A <- A | (HL)
+        // Flags Affected: All
+        private byte ORHL(byte opCode)
+        {
+            var n = Fetch1(_rootInstructions);
+            A = Or(A, n);
+
+            return 0;
+        }
+
+        // Instruction   : OR (IX+d)
+        // Operation     : A <- A | (IX+d)
+        // Flags Affected: All
+        private byte ORIXD(byte opCode)
+        {
+            sbyte d = (sbyte)Fetch1(_ddInstructions); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IX + d);
+            var n = Fetch2(_ddInstructions);
+
+            A = Or(A, n);
+            MEMPTR = _absoluteAddress;
+
+            return 0;
+        }
+
+        // Instruction   : OR (IY+d)
+        // Operation     : A <- A | (IY+d)
+        // Flags Affected: All
+        private byte ORIYD(byte opCode)
+        {
+            sbyte d = (sbyte)Fetch1(_fdInstructions); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IY + d);
+            var n = Fetch2(_fdInstructions);
+
+            A = Or(A, n);
+            MEMPTR = _absoluteAddress;
+
+            return 0;
+        }
 
 
 
