@@ -1,6 +1,7 @@
 ﻿using FakeItEasy;
 using System.Collections.Generic;
 using Xunit;
+using static Essenbee.Z80.Z80;
 
 namespace Essenbee.Z80.Tests
 {
@@ -121,7 +122,7 @@ namespace Essenbee.Z80.Tests
         }
 
         [Fact]
-        private void JumpWhenAisOddParityForJPCCNN()
+        private void JumpWhenOddParityForJPCCNN()
         {
             var fakeBus = A.Fake<IBus>();
 
@@ -142,7 +143,7 @@ namespace Essenbee.Z80.Tests
             A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
                 .ReturnsLazily((ushort addr, bool ro) => program[addr]);
 
-            var cpu = new Z80() { A = 0b00010011, PC = 0x0080 };
+            var cpu = new Z80() { A = 0x00, F = (Flags)0b00000000, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
 
             cpu.Step();
@@ -152,7 +153,7 @@ namespace Essenbee.Z80.Tests
         }
 
         [Fact]
-        private void NotJumpWhenAisEvenParityForJPCCNN()
+        private void NotJumpWhenEvenParityForJPCCNN()
         {
             var fakeBus = A.Fake<IBus>();
 
@@ -173,13 +174,20 @@ namespace Essenbee.Z80.Tests
             A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
                 .ReturnsLazily((ushort addr, bool ro) => program[addr]);
 
-            var cpu = new Z80() { A = 0b10010011, PC = 0x0080 };
+            var cpu = new Z80() { A = 0x00, F = (Flags)0b00000100, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
 
             cpu.Step();
 
             Assert.Equal(0x0191, cpu.PC);
-            FlagsUnchanged(cpu);
+            Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
+            Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
+            Assert.True((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
+            Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
         }
 
         [Fact]

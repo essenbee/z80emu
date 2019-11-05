@@ -282,6 +282,15 @@ namespace Essenbee.Z80
                 { 0x9E, new Instruction("SBC A,(HL)", RGIHL, RGIHL, SBCAHL, new List<int>{ 4, 3 }) },
                 { 0x9F, new Instruction("SBC A,A", REG, REG, SBCAR, new List<int>{ 4 }) },
 
+                { 0xA0, new Instruction("AND B", IMP, IMP, ANDR, new List<int>{ 4 }) },
+                { 0xA1, new Instruction("AND C", IMP, IMP, ANDR, new List<int>{ 4 }) },
+                { 0xA2, new Instruction("AND D", IMP, IMP, ANDR, new List<int>{ 4 }) },
+                { 0xA3, new Instruction("AND E", IMP, IMP, ANDR, new List<int>{ 4 }) },
+                { 0xA4, new Instruction("AND H", IMP, IMP, ANDR, new List<int>{ 4 }) },
+                { 0xA5, new Instruction("AND L", IMP, IMP, ANDR, new List<int>{ 4 }) },
+                { 0xA6, new Instruction("AND (HL)", RGIHL, RGIHL, ANDHL, new List<int>{ 4, 3 }) },
+                { 0xA7, new Instruction("AND A", IMP, IMP, ANDR, new List<int>{ 4 }) },
+
                 { 0xB8, new Instruction("CP B", IMP, IMP, CPR, new List<int>{ 4 }) },
                 { 0xB9, new Instruction("CP C", IMP, IMP, CPR, new List<int>{ 4 }) },
                 { 0xBA, new Instruction("CP D", IMP, IMP, CPR, new List<int>{ 4 }) },
@@ -313,6 +322,7 @@ namespace Essenbee.Z80
                 { 0xE1, new Instruction("POP HL", IMM, IMM, POPHL, new List<int>{ 4, 3, 3 }) },
                 { 0xE2, new Instruction("JP PO,nn", IMM, IMM, JPCCNN, new List<int>{ 4, 3, 3 }) },
                 { 0xE5, new Instruction("PUSH HL", IMM, IMM, PUSHHL, new List<int>{ 5, 3, 3 }) },
+                { 0xE6, new Instruction("AND n", IMM, IMM, ANDN, new List<int>{ 4, 3 }) },
                 { 0xEA, new Instruction("JP PE,nn", IMM, IMM, JPCCNN, new List<int>{ 4, 3, 3 }) },
                 { 0xF1, new Instruction("POP AF", IMM, IMM, POPAF, new List<int>{ 4, 3, 3 }) },
                 { 0xF2, new Instruction("JP P,nn", IMM, IMM, JPCCNN, new List<int>{ 4, 3, 3 }) },
@@ -366,6 +376,8 @@ namespace Essenbee.Z80
                 { 0x96, new Instruction("SUB A,(IX+d)", IMM, IDX, SUBAIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
                 { 0x9E, new Instruction("SBC A,(IX+d)", IMM, IDX, SBCAIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
 
+                { 0xA6, new Instruction("AND (IX+d)", IMM, IDX, ANDIXD, new List<int>{ 4, 4 , 3, 5, 3 }) },
+
                 { 0xBE, new Instruction("CP (IX+d)", IMM, IDX, CPIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
 
                 { 0xE1, new Instruction("POP IX", IMM, IMM, POPIX, new List<int>{ 4, 3, 3, 3 }) },
@@ -408,6 +420,8 @@ namespace Essenbee.Z80
                 { 0x8E, new Instruction("ADC A,(IY+d)", IMM, IDX, ADCAIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
                 { 0x96, new Instruction("SUB A,(IY+d)", IMM, IDX, SUBAIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
                 { 0x9E, new Instruction("SBC A,(IY+d)", IMM, IDX, SBCAIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
+
+                { 0xA6, new Instruction("AND (IY+d)", IMM, IDX, ANDIYD, new List<int>{ 4, 4 , 3, 5, 3 }) },
 
                 { 0xBE, new Instruction("CP (IY+d)", IMM, IDX, CPIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
 

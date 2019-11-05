@@ -1419,6 +1419,73 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction   : AND r
+        // Operation     : A <- A & r
+        // Flags Affected: All
+        private byte ANDR(byte opCode)
+        {
+            var src = (opCode & 0b00000111);
+            var n = ReadFromRegister(src);
+            A = And(A, n);
+
+            return 0;
+        }
+
+        // Instruction   : AND n
+        // Operation     : A <- A & n
+        // Flags Affected: All
+        private byte ANDN(byte opCode)
+        {
+            var n = Fetch1(_rootInstructions);
+            A = And(A, n);
+
+            return 0;
+        }
+
+        // Instruction   : AND (HL)
+        // Operation     : A <- A & (HL)
+        // Flags Affected: All
+        private byte ANDHL(byte opCode)
+        {
+            var n = Fetch1(_rootInstructions);
+            A = And(A, n);
+
+            return 0;
+        }
+
+        // Instruction   : AND (IX+d)
+        // Operation     : A <- A & (IX+d)
+        // Flags Affected: All
+        private byte ANDIXD(byte opCode)
+        {
+            sbyte d = (sbyte)Fetch1(_ddInstructions); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IX + d);
+            var n = Fetch2(_ddInstructions);
+
+            A = And(A, n);
+            MEMPTR = _absoluteAddress;
+
+            return 0;
+        }
+
+        // Instruction   : AND (IY+d)
+        // Operation     : A <- A & (IY+d)
+        // Flags Affected: All
+        private byte ANDIYD(byte opCode)
+        {
+            sbyte d = (sbyte)Fetch1(_fdInstructions); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IY + d);
+            var n = Fetch2(_fdInstructions);
+
+            A = And(A, n);
+            MEMPTR = _absoluteAddress;
+
+            return 0;
+        }
+
+
+
+
 
 
 
@@ -1854,6 +1921,63 @@ namespace Essenbee.Z80
             SetQ();
 
             return (byte)diff;
+        }
+
+        private byte And(byte a, byte b)
+        {
+            var result = (byte)(a & b);
+
+            SetFlag(Flags.N, false);
+            SetFlag(Flags.C, false);
+            SetFlag(Flags.S, (result & 0x80) > 0);
+            SetFlag(Flags.Z, result == 0x00);
+            SetFlag(Flags.P, Parity(result));
+            SetFlag(Flags.H, true);
+
+            // Undocumented Flags
+            SetFlag(Flags.X, (result & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (result & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetQ();
+
+            return result;
+        }
+
+        private byte Or(byte a, byte b)
+        {
+            var result = (byte)(a | b);
+
+            SetFlag(Flags.N, false);
+            SetFlag(Flags.C, false);
+            SetFlag(Flags.S, (result & 0x80) > 0);
+            SetFlag(Flags.Z, result == 0x00);
+            SetFlag(Flags.P, Parity(result));
+            SetFlag(Flags.H, false);
+
+            // Undocumented Flags
+            SetFlag(Flags.X, (result & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (result & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetQ();
+
+            return result;
+        }
+
+        private byte Xor(byte a, byte b)
+        {
+            var result = (byte)(a ^ b);
+
+            SetFlag(Flags.N, false);
+            SetFlag(Flags.C, false);
+            SetFlag(Flags.S, (result & 0x80) > 0);
+            SetFlag(Flags.Z, result == 0x00);
+            SetFlag(Flags.P, Parity(result));
+            SetFlag(Flags.H, false);
+
+            // Undocumented Flags
+            SetFlag(Flags.X, (result & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (result & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetQ();
+
+            return result;
         }
 
         private void SetIncFlags(byte val, byte incVal)
