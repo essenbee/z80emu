@@ -1972,8 +1972,8 @@ namespace Essenbee.Z80
                 1 => CheckFlag(Flags.Z),
                 2 => !CheckFlag(Flags.C),
                 3 => CheckFlag(Flags.C),
-                4 => !Parity(A),
-                5 => Parity(A),
+                4 => !CheckFlag(Flags.P),
+                5 => CheckFlag(Flags.P),
                 6 => !CheckFlag(Flags.S),
                 7 => CheckFlag(Flags.S),
                 _ => false
