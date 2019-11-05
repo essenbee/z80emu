@@ -1547,10 +1547,69 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction   : XOR r
+        // Operation     : A <- A ^ r
+        // Flags Affected: All
+        private byte XORR(byte opCode)
+        {
+            var src = (opCode & 0b00000111);
+            var n = ReadFromRegister(src);
+            A = Xor(A, n);
 
+            return 0;
+        }
 
+        // Instruction   : XOR n
+        // Operation     : A <- A ^ n
+        // Flags Affected: All
+        private byte XORN(byte opCode)
+        {
+            var n = Fetch1(_rootInstructions);
+            A = Xor(A, n);
 
+            return 0;
+        }
 
+        // Instruction   : XOR (HL)
+        // Operation     : A <- A ^ (HL)
+        // Flags Affected: All
+        private byte XORHL(byte opCode)
+        {
+            var n = Fetch1(_rootInstructions);
+            A = Xor(A, n);
+
+            return 0;
+        }
+
+        // Instruction   : XOR (IX+d)
+        // Operation     : A <- A ^ (IX+d)
+        // Flags Affected: All
+        private byte XORIXD(byte opCode)
+        {
+            sbyte d = (sbyte)Fetch1(_ddInstructions); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IX + d);
+            var n = Fetch2(_ddInstructions);
+
+            A = Xor(A, n);
+            MEMPTR = _absoluteAddress;
+
+            return 0;
+        }
+
+        // Instruction   : XOR (IY+d)
+        // Operation     : A <- A ^ (IY+d)
+        // Flags Affected: All
+        private byte XORIYD(byte opCode)
+        {
+            sbyte d = (sbyte)Fetch1(_fdInstructions); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IY + d);
+            var n = Fetch2(_fdInstructions);
+
+            A = Xor(A, n);
+            MEMPTR = _absoluteAddress;
+
+            return 0;
+        }
 
         // ========================================
         // General Purpose Arithmetic/CPU Control
