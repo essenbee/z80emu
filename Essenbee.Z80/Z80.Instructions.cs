@@ -1915,6 +1915,28 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction    : SBC HL, ss
+        // Operation      : HL <- HL - ss - C
+        // Flags Affected : All
+
+        private byte SBCHLSS(byte opCode)
+        {
+            var src = (opCode & 0b00110000) >> 4;
+            var n = ReadFromRegisterPair(src);
+            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+
+            var sum = Sub16(HL, n, c);
+
+            H = (byte)((sum & 0xFF00) >> 8);
+            L = (byte)(sum & 0x00FF);
+
+            return 0;
+        }
+
+
+
+
+
 
 
         // ========================================
@@ -2058,8 +2080,8 @@ namespace Essenbee.Z80
             SetFlag(Flags.C, sum > 0xFFFF ? true : false); // Set if there is a carry into bit 15
 
             // Undocumented Flags
-            SetFlag(Flags.X, ((byte)sum & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, ((byte)sum & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((ushort)sum & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((ushort)sum & 0x20) > 0 ? true : false); //Copy of bit 5
             SetQ();
 
             return (ushort)sum;
@@ -2093,6 +2115,36 @@ namespace Essenbee.Z80
             SetQ();
 
             return (byte)diff;
+        }
+
+        private ushort Sub16(ushort a, ushort b, byte c = 0)
+        {
+            var diff = a - b - c;
+
+            SetFlag(Flags.N, true);
+            SetFlag(Flags.Z, (ushort)diff == 0 ? true : false);
+            SetFlag(Flags.S, ((ushort)diff & 0x8000) > 0 ? true : false);
+            SetFlag(Flags.H, ((a & 0xFF) < ((b + c) & 0xFF)) ? true : false);
+
+            // Overflow flag
+            if (((a ^ (b + c)) & 0x8000) != 0                // Different sign
+                && (((b + c) ^ (ushort)diff) & 0x8000) == 0) // Same sign
+            {
+                SetFlag(Flags.P, true);
+            }
+            else
+            {
+                SetFlag(Flags.P, false);
+            }
+
+            SetFlag(Flags.C, diff < 0 ? true : false); // Set if there is not a borrow from bit 15
+
+            // Undocumented Flags
+            SetFlag(Flags.X, ((ushort)diff & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((ushort)diff & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetQ();
+
+            return (ushort)diff;
         }
 
         private byte And(byte a, byte b)
