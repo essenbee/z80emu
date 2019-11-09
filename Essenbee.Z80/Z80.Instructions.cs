@@ -2076,12 +2076,14 @@ namespace Essenbee.Z80
             var sum = (a + b + c);
 
             SetFlag(Flags.N, false);
+            SetFlag(Flags.Z, (ushort)sum == 0 ? true : false);
             SetFlag(Flags.H, (a & 0xFF) + (b & 0xFF) > 0xFF ? true : false);
             SetFlag(Flags.C, sum > 0xFFFF ? true : false); // Set if there is a carry into bit 15
 
-            // Undocumented Flags
-            SetFlag(Flags.X, ((ushort)sum & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, ((ushort)sum & 0x20) > 0 ? true : false); //Copy of bit 5
+            // Undocumented Flags - from high byte
+            SetFlag(Flags.X, (H & 0x0800) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (H & 0x2000) > 0 ? true : false); //Copy of bit 5
+
             SetQ();
 
             return (ushort)sum;
@@ -2110,8 +2112,8 @@ namespace Essenbee.Z80
             SetFlag(Flags.C, diff < 0 ? true : false); // Set if there is not a borrow from bit 8
 
             // Undocumented Flags
-            SetFlag(Flags.X, ((byte)diff & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, ((byte)diff & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((ushort)diff & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((ushort)diff & 0x20) > 0 ? true : false); //Copy of bit 5
             SetQ();
 
             return (byte)diff;
@@ -2139,9 +2141,10 @@ namespace Essenbee.Z80
 
             SetFlag(Flags.C, diff < 0 ? true : false); // Set if there is not a borrow from bit 15
 
-            // Undocumented Flags
-            SetFlag(Flags.X, ((ushort)diff & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, ((ushort)diff & 0x20) > 0 ? true : false); //Copy of bit 5
+            // Undocumented Flags - from high byte
+            SetFlag(Flags.X, (H & 0x0800) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (H & 0x2000) > 0 ? true : false); //Copy of bit 5
+
             SetQ();
 
             return (ushort)diff;
