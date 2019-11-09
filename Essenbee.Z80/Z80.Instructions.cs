@@ -1880,6 +1880,41 @@ namespace Essenbee.Z80
         // 16-bit Arithmetic Group
         // ========================================
 
+        // Instruction    : ADD HL, ss
+        // Operation      : HL <- HL + ss
+        // Flags Affected : H,C,N
+
+        private byte ADDHLSS(byte opCode)
+        {
+            var src = (opCode & 0b00110000) >> 4;
+            var n = ReadFromRegisterPair(src);
+
+            var sum = Add16(HL, n);
+
+            H = (byte)((sum & 0xFF00) >> 8);
+            L = (byte)(sum & 0x00FF);
+
+            return 0;
+        }
+
+        // Instruction    : ADC HL, ss
+        // Operation      : HL <- HL + ss + C
+        // Flags Affected : H,C,N
+
+        private byte ADCHLSS(byte opCode)
+        {
+            var src = (opCode & 0b00110000) >> 4;
+            var n = ReadFromRegisterPair(src);
+            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+
+            var sum = Add16(HL, n, c);
+
+            H = (byte)((sum & 0xFF00) >> 8);
+            L = (byte)(sum & 0x00FF);
+
+            return 0;
+        }
+
 
 
         // ========================================
@@ -2012,6 +2047,22 @@ namespace Essenbee.Z80
             SetQ();
 
             return (byte)sum;
+        }
+
+        private ushort Add16(ushort a, ushort b, byte c = 0)
+        {
+            var sum = (a + b + c);
+
+            SetFlag(Flags.N, false);
+            SetFlag(Flags.H, (a & 0xFF) + (b & 0xFF) > 0xFF ? true : false);
+            SetFlag(Flags.C, sum > 0xFFFF ? true : false); // Set if there is a carry into bit 15
+
+            // Undocumented Flags
+            SetFlag(Flags.X, ((byte)sum & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((byte)sum & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetQ();
+
+            return (ushort)sum;
         }
 
         private byte Sub8(byte a, byte b, byte c = 0)
@@ -2180,6 +2231,16 @@ namespace Essenbee.Z80
                 5 => L,
                 7 => A,
                 _ => 0x00
+            };
+
+        private ushort ReadFromRegisterPair(int src) =>
+            src switch
+            {
+                0 => BC,
+                1 => DE,
+                2 => HL,
+                3 => SP,
+                _ => 0x0000
             };
 
         private void AssignToRegister(int dest, byte n)
