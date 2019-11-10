@@ -498,6 +498,7 @@ namespace Essenbee.Z80
                 { 0x03, new Instruction("RLC E", IMP, IMP, RLCR, new List<int>{ 4, 4 }) },
                 { 0x04, new Instruction("RLC H", IMP, IMP, RLCR, new List<int>{ 4, 4 }) },
                 { 0x05, new Instruction("RLC L", IMP, IMP, RLCR, new List<int>{ 4, 4 }) },
+                { 0x06, new Instruction("RLC (HL)", RGIHL, IMP, RLCHL, new List<int>{ 4, 4, 4, 3 }) },
             };
         }
 

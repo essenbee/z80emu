@@ -2168,7 +2168,7 @@ namespace Essenbee.Z80
             SetFlag(Flags.H, false);
             SetFlag(Flags.N, false);
             SetFlag(Flags.Z, n == 0);
-            SetFlag(Flags.S, src >= 0x80);
+            SetFlag(Flags.S, n >= 0x80);
             SetFlag(Flags.P, Parity(n));
 
             // Undocumented Flags
@@ -2178,6 +2178,41 @@ namespace Essenbee.Z80
 
             return 0;
         }
+
+        // Instruction    : RLC (HL)
+        // Operation      : (HL) is rotated left 1 position, with bit 7 moving to the carry flag and bit 0
+        // Flags Affected : All
+
+        private byte RLCHL(byte opCode)
+        {
+            var c = 0;
+            var n = Fetch1(_cbInstructions);
+
+            if ((n & 0b10000000) > 0)
+            {
+                c = 1;
+            }
+
+            n = (byte)((n << 1) + c);
+
+            WriteToBus(HL, n);
+
+            SetFlag(Flags.C, c == 1);
+            SetFlag(Flags.H, false);
+            SetFlag(Flags.N, false);
+            SetFlag(Flags.Z, n == 0);
+            SetFlag(Flags.S, n >= 0x80);
+            SetFlag(Flags.P, Parity(n));
+
+            // Undocumented Flags
+            SetFlag(Flags.X, (n & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (n & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetQ();
+
+            return 0;
+        }
+
+
 
 
 
