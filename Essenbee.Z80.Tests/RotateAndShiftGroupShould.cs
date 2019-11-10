@@ -241,5 +241,105 @@ namespace Essenbee.Z80.Tests
                 program[addr] = data;
             }
         }
+
+        [Fact]
+        private void UpdateLocationContentsCorrectlyForRLCIXD()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xDD }, // RLC (IX+3)
+                { 0x0081, 0xCB },
+                { 0x0082, 0x06 },
+                { 0x0083, 0x03 },
+                { 0x0084, 0x00 },
+
+                { 0x0190, 0x00 },
+                { 0x0191, 0x00 }, // <- (IX)
+                { 0x0192, 0x00 },
+                { 0x0193, 0x00 },
+                { 0x0194, 0b10001000 },
+                { 0x0195, 0x00 },
+                { 0x0196, 0x00 },
+                { 0x0197, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+            A.CallTo(() => fakeBus.Write(A<ushort>._, A<byte>._))
+                .Invokes((ushort addr, byte data) => UpdateMemory(addr, data));
+
+            var cpu = new Z80() { IX = 0x0191, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+
+            cpu.Step();
+
+            Assert.Equal(0b00010001, program[0x0194]);
+            Assert.True((cpu.F & Z80.Flags.C) == Z80.Flags.C); // Carry flag contains 1
+            Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
+            Assert.True((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
+            Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+
+            void UpdateMemory(ushort addr, byte data)
+            {
+                program[addr] = data;
+            }
+        }
+
+        [Fact]
+        private void UpdateLocationContentsCorrectlyForRLCIYD()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xFD }, // RLC (IY+3)
+                { 0x0081, 0xCB },
+                { 0x0082, 0x06 },
+                { 0x0083, 0x03 },
+                { 0x0084, 0x00 },
+
+                { 0x0190, 0x00 },
+                { 0x0191, 0x00 }, // <- (IX)
+                { 0x0192, 0x00 },
+                { 0x0193, 0x00 },
+                { 0x0194, 0b10001000 },
+                { 0x0195, 0x00 },
+                { 0x0196, 0x00 },
+                { 0x0197, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+            A.CallTo(() => fakeBus.Write(A<ushort>._, A<byte>._))
+                .Invokes((ushort addr, byte data) => UpdateMemory(addr, data));
+
+            var cpu = new Z80() { IY = 0x0191, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+
+            cpu.Step();
+
+            Assert.Equal(0b00010001, program[0x0194]);
+            Assert.True((cpu.F & Z80.Flags.C) == Z80.Flags.C); // Carry flag contains 1
+            Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
+            Assert.True((cpu.F & Z80.Flags.P) == Z80.Flags.P);
+            Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
+            Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
+            Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
+
+            void UpdateMemory(ushort addr, byte data)
+            {
+                program[addr] = data;
+            }
+        }
     }
 }

@@ -2212,9 +2212,77 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction    : RLC (IX+d)
+        // Operation      : (IX+d) is rotated left 1 position, with bit 7 moving to the carry flag and bit 0
+        // Flags Affected : All
 
+        private byte RLCIXD(byte opCode)
+        {
+            var c = 0;
 
+            sbyte d = (sbyte)Fetch1(_ddcbInstructions); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IX + d);
+            var n = Fetch2(_ddcbInstructions);
 
+            if ((n & 0b10000000) > 0)
+            {
+                c = 1;
+            }
+
+            n = (byte)((n << 1) + c);
+
+            WriteToBus(_absoluteAddress, n);
+
+            SetFlag(Flags.C, c == 1);
+            SetFlag(Flags.H, false);
+            SetFlag(Flags.N, false);
+            SetFlag(Flags.Z, n == 0);
+            SetFlag(Flags.S, n >= 0x80);
+            SetFlag(Flags.P, Parity(n));
+
+            // Undocumented Flags
+            SetFlag(Flags.X, (n & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (n & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetQ();
+
+            return 0;
+        }
+
+        // Instruction    : RLC (IY+d)
+        // Operation      : (IY+d) is rotated left 1 position, with bit 7 moving to the carry flag and bit 0
+        // Flags Affected : All
+
+        private byte RLCIYD(byte opCode)
+        {
+            var c = 0;
+
+            sbyte d = (sbyte)Fetch1(_fdcbInstructions); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IY + d);
+            var n = Fetch2(_fdcbInstructions);
+
+            if ((n & 0b10000000) > 0)
+            {
+                c = 1;
+            }
+
+            n = (byte)((n << 1) + c);
+
+            WriteToBus(_absoluteAddress, n);
+
+            SetFlag(Flags.C, c == 1);
+            SetFlag(Flags.H, false);
+            SetFlag(Flags.N, false);
+            SetFlag(Flags.Z, n == 0);
+            SetFlag(Flags.S, n >= 0x80);
+            SetFlag(Flags.P, Parity(n));
+
+            // Undocumented Flags
+            SetFlag(Flags.X, (n & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (n & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetQ();
+
+            return 0;
+        }
 
 
 

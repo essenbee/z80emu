@@ -500,6 +500,16 @@ namespace Essenbee.Z80
                 { 0x05, new Instruction("RLC L", IMP, IMP, RLCR, new List<int>{ 4, 4 }) },
                 { 0x06, new Instruction("RLC (HL)", RGIHL, IMP, RLCHL, new List<int>{ 4, 4, 4, 3 }) },
             };
+
+            _ddcbInstructions = new Dictionary<byte, Instruction>
+            {
+                { 0x06, new Instruction("RLC (IX+d)", IMM, IDX, RLCIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
+            };
+
+            _fdcbInstructions = new Dictionary<byte, Instruction>
+            {
+                { 0x06, new Instruction("RLC (IY+d)", IMM, IDX, RLCIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
+            };
         }
 
         public void ConnectToBus(IBus bus) => _bus = bus;
@@ -646,7 +656,7 @@ namespace Essenbee.Z80
                     if (incPC) PC++;
                     if (opDD == 0xCB)
                     {
-                        var opDDCB = incPC ? ReadFromBus((ushort)(PC + 1)) : ReadFromBus((ushort)(PC + 2));
+                        var opDDCB = incPC ? ReadFromBus(PC) : ReadFromBus((ushort)(PC + 2));
                         if (incPC) PC++;
                         return (opDDCB, _ddcbInstructions[opDDCB]);
                     }
@@ -661,7 +671,7 @@ namespace Essenbee.Z80
                     if (incPC) PC++;
                     if (opFD == 0xCB)
                     {
-                        var opFDCB = incPC ? ReadFromBus((ushort)(PC + 1)) : ReadFromBus((ushort)(PC + 2));
+                        var opFDCB = incPC ? ReadFromBus(PC) : ReadFromBus((ushort)(PC + 2));
                         if (incPC) PC++;
                         return (opFDCB, _fdcbInstructions[opFDCB]);
                     }
