@@ -2222,6 +2222,7 @@ namespace Essenbee.Z80
 
             sbyte d = (sbyte)Fetch1(_ddcbInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IX + d);
+            MEMPTR = _absoluteAddress;
             var n = Fetch2(_ddcbInstructions);
 
             if ((n & 0b10000000) > 0)
@@ -2258,6 +2259,7 @@ namespace Essenbee.Z80
 
             sbyte d = (sbyte)Fetch1(_fdcbInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IY + d);
+            MEMPTR = _absoluteAddress;
             var n = Fetch2(_fdcbInstructions);
 
             if ((n & 0b10000000) > 0)
