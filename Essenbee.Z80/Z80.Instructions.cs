@@ -2145,7 +2145,39 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction    : RLC r
+        // Operation      : r is rotated left 1 position, with bit 7 moving to the carry flag and bit 0
+        // Flags Affected : All
 
+        private byte RLCR(byte opCode)
+        {
+            var c = 0;
+            var src = (opCode & 0b00000111);
+            var n = ReadFromRegister(src);
+
+            if ((n & 0b10000000) > 0)
+            {
+                c = 1;
+            }
+
+            n = (byte)((n << 1) + c);
+
+            AssignToRegister(src, n);
+
+            SetFlag(Flags.C, c == 1);
+            SetFlag(Flags.H, false);
+            SetFlag(Flags.N, false);
+            SetFlag(Flags.Z, n == 0);
+            SetFlag(Flags.S, src >= 0x80);
+            SetFlag(Flags.P, Parity(n));
+
+            // Undocumented Flags
+            SetFlag(Flags.X, (n & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (n & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetQ();
+
+            return 0;
+        }
 
 
 

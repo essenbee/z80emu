@@ -489,6 +489,16 @@ namespace Essenbee.Z80
                 { 0x4F, new Instruction("ADD R,A", REG, REG, LDRA, new List<int>{ 4, 5 }) },
                 { 0x5F, new Instruction("ADD A,R", REG, REG, LDAR, new List<int>{ 4, 5 }) },
             };
+
+            _cbInstructions = new Dictionary<byte, Instruction>
+            {
+                { 0x00, new Instruction("RLC B", IMP, IMP, RLCR, new List<int>{ 4, 4 }) },
+                { 0x01, new Instruction("RLC C", IMP, IMP, RLCR, new List<int>{ 4, 4 }) },
+                { 0x02, new Instruction("RLC D", IMP, IMP, RLCR, new List<int>{ 4, 4 }) },
+                { 0x03, new Instruction("RLC E", IMP, IMP, RLCR, new List<int>{ 4, 4 }) },
+                { 0x04, new Instruction("RLC H", IMP, IMP, RLCR, new List<int>{ 4, 4 }) },
+                { 0x05, new Instruction("RLC L", IMP, IMP, RLCR, new List<int>{ 4, 4 }) },
+            };
         }
 
         public void ConnectToBus(IBus bus) => _bus = bus;
