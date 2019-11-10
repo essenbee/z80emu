@@ -2317,7 +2317,37 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction    : RL (HL)
+        // Operation      : (HL) is rotated left 1 position, through the carry flag;
+        //                : with the previous content of the carry flag copied to bit 0
+        // Flags Affected : All
 
+        private byte RLHL(byte opCode)
+        {
+            var n = Fetch1(_cbInstructions);
+
+            var priorC = CheckFlag(Flags.C) ? 1 : 0;
+            var newC = n & 0b10000000;
+
+            n = (byte)((n << 1) + priorC);
+
+            SetFlag(Flags.C, newC > 0);
+
+            WriteToBus(HL, n);
+
+            SetFlag(Flags.H, false);
+            SetFlag(Flags.N, false);
+            SetFlag(Flags.Z, n == 0);
+            SetFlag(Flags.S, n >= 0x80);
+            SetFlag(Flags.P, Parity(n));
+
+            // Undocumented Flags
+            SetFlag(Flags.X, (n & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (n & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetQ();
+
+            return 0;
+        }
 
 
 
