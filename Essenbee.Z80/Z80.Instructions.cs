@@ -2039,6 +2039,120 @@ namespace Essenbee.Z80
 
 
 
+        // ========================================
+        // Rotate and Shift Group
+        // ========================================
+
+        // Instruction    : RLCA
+        // Operation      : A is rotated left 1 position, with bit 7 moving to the carry flag and bit 0
+        // Flags Affected : H,N,C
+
+        private byte RLCA(byte opCode)
+        {
+            var c = 0;
+
+            if ((A & 0b10000000) > 0)
+            {
+                c = 1;
+            }
+
+            A = (byte)((A << 1) + c);
+
+            SetFlag(Flags.C, c == 1);
+            SetFlag(Flags.H, false);
+            SetFlag(Flags.N, false);
+
+            // Undocumented Flags
+            SetFlag(Flags.X, (A & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (A & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetQ();
+
+            return 0;
+        }
+
+        // Instruction    : RLA
+        // Operation      : A is rotated left 1 position, through the carry flag;
+        //                : with the previous content of the carry flag copied to bit 0
+        // Flags Affected : H,N,C
+
+        private byte RLA(byte opCode)
+        {
+            var priorC = CheckFlag(Flags.C) ? 1 : 0;
+            var newC = A & 0b10000000;
+
+            A = (byte)((A << 1) + priorC);
+
+            SetFlag(Flags.C, newC == 1);
+            SetFlag(Flags.H, false);
+            SetFlag(Flags.N, false);
+
+            // Undocumented Flags
+            SetFlag(Flags.X, (A & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (A & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetQ();
+
+            return 0;
+        }
+
+        // Instruction    : RRCA
+        // Operation      : A is rotated right 1 position, with bit 0 moving to the carry flag and bit 7
+        // Flags Affected : H,N,C
+
+        private byte RRCA(byte opCode)
+        {
+            var c = 0;
+
+            if ((A & 0b00000001) > 0)
+            {
+                c = 0b10000000;
+            }
+
+            A = (byte)((A >> 1) + c);
+
+            SetFlag(Flags.C, c == 0b10000000);
+            SetFlag(Flags.H, false);
+            SetFlag(Flags.N, false);
+
+            // Undocumented Flags
+            SetFlag(Flags.X, (A & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (A & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetQ();
+
+            return 0;
+        }
+
+        // Instruction    : RRA
+        // Operation      : A is rotated right 1 position, through the carry flag;
+        //                : with the previous content of the carry flag copied to bit 7
+        // Flags Affected : H,N,C
+
+        private byte RRA(byte opCode)
+        {
+            var priorC = CheckFlag(Flags.C) ? 0b10000000 : 0;
+            var newC = A & 0b00000001;
+
+            A = (byte)((A >> 1) + priorC);
+
+            SetFlag(Flags.C, newC == 1);
+            SetFlag(Flags.H, false);
+            SetFlag(Flags.N, false);
+
+            // Undocumented Flags
+            SetFlag(Flags.X, (A & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (A & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetQ();
+
+            return 0;
+        }
+
+
+
+
+
+
+
+
+
         // =========================== H E L P E R S ===========================
 
         private byte Add8(byte a, byte b, byte c = 0)

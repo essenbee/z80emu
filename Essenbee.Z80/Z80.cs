@@ -112,7 +112,7 @@ namespace Essenbee.Z80
                 { 0x05, new Instruction("DEC B", IMP, IMP, DECR, new List<int>{ 4 }) },
 
                 { 0x06, new Instruction("LD B,n", IMM, IMM, LDRN, new List<int>{ 4, 3 }) },
-
+                { 0x07, new Instruction("RLCA", IMP, IMP, RLCA, new List<int>{ 4 }) },
                 { 0x09, new Instruction("ADD HL,BC", IMP, IMP, ADDHLSS, new List<int>{ 4, 4, 3 }) },
 
                 { 0x0A, new Instruction("LD A,(BC)", IDX, IMP, LDABC, new List<int>{ 4, 3 }) },
@@ -121,6 +121,7 @@ namespace Essenbee.Z80
                 { 0x0D, new Instruction("DEC C", IMP, IMP, DECR, new List<int>{ 4 }) },
 
                 { 0x0E, new Instruction("LD C,n", IMM, IMM, LDRN, new List<int>{ 4, 3 }) },
+                { 0x0F, new Instruction("RRCA", IMP, IMP, RRCA, new List<int>{ 4 }) },
                 { 0x11, new Instruction("LD DE,nn", IMM, IMP, LDDENN, new List<int>{ 4, 3, 3 }) },
                 { 0x12, new Instruction("LD (DE),A", IMP, IMP, LDDEA, new List<int>{ 4, 3 }) },
 
@@ -128,6 +129,7 @@ namespace Essenbee.Z80
                 { 0x15, new Instruction("DEC D", IMP, IMP, DECR, new List<int>{ 4 }) },
 
                 { 0x16, new Instruction("LD D,n", IMM, IMM, LDRN, new List<int>{ 4, 3 }) },
+                { 0x17, new Instruction("RLA", IMP, IMP, RLA, new List<int>{ 4 }) },
                 { 0x18, new Instruction("JR e", IMM, IMM, JR, new List<int>{ 4, 3, 5 }) },
                 { 0x19, new Instruction("ADD HL,DE", IMP, IMP, ADDHLSS, new List<int>{ 4, 4, 3 }) },
                 { 0x1A, new Instruction("LD A,(DE)", IDX, IMP, LDADE, new List<int>{ 4, 3 }) },
@@ -136,6 +138,7 @@ namespace Essenbee.Z80
                 { 0x1D, new Instruction("DEC E", IMP, IMP, DECR, new List<int>{ 4 }) },
 
                 { 0x1E, new Instruction("LD E,n", IMM, IMM, LDRN, new List<int>{ 4, 3 }) },
+                { 0x1F, new Instruction("RRA", IMP, IMP, RRA, new List<int>{ 4 }) },
                 { 0x21, new Instruction("LD HL,nn", IMM, IMP, LDHLNN, new List<int>{ 4, 3, 3 }) },
                 { 0x22, new Instruction("LD (nn),HL", IMM, IDX, LDNNHL, new List<int>{ 4, 3, 3, 3, 3 }) },
 
