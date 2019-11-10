@@ -499,6 +499,16 @@ namespace Essenbee.Z80
                 { 0x04, new Instruction("RLC H", IMP, IMP, RLCR, new List<int>{ 4, 4 }) },
                 { 0x05, new Instruction("RLC L", IMP, IMP, RLCR, new List<int>{ 4, 4 }) },
                 { 0x06, new Instruction("RLC (HL)", RGIHL, IMP, RLCHL, new List<int>{ 4, 4, 4, 3 }) },
+                { 0x07, new Instruction("RLC A", IMP, IMP, RLCR, new List<int>{ 4, 4 }) },
+
+                { 0x10, new Instruction("RL B", IMP, IMP, RLR, new List<int>{ 4, 4 }) },
+                { 0x11, new Instruction("RL C", IMP, IMP, RLR, new List<int>{ 4, 4 }) },
+                { 0x12, new Instruction("RL D", IMP, IMP, RLR, new List<int>{ 4, 4 }) },
+                { 0x13, new Instruction("RL E", IMP, IMP, RLR, new List<int>{ 4, 4 }) },
+                { 0x14, new Instruction("RL H", IMP, IMP, RLR, new List<int>{ 4, 4 }) },
+                { 0x15, new Instruction("RL L", IMP, IMP, RLR, new List<int>{ 4, 4 }) },
+
+                { 0x17, new Instruction("RL A", IMP, IMP, RLCR, new List<int>{ 4, 4 }) },
             };
 
             _ddcbInstructions = new Dictionary<byte, Instruction>
