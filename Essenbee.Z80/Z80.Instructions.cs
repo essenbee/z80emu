@@ -2076,13 +2076,13 @@ namespace Essenbee.Z80
             var sum = (a + b + c);
 
             SetFlag(Flags.N, false);
-            SetFlag(Flags.Z, (ushort)sum == 0 ? true : false);
+            // SetFlag(Flags.Z, (ushort)sum == 0 ? true : false);
             SetFlag(Flags.H, (a & 0xFF) + (b & 0xFF) > 0xFF ? true : false);
             SetFlag(Flags.C, sum > 0xFFFF ? true : false); // Set if there is a carry into bit 15
 
             // Undocumented Flags - from high byte
-            SetFlag(Flags.X, (H & 0x0800) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (H & 0x2000) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, (sum & 0x0800) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (sum & 0x2000) > 0 ? true : false); //Copy of bit 5
 
             SetQ();
 
@@ -2142,8 +2142,8 @@ namespace Essenbee.Z80
             SetFlag(Flags.C, diff < 0 ? true : false); // Set if there is not a borrow from bit 15
 
             // Undocumented Flags - from high byte
-            SetFlag(Flags.X, (H & 0x0800) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (H & 0x2000) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, (diff & 0x0800) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (diff & 0x2000) > 0 ? true : false); //Copy of bit 5
 
             SetQ();
 
