@@ -508,7 +508,25 @@ namespace Essenbee.Z80
                 { 0x14, new Instruction("RL H", IMP, IMP, RLR, new List<int>{ 4, 4 }) },
                 { 0x15, new Instruction("RL L", IMP, IMP, RLR, new List<int>{ 4, 4 }) },
                 { 0x16, new Instruction("RL (HL)", RGIHL, IMP, RLHL, new List<int>{ 4, 4, 4, 3 }) },
-                { 0x17, new Instruction("RL A", IMP, IMP, RLCR, new List<int>{ 4, 4 }) },
+                { 0x17, new Instruction("RL A", IMP, IMP, RLR, new List<int>{ 4, 4 }) },
+
+                { 0x20, new Instruction("SLA B", IMP, IMP, SLAR, new List<int>{ 4, 4 }) },
+                { 0x21, new Instruction("SLA C", IMP, IMP, SLAR, new List<int>{ 4, 4 }) },
+                { 0x22, new Instruction("SLA D", IMP, IMP, SLAR, new List<int>{ 4, 4 }) },
+                { 0x23, new Instruction("SLA E", IMP, IMP, SLAR, new List<int>{ 4, 4 }) },
+                { 0x24, new Instruction("SLA H", IMP, IMP, SLAR, new List<int>{ 4, 4 }) },
+                { 0x25, new Instruction("SLA L", IMP, IMP, SLAR, new List<int>{ 4, 4 }) },
+                { 0x26, new Instruction("SLA (HL)", RGIHL, IMP, SLAHL, new List<int>{ 4, 4, 4, 3 }) },
+                { 0x27, new Instruction("SLA A", IMP, IMP, SLAR, new List<int>{ 4, 4 }) },
+
+                { 0x38, new Instruction("SRL B", IMP, IMP, SRLR, new List<int>{ 4, 4 }) },
+                { 0x39, new Instruction("SRL C", IMP, IMP, SRLR, new List<int>{ 4, 4 }) },
+                { 0x3A, new Instruction("SRL D", IMP, IMP, SRLR, new List<int>{ 4, 4 }) },
+                { 0x3B, new Instruction("SRL E", IMP, IMP, SRLR, new List<int>{ 4, 4 }) },
+                { 0x3C, new Instruction("SRL H", IMP, IMP, SRLR, new List<int>{ 4, 4 }) },
+                { 0x3D, new Instruction("SRL L", IMP, IMP, SRLR, new List<int>{ 4, 4 }) },
+                { 0x3E, new Instruction("SRL (HL)", RGIHL, IMP, SRLHL, new List<int>{ 4, 4, 4, 3 }) },
+                { 0x3F, new Instruction("SRL A", IMP, IMP, SRLR, new List<int>{ 4, 4 }) },
             };
 
             _ddcbInstructions = new Dictionary<byte, Instruction>

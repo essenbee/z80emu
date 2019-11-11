@@ -2058,6 +2058,7 @@ namespace Essenbee.Z80
 
             A = (byte)((A << 1) + c);
 
+            // Do not use SetRotateLeftFlags() here
             SetFlag(Flags.C, c == 1);
             SetFlag(Flags.H, false);
             SetFlag(Flags.N, false);
@@ -2082,6 +2083,7 @@ namespace Essenbee.Z80
 
             A = (byte)((A << 1) + priorC);
 
+            // Do not use SetRotateLeftFlags() here
             SetFlag(Flags.C, newC > 0);
             SetFlag(Flags.H, false);
             SetFlag(Flags.N, false);
@@ -2109,6 +2111,7 @@ namespace Essenbee.Z80
 
             A = (byte)((A >> 1) + c);
 
+            // Do not use SetRotateRightFlags() here
             SetFlag(Flags.C, c == 0b10000000);
             SetFlag(Flags.H, false);
             SetFlag(Flags.N, false);
@@ -2133,6 +2136,7 @@ namespace Essenbee.Z80
 
             A = (byte)((A >> 1) + priorC);
 
+            // Do not use SetRotateRightFlags() here
             SetFlag(Flags.C, newC == 1);
             SetFlag(Flags.H, false);
             SetFlag(Flags.N, false);
@@ -2165,16 +2169,7 @@ namespace Essenbee.Z80
             AssignToRegister(src, n);
 
             SetFlag(Flags.C, c == 1);
-            SetFlag(Flags.H, false);
-            SetFlag(Flags.N, false);
-            SetFlag(Flags.Z, n == 0);
-            SetFlag(Flags.S, n >= 0x80);
-            SetFlag(Flags.P, Parity(n));
-
-            // Undocumented Flags
-            SetFlag(Flags.X, (n & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (n & 0x20) > 0 ? true : false); //Copy of bit 5
-            SetQ();
+            SetRotateLeftFlags(n);
 
             return 0;
         }
@@ -2198,16 +2193,7 @@ namespace Essenbee.Z80
             WriteToBus(HL, n);
 
             SetFlag(Flags.C, c == 1);
-            SetFlag(Flags.H, false);
-            SetFlag(Flags.N, false);
-            SetFlag(Flags.Z, n == 0);
-            SetFlag(Flags.S, n >= 0x80);
-            SetFlag(Flags.P, Parity(n));
-
-            // Undocumented Flags
-            SetFlag(Flags.X, (n & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (n & 0x20) > 0 ? true : false); //Copy of bit 5
-            SetQ();
+            SetRotateLeftFlags(n);
 
             return 0;
         }
@@ -2235,16 +2221,7 @@ namespace Essenbee.Z80
             WriteToBus(_absoluteAddress, n);
 
             SetFlag(Flags.C, c == 1);
-            SetFlag(Flags.H, false);
-            SetFlag(Flags.N, false);
-            SetFlag(Flags.Z, n == 0);
-            SetFlag(Flags.S, n >= 0x80);
-            SetFlag(Flags.P, Parity(n));
-
-            // Undocumented Flags
-            SetFlag(Flags.X, (n & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (n & 0x20) > 0 ? true : false); //Copy of bit 5
-            SetQ();
+            SetRotateLeftFlags(n);
 
             return 0;
         }
@@ -2272,16 +2249,7 @@ namespace Essenbee.Z80
             WriteToBus(_absoluteAddress, n);
 
             SetFlag(Flags.C, c == 1);
-            SetFlag(Flags.H, false);
-            SetFlag(Flags.N, false);
-            SetFlag(Flags.Z, n == 0);
-            SetFlag(Flags.S, n >= 0x80);
-            SetFlag(Flags.P, Parity(n));
-
-            // Undocumented Flags
-            SetFlag(Flags.X, (n & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (n & 0x20) > 0 ? true : false); //Copy of bit 5
-            SetQ();
+            SetRotateLeftFlags(n);
 
             return 0;
         }
@@ -2304,17 +2272,7 @@ namespace Essenbee.Z80
             SetFlag(Flags.C, newC > 0);
 
             AssignToRegister(src, n);
-
-            SetFlag(Flags.H, false);
-            SetFlag(Flags.N, false);
-            SetFlag(Flags.Z, n == 0);
-            SetFlag(Flags.S, n >= 0x80);
-            SetFlag(Flags.P, Parity(n));
-
-            // Undocumented Flags
-            SetFlag(Flags.X, (n & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (n & 0x20) > 0 ? true : false); //Copy of bit 5
-            SetQ();
+            SetRotateLeftFlags(n);
 
             return 0;
         }
@@ -2336,17 +2294,47 @@ namespace Essenbee.Z80
             SetFlag(Flags.C, newC > 0);
 
             WriteToBus(HL, n);
+            SetRotateLeftFlags(n);
 
-            SetFlag(Flags.H, false);
-            SetFlag(Flags.N, false);
-            SetFlag(Flags.Z, n == 0);
-            SetFlag(Flags.S, n >= 0x80);
-            SetFlag(Flags.P, Parity(n));
+            return 0;
+        }
 
-            // Undocumented Flags
-            SetFlag(Flags.X, (n & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (n & 0x20) > 0 ? true : false); //Copy of bit 5
-            SetQ();
+        // Instruction    : SLA r
+        // Operation      : r is shifted left 1 position, through the carry flag;
+        //                : a 0 is shifted into bit 0
+        // Flags Affected : All
+
+        private byte SLAR(byte opCode)
+        {
+            var src = opCode & 0b00000111;
+            var n = ReadFromRegister(src);
+
+            var newCarry = n & 0b10000000;
+
+            n = (byte)(n << 1);
+            AssignToRegister(src, n);
+
+            SetFlag(Flags.C, newCarry > 0);
+            SetShiftLeftArithmeticFlags(n);
+
+            return 0;
+        }
+
+        // Instruction    : SLA (HL)
+        // Operation      : (HL) is shifted left 1 position, through the carry flag;
+        //                : a 0 is shifted into bit 0
+        // Flags Affected : All
+
+        private byte SLAHL(byte opCode)
+        {
+            var n = Fetch1(_cbInstructions);
+            var newCarry = n & 0b10000000;
+            n = (byte)(n << 1);
+
+            WriteToBus(HL, n);
+
+            SetFlag(Flags.C, newCarry > 0);
+            SetShiftLeftArithmeticFlags(n);
 
             return 0;
         }
@@ -2354,9 +2342,61 @@ namespace Essenbee.Z80
 
 
 
-        // =========================== H E L P E R S ===========================
 
-        private byte Add8(byte a, byte b, byte c = 0)
+
+        // Instruction    : SRL r
+        // Operation      : r is shifted right 1 position, through the carry flag;
+        //                : a 0 is shifted into bit 7
+        // Flags Affected : All
+
+        private byte SRLR(byte opCode)
+        {
+            var src = opCode & 0b00000111;
+            var n = ReadFromRegister(src);
+
+            var newCarry = n & 0b00000001;
+
+            n = (byte)(n >> 1);
+            AssignToRegister(src, n);
+
+            SetFlag(Flags.C, newCarry > 0);
+            SetShiftRightLogicalFlags(n);
+
+            return 0;
+        }
+
+        // Instruction    : SRL (HL)
+        // Operation      : (HL) is shifted right 1 position, through the carry flag;
+        //                : a 0 is shifted into bit 7
+        // Flags Affected : All
+
+        private byte SRLHL(byte opCode)
+        {
+            var n = Fetch1(_cbInstructions);
+
+            var newCarry = n & 0b00000001;
+
+            n = (byte)(n >> 1);
+            WriteToBus(HL, n);
+
+            SetFlag(Flags.C, newCarry > 0);
+            SetShiftRightLogicalFlags(n);
+
+            return 0;
+        }
+
+
+
+
+
+
+
+
+
+
+            // =========================== H E L P E R S ===========================
+
+            private byte Add8(byte a, byte b, byte c = 0)
         {
             var sum = (a + b + c);
 
@@ -2574,6 +2614,50 @@ namespace Essenbee.Z80
             // Undocumented Flags
             SetFlag(Flags.X, ((byte)diff & 0x08) > 0 ? true : false); //Copy of bit 3
             SetFlag(Flags.U, ((byte)diff & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetQ();
+        }
+
+        private void SetRotateLeftFlags(byte n)
+        {
+            SetFlag(Flags.H, false);
+            SetFlag(Flags.N, false);
+            SetFlag(Flags.Z, n == 0);
+            SetFlag(Flags.S, n >= 0x80);
+            SetFlag(Flags.P, Parity(n));
+
+            // Undocumented Flags
+            SetFlag(Flags.X, (n & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (n & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetQ();
+        }
+
+        private void SetShiftLeftArithmeticFlags(byte n)
+        {
+            SetFlag(Flags.S, n >= 0x80);
+            SetFlag(Flags.Z, n == 0);
+            SetFlag(Flags.H, false);
+            SetFlag(Flags.P, Parity(n));
+            SetFlag(Flags.N, false);
+
+            // Undocumented flags
+            SetFlag(Flags.X, (n & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (n & 0x20) > 0 ? true : false); //Copy of bit 5
+
+            SetQ();
+        }
+
+        private void SetShiftRightLogicalFlags(byte n)
+        {
+            SetFlag(Flags.Z, n == 0);
+            SetFlag(Flags.P, Parity(n));
+            SetFlag(Flags.Z, false);
+            SetFlag(Flags.H, false);
+            SetFlag(Flags.N, false);
+
+            // Undocumented flags
+            SetFlag(Flags.X, (n & 0x08) > 0 ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, (n & 0x20) > 0 ? true : false); //Copy of bit 5
+
             SetQ();
         }
 
