@@ -392,5 +392,72 @@ namespace Essenbee.Z80.Tests
             Assert.Equal(0x086, cpu.PC);
             FlagsUnchanged(cpu);
         }
+
+        [Fact]
+        private void JumpBackFourForDJNZ_WhenNotZero()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x007C, 0x00 }, // <- jump here
+                { 0x007D, 0x00 },
+                { 0x007E, 0x00 },
+                { 0x007F, 0x00 },
+                { 0x0080, 0x10 }, // DJNZ $-4
+                { 0x0081, 0xFA }, // Assembler with compensate for PC incrementing twice
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+                { 0x0085, 0x00 },
+                { 0x0086, 0x00 },
+                { 0x0087, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+
+            var cpu = new Z80() { B = 0x05, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+
+            cpu.Step();
+
+            Assert.Equal(0x07C, cpu.PC);
+        }
+
+
+        [Fact]
+        private void NotJumpBackFourForDJNZ_WhenZero()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x007C, 0x00 }, // <- jump here
+                { 0x007D, 0x00 },
+                { 0x007E, 0x00 },
+                { 0x007F, 0x00 },
+                { 0x0080, 0x10 }, // DJNZ $-4
+                { 0x0081, 0xFA }, // Assembler with compensate for PC incrementing twice
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+                { 0x0085, 0x00 },
+                { 0x0086, 0x00 },
+                { 0x0087, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+
+            var cpu = new Z80() { B = 0x01, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+
+            cpu.Step();
+
+            Assert.Equal(0x082, cpu.PC);
+        }
     }
 }

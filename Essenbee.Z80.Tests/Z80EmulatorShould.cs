@@ -95,5 +95,44 @@ namespace Essenbee.Z80.Tests
 
             Assert.Equal(0x0372, cpu.HL);
         }
+
+
+        [Fact]
+        private void ExecuteEightBitMultiplication2RoutineSuccessfully()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            //` Arithmetic Test Routine #1 - 10 instructions
+            //` Filename: Arithmetic1.hex
+            //`
+            //` 8000                          .ORG   8000h
+            //`
+            //`8000   01 15 00               LD BC,21
+            //`8003   06 08                  LD B,8
+            //`8005   11 2A 00               LD DE,42
+            //`8008   16 00                  LD D,0
+            //`800A   21 00 00               LD HL,0
+            //`800D   CB 39         MULTI:   SRL C; LSB in Carry Flag
+            //`800F   30 01                  JR NC, NOADD
+            //`8011   19                     ADD HL, DE
+            //`8012   CB 23        NOADD:    SLA E
+            //`8014   CB 12                  RL D
+            //`8016   10 F5                  DJNZ   MULTI
+
+var ram = HexFileReader.Read("../../../HexFiles/Multiplication2.hex");
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => ram[addr]);
+
+            var cpu = new Z80() { A = 0x00, B = 0x00, C = 0x00, H = 0x00, L = 0x00, PC = 0x8000 };
+            cpu.ConnectToBus(fakeBus);
+
+            while (cpu.PC < 0x8018)
+            {
+                cpu.Step();
+            }
+
+            Assert.Equal(0x0372, cpu.HL);
+        }
     }
 }

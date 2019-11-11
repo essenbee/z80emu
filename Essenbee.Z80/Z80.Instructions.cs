@@ -2033,7 +2033,29 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction    : DJNZ e
+        // Operation      : Decrement B and jump if NZ (PC <- PC + e)
+        // Flags Affected : None
+        // Notes          : Assembler with compensate automatically for the twice-incremented PC
+        private byte DJNZ(byte opCode)
+        {
+            var e = (sbyte)Fetch1(_rootInstructions);
 
+            var initialVal = B;
+            B--;
+            SetDecFlags(initialVal, B);
+
+            if (!CheckFlag(Flags.Z))
+            {
+                // ToDo: Additional 5 T-states
+                PC = (ushort)(PC + e);
+                MEMPTR = PC;
+            }
+
+            ResetQ();
+
+            return 0;
+        }
 
 
 
