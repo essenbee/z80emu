@@ -87,13 +87,13 @@ namespace Essenbee.Z80
 
         private IBus _bus = null!;
 
-        private Dictionary<byte, Instruction> _rootInstructions = new Dictionary<byte, Instruction>();
-        private Dictionary<byte, Instruction> _cbInstructions = new Dictionary<byte, Instruction>();
-        private Dictionary<byte, Instruction> _ddInstructions = new Dictionary<byte, Instruction>();
-        private Dictionary<byte, Instruction> _ddcbInstructions = new Dictionary<byte, Instruction>();
-        private Dictionary<byte, Instruction> _edInstructions = new Dictionary<byte, Instruction>();
-        private Dictionary<byte, Instruction> _fdInstructions = new Dictionary<byte, Instruction>();
-        private Dictionary<byte, Instruction> _fdcbInstructions = new Dictionary<byte, Instruction>();
+        public Dictionary<byte, Instruction> RootInstructions { get; } = new Dictionary<byte, Instruction>();
+        public Dictionary<byte, Instruction> CBInstructions { get; } = new Dictionary<byte, Instruction>();
+        public Dictionary<byte, Instruction> DDInstructions { get; } = new Dictionary<byte, Instruction>();
+        public Dictionary<byte, Instruction> DDCBInstructions { get; } = new Dictionary<byte, Instruction>();
+        public Dictionary<byte, Instruction> EDInstructions { get; } = new Dictionary<byte, Instruction>();
+        public Dictionary<byte, Instruction> FDInstructions { get; } = new Dictionary<byte, Instruction>();
+        public Dictionary<byte, Instruction> FDCBInstructions { get; } = new Dictionary<byte, Instruction>();
 
         private ushort _absoluteAddress = 0x0000;
         private byte _currentOpCode = 0x00;
@@ -102,7 +102,7 @@ namespace Essenbee.Z80
 
         public Z80()
         {
-            _rootInstructions = new Dictionary<byte, Instruction>
+            RootInstructions = new Dictionary<byte, Instruction>
             {
                 { 0x00, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4 }) },
                 { 0x01, new Instruction("LD BC,nn", IMM, IMP, LDBCNN, new List<int>{ 4, 3, 3 }) },
@@ -368,7 +368,7 @@ namespace Essenbee.Z80
                 { 0xFD, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4 }) },
             };
 
-            _ddInstructions = new Dictionary<byte, Instruction>
+            DDInstructions = new Dictionary<byte, Instruction>
             {
                 { 0x21, new Instruction("LD IX,nn", IMM, IMP, LDIXNN, new List<int>{ 4, 4, 3, 3 }) },
                 { 0x22, new Instruction("LD (nn),IX", IMM, IDX, LDNNIX, new List<int>{ 4, 4, 3, 3, 3, 3 }) },
@@ -415,7 +415,7 @@ namespace Essenbee.Z80
                 { 0xF9, new Instruction("LD SP,IX", IMM, IMM, LDSPIX, new List<int>{ 4, 6 }) },
             };
 
-            _fdInstructions = new Dictionary<byte, Instruction>
+            FDInstructions = new Dictionary<byte, Instruction>
             {
                 { 0x21, new Instruction("LD IY,nn", IMM, IMP, LDIYNN, new List<int>{ 4, 4, 3, 3 }) },
                 { 0x22, new Instruction("LD (nn),IY", IMM, IDX, LDNNIY, new List<int>{ 4, 4, 3, 3, 3, 3 }) },
@@ -462,7 +462,7 @@ namespace Essenbee.Z80
                 { 0xF9, new Instruction("LD SP,IY", IMM, IMM, LDSPIY, new List<int>{ 4, 6 }) },
             };
 
-            _edInstructions = new Dictionary<byte, Instruction>
+            EDInstructions = new Dictionary<byte, Instruction>
             {
                 { 0x42, new Instruction("SBC HL,BC", IMP, IMP, SBCHLSS, new List<int>{ 4, 4, 4, 3 }) },
                 { 0x43, new Instruction("LD (nn),BC", IMM, IDX, LDNNBC, new List<int>{ 4, 4, 3, 3, 3, 3 }) },
@@ -491,7 +491,7 @@ namespace Essenbee.Z80
                 { 0x5F, new Instruction("ADD A,R", REG, REG, LDAR, new List<int>{ 4, 5 }) },
             };
 
-            _cbInstructions = new Dictionary<byte, Instruction>
+            CBInstructions = new Dictionary<byte, Instruction>
             {
                 { 0x00, new Instruction("RLC B", IMP, IMP, RLCR, new List<int>{ 4, 4 }) },
                 { 0x01, new Instruction("RLC C", IMP, IMP, RLCR, new List<int>{ 4, 4 }) },
@@ -530,12 +530,12 @@ namespace Essenbee.Z80
                 { 0x3F, new Instruction("SRL A", IMP, IMP, SRLR, new List<int>{ 4, 4 }) },
             };
 
-            _ddcbInstructions = new Dictionary<byte, Instruction>
+            DDCBInstructions = new Dictionary<byte, Instruction>
             {
                 { 0x06, new Instruction("RLC (IX+d)", IMM, IDX, RLCIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
             };
 
-            _fdcbInstructions = new Dictionary<byte, Instruction>
+            FDCBInstructions = new Dictionary<byte, Instruction>
             {
                 { 0x06, new Instruction("RLC (IY+d)", IMM, IDX, RLCIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
             };
@@ -669,7 +669,7 @@ namespace Essenbee.Z80
         private (byte opCode, Instruction operation) FetchNextInstruction(byte code, bool incPC = true)
         {
             // ToDo: Need to handle interrupts to release CPU from HALT state!
-            if (!_rootInstructions[code].Mnemonic.Equals("HALT", StringComparison.InvariantCultureIgnoreCase))
+            if (!RootInstructions[code].Mnemonic.Equals("HALT", StringComparison.InvariantCultureIgnoreCase))
             {
                 if (incPC) PC++;
             }
@@ -679,7 +679,7 @@ namespace Essenbee.Z80
                 case 0xCB:
                     var opCB = incPC ? ReadFromBus(PC) : ReadFromBus((ushort)(PC + 1));
                     if (incPC) PC++;
-                    return (opCB, _cbInstructions[opCB]);
+                    return (opCB, CBInstructions[opCB]);
                 case 0xDD:
                     var opDD = incPC ? ReadFromBus(PC) : ReadFromBus((ushort)(PC + 1));
                     if (incPC) PC++;
@@ -687,14 +687,14 @@ namespace Essenbee.Z80
                     {
                         var opDDCB = incPC ? ReadFromBus(PC) : ReadFromBus((ushort)(PC + 2));
                         if (incPC) PC++;
-                        return (opDDCB, _ddcbInstructions[opDDCB]);
+                        return (opDDCB, DDCBInstructions[opDDCB]);
                     }
 
-                    return (opDD, _ddInstructions[opDD]);
+                    return (opDD, DDInstructions[opDD]);
                 case 0xED:
                     var opED = incPC ? ReadFromBus(PC) : ReadFromBus((ushort)(PC + 1));
                     if (incPC) PC++;
-                    return (opED, _edInstructions[opED]);
+                    return (opED, EDInstructions[opED]);
                 case 0xFD:
                     var opFD = incPC ? ReadFromBus(PC) : ReadFromBus((ushort)(PC + 1));
                     if (incPC) PC++;
@@ -702,12 +702,12 @@ namespace Essenbee.Z80
                     {
                         var opFDCB = incPC ? ReadFromBus(PC) : ReadFromBus((ushort)(PC + 2));
                         if (incPC) PC++;
-                        return (opFDCB, _fdcbInstructions[opFDCB]);
+                        return (opFDCB, FDCBInstructions[opFDCB]);
                     }
 
-                    return (opFD, _fdInstructions[opFD]);
+                    return (opFD, FDInstructions[opFD]);
                 default:
-                    return (code, _rootInstructions[code]);
+                    return (code, RootInstructions[code]);
             }
         }
 
