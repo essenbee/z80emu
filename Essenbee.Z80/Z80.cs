@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
 
 namespace Essenbee.Z80
 {
@@ -114,7 +116,7 @@ namespace Essenbee.Z80
                 { 0x06, new Instruction("LD B,n", IMM, IMP, LDRN, new List<int>{ 4, 3 }) },
                 { 0x07, new Instruction("RLCA", IMP, IMP, RLCA, new List<int>{ 4 }) },
                 { 0x09, new Instruction("ADD HL,BC", IMP, IMP, ADDHLSS, new List<int>{ 4, 4, 3 }) },
-                { 0x10, new Instruction("DJNZ e", IMM, IMP, DJNZ, new List<int> { 5, 3 } ) },
+                { 0x10, new Instruction("DJNZ e", IMS, IMP, DJNZ, new List<int> { 5, 3 } ) },
 
                 { 0x0A, new Instruction("LD A,(BC)", IDX, IMP, LDABC, new List<int>{ 4, 3 }) },
 
@@ -131,7 +133,7 @@ namespace Essenbee.Z80
 
                 { 0x16, new Instruction("LD D,n", IMM, IMP, LDRN, new List<int>{ 4, 3 }) },
                 { 0x17, new Instruction("RLA", IMP, IMP, RLA, new List<int>{ 4 }) },
-                { 0x18, new Instruction("JR e", IMM, IMM, JR, new List<int>{ 4, 3, 5 }) },
+                { 0x18, new Instruction("JR e", IMS, IMM, JR, new List<int>{ 4, 3, 5 }) },
                 { 0x19, new Instruction("ADD HL,DE", IMP, IMP, ADDHLSS, new List<int>{ 4, 4, 3 }) },
                 { 0x1A, new Instruction("LD A,(DE)", IDX, IMP, LDADE, new List<int>{ 4, 3 }) },
 
@@ -157,7 +159,7 @@ namespace Essenbee.Z80
                 { 0x2E, new Instruction("LD L,n", IMM, IMP, LDRN, new List<int>{ 4, 3 }) },
 
                 { 0x2F, new Instruction("CPL", IMP, IMP, CPL, new List<int>{ 4 }) },
-                { 0x30, new Instruction("JR C,e", IMM, IMP, JRNC, new List<int>{ 4, 3, 5 }) },
+                { 0x30, new Instruction("JR C,e", IMS, IMP, JRNC, new List<int>{ 4, 3, 5 }) },
                 { 0x31, new Instruction("LD SP,nn", IMX, IMP, LDSPNN, new List<int>{ 4, 3, 3 }) },
                 { 0x32, new Instruction("LD (nn),A", IMX, IMP, LDNNA, new List<int>{ 4, 3, 3, 3 }) },
 
@@ -166,7 +168,7 @@ namespace Essenbee.Z80
 
                 { 0x36, new Instruction("LD (HL),n", IMM, IMP, LDHLN, new List<int>{ 4, 3, 3 }) },
                 { 0x37, new Instruction("SCF", IMP, IMP, SCF, new List<int>{ 4 }) },
-                { 0x38, new Instruction("JR C,e", IMM, IMP, JRC, new List<int>{ 4, 3, 5 }) },
+                { 0x38, new Instruction("JR C,e", IMS, IMP, JRC, new List<int>{ 4, 3, 5 }) },
                 { 0x39, new Instruction("ADD HL,SP", IMP, IMP, ADDHLSS, new List<int>{ 4, 4, 3 }) },
                 { 0x3A, new Instruction("LD A,(nn)", IMX, IDX, LDANN, new List<int>{ 4, 3, 3, 3 }) },
 
@@ -375,39 +377,39 @@ namespace Essenbee.Z80
 
                 { 0x2B, new Instruction("LD IX,(nn)", IMX, IDX, LDIXFNN, new List<int>{ 4, 4, 3, 3, 3, 3 }) },
 
-                { 0x34, new Instruction("INC (IX+d)", IMM, IDX, INCIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
-                { 0x35, new Instruction("DEC (IX+d)", IMM, IDX, DECIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
+                { 0x34, new Instruction("INC (IX+d)", IMS, IDX, INCIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
+                { 0x35, new Instruction("DEC (IX+d)", IMS, IDX, DECIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
 
-                { 0x36, new Instruction("LD (IX+d),n", IMM, IMM, LDIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x36, new Instruction("LD (IX+d),n", IMS, IMM, LDIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
 
-                { 0x46, new Instruction("LD B,(IX+d)", IMM, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x4E, new Instruction("LD C,(IX+d)", IMM, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x56, new Instruction("LD D,(IX+d)", IMM, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x5E, new Instruction("LD E,(IX+d)", IMM, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x66, new Instruction("LD H,(IX+d)", IMM, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x6E, new Instruction("LD L,(IX+d)", IMM, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x46, new Instruction("LD B,(IX+d)", IMS, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x4E, new Instruction("LD C,(IX+d)", IMS, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x56, new Instruction("LD D,(IX+d)", IMS, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x5E, new Instruction("LD E,(IX+d)", IMS, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x66, new Instruction("LD H,(IX+d)", IMS, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x6E, new Instruction("LD L,(IX+d)", IMS, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
 
-                { 0x70, new Instruction("LD (IX+d),B", IMM, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x71, new Instruction("LD (IX+d),C", IMM, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x72, new Instruction("LD (IX+d),D", IMM, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x73, new Instruction("LD (IX+d),E", IMM, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x74, new Instruction("LD (IX+d),H", IMM, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x75, new Instruction("LD (IX+d),L", IMM, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x70, new Instruction("LD (IX+d),B", IMS, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x71, new Instruction("LD (IX+d),C", IMS, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x72, new Instruction("LD (IX+d),D", IMS, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x73, new Instruction("LD (IX+d),E", IMS, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x74, new Instruction("LD (IX+d),H", IMS, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x75, new Instruction("LD (IX+d),L", IMS, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
 
-                { 0x77, new Instruction("LD (IX+d),A", IMM, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x77, new Instruction("LD (IX+d),A", IMS, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
 
-                { 0x7E, new Instruction("LD A,(IX+d)", IMM, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x7E, new Instruction("LD A,(IX+d)", IMS, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
 
-                { 0x86, new Instruction("ADD A,(IX+d)", IMM, IDX, ADDAIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x8E, new Instruction("ADC A,(IX+d)", IMM, IDX, ADCAIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x96, new Instruction("SUB A,(IX+d)", IMM, IDX, SUBAIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x9E, new Instruction("SBC A,(IX+d)", IMM, IDX, SBCAIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x86, new Instruction("ADD A,(IX+d)", IMS, IDX, ADDAIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x8E, new Instruction("ADC A,(IX+d)", IMS, IDX, ADCAIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x96, new Instruction("SUB A,(IX+d)", IMS, IDX, SUBAIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x9E, new Instruction("SBC A,(IX+d)", IMS, IDX, SBCAIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
 
-                { 0xA6, new Instruction("AND (IX+d)", IMM, IDX, ANDIXD, new List<int>{ 4, 4 , 3, 5, 3 }) },
-                { 0xAE, new Instruction("XOR (IX+d)", IMM, IDX, XORIXD, new List<int>{ 4, 4 , 3, 5, 3 }) },
-                { 0xB6, new Instruction("OR (IX+d)", IMM, IDX, ORIXD, new List<int>{ 4, 4 , 3, 5, 3 }) },
+                { 0xA6, new Instruction("AND (IX+d)", IMS, IDX, ANDIXD, new List<int>{ 4, 4 , 3, 5, 3 }) },
+                { 0xAE, new Instruction("XOR (IX+d)", IMS, IDX, XORIXD, new List<int>{ 4, 4 , 3, 5, 3 }) },
+                { 0xB6, new Instruction("OR (IX+d)", IMS, IDX, ORIXD, new List<int>{ 4, 4 , 3, 5, 3 }) },
 
-                { 0xBE, new Instruction("CP (IX+d)", IMM, IDX, CPIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0xBE, new Instruction("CP (IX+d)", IMS, IDX, CPIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
 
                 { 0xE1, new Instruction("POP IX", IMP, IMP, POPIX, new List<int>{ 4, 3, 3, 3 }) },
                 { 0xE5, new Instruction("PUSH IX", IMP, IMP, PUSHIX, new List<int>{ 4, 5, 3, 3 }) },
@@ -422,39 +424,39 @@ namespace Essenbee.Z80
 
                 { 0x2B, new Instruction("LD IY,(nn)", IMX, IDX, LDIYFNN, new List<int>{ 4, 4, 3, 3, 3, 3 }) },
 
-                { 0x34, new Instruction("INC (IY+d)", IMM, IDX, INCIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
-                { 0x35, new Instruction("DEC (IY+d)", IMM, IDX, DECIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
+                { 0x34, new Instruction("INC (IY+d)", IMS, IDX, INCIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
+                { 0x35, new Instruction("DEC (IY+d)", IMS, IDX, DECIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
 
-                { 0x36, new Instruction("LD (IY+d),n", IMM, IMM, LDIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x36, new Instruction("LD (IY+d),n", IMS, IMM, LDIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
 
-                { 0x46, new Instruction("LD B,(IY+d)", IMM, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x4E, new Instruction("LD C,(IY+d)", IMM, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x56, new Instruction("LD D,(IY+d)", IMM, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x5E, new Instruction("LD E,(IY+d)", IMM, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x66, new Instruction("LD H,(IY+d)", IMM, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x6E, new Instruction("LD L,(IY+d)", IMM, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x46, new Instruction("LD B,(IY+d)", IMS, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x4E, new Instruction("LD C,(IY+d)", IMS, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x56, new Instruction("LD D,(IY+d)", IMS, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x5E, new Instruction("LD E,(IY+d)", IMS, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x66, new Instruction("LD H,(IY+d)", IMS, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x6E, new Instruction("LD L,(IY+d)", IMS, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
 
-                { 0x70, new Instruction("LD (IY+d),B", IMM, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x71, new Instruction("LD (IY+d),C", IMM, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x72, new Instruction("LD (IY+d),D", IMM, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x73, new Instruction("LD (IY+d),E", IMM, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x74, new Instruction("LD (IY+d),H", IMM, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x75, new Instruction("LD (IY+d),L", IMM, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x70, new Instruction("LD (IY+d),B", IMS, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x71, new Instruction("LD (IY+d),C", IMS, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x72, new Instruction("LD (IY+d),D", IMS, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x73, new Instruction("LD (IY+d),E", IMS, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x74, new Instruction("LD (IY+d),H", IMS, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x75, new Instruction("LD (IY+d),L", IMS, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
 
-                { 0x77, new Instruction("LD (IY+d),A", IMM, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x77, new Instruction("LD (IY+d),A", IMS, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
 
-                { 0x7E, new Instruction("LD A,(IY+d)", IMM, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x7E, new Instruction("LD A,(IY+d)", IMS, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
 
-                { 0x86, new Instruction("ADD A,(IY+d)", IMM, IDX, ADDAIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x8E, new Instruction("ADC A,(IY+d)", IMM, IDX, ADCAIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x96, new Instruction("SUB A,(IY+d)", IMM, IDX, SUBAIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x9E, new Instruction("SBC A,(IY+d)", IMM, IDX, SBCAIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x86, new Instruction("ADD A,(IY+d)", IMS, IDX, ADDAIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x8E, new Instruction("ADC A,(IY+d)", IMS, IDX, ADCAIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x96, new Instruction("SUB A,(IY+d)", IMS, IDX, SUBAIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x9E, new Instruction("SBC A,(IY+d)", IMS, IDX, SBCAIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
 
-                { 0xA6, new Instruction("AND (IY+d)", IMM, IDX, ANDIYD, new List<int>{ 4, 4 , 3, 5, 3 }) },
-                { 0xAE, new Instruction("XOR (IY+d)", IMM, IDX, XORIYD, new List<int>{ 4, 4 , 3, 5, 3 }) },
-                { 0xB6, new Instruction("OR (IY+d)", IMM, IDX, ORIYD, new List<int>{ 4, 4 , 3, 5, 3 }) },
+                { 0xA6, new Instruction("AND (IY+d)", IMS, IDX, ANDIYD, new List<int>{ 4, 4 , 3, 5, 3 }) },
+                { 0xAE, new Instruction("XOR (IY+d)", IMS, IDX, XORIYD, new List<int>{ 4, 4 , 3, 5, 3 }) },
+                { 0xB6, new Instruction("OR (IY+d)", IMS, IDX, ORIYD, new List<int>{ 4, 4 , 3, 5, 3 }) },
 
-                { 0xBE, new Instruction("CP (IY+d)", IMM, IDX, CPIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0xBE, new Instruction("CP (IY+d)", IMS, IDX, CPIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
 
                 { 0xE1, new Instruction("POP IY", IMP, IMP, POPIY, new List<int>{ 4, 3, 3, 3 }) },
                 { 0xE5, new Instruction("PUSH IY", IMP, IMP, PUSHIY, new List<int>{ 4, 5, 3, 3 }) },
@@ -532,12 +534,12 @@ namespace Essenbee.Z80
 
             DDCBInstructions = new Dictionary<byte, Instruction>
             {
-                { 0x06, new Instruction("RLC (IX+d)", IMM, IDX, RLCIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
+                { 0x06, new Instruction("RLC (IX+d)", IMS, IDX, RLCIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
             };
 
             FDCBInstructions = new Dictionary<byte, Instruction>
             {
-                { 0x06, new Instruction("RLC (IY+d)", IMM, IDX, RLCIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
+                { 0x06, new Instruction("RLC (IY+d)", IMS, IDX, RLCIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
             };
         }
 
@@ -573,6 +575,23 @@ namespace Essenbee.Z80
             {
                 Tick();
             }
+        }
+
+        public string Disassemble(ushort start, ushort end)
+        {
+            var address = start;
+            var sb = new StringBuilder();
+            var culture = new CultureInfo("en-US");
+
+            while (address <= end)
+            {
+                var (op, nextAddr) = DisassembleInstruction(address, culture);
+                address = nextAddr;
+                sb.Append(op);
+                sb.AppendLine();
+            }
+
+            return sb.ToString();
         }
 
         private void Tick()
@@ -714,5 +733,82 @@ namespace Essenbee.Z80
         private void ResetQ() => Q = (Flags)(0b00000000);
 
         private void SetQ() => Q = F;
+
+        private (string opString, ushort nextAddress) DisassembleInstruction(ushort address, CultureInfo culture)
+        {
+            var opCode = @$"{address.ToString("X4", culture)}    ";
+            var aByte = ReadFromBus(address++);
+            Instruction operation;
+
+            switch (aByte)
+            {
+                case 0xCB:
+                    var opCB = ReadFromBus(address++);
+                    operation = CBInstructions[opCB];
+                    break;
+                case 0xDD:
+                    var opDD = ReadFromBus(address++);
+
+                    if (opDD == 0xCB)
+                    {
+                        var opDDCB = ReadFromBus(address++);
+                        operation = DDCBInstructions[opDDCB];
+                        break;
+                    }
+
+                    operation = DDInstructions[opDD];
+                    break;
+
+                case 0xED:
+                    var opED = ReadFromBus(address++);
+                    operation = EDInstructions[opED];
+                    break;
+
+                case 0xFD:
+                    var opFD = ReadFromBus(address++);
+                    
+                    if (opFD == 0xCB)
+                    {
+                        var opFDCB = ReadFromBus(address++);
+                        operation = FDCBInstructions[opFDCB];
+                        break;
+                    }
+
+                    operation = FDInstructions[opFD];
+                    break;
+
+                default:
+                    operation = RootInstructions[aByte];
+                    break;
+            }
+
+            opCode += $"{operation.Mnemonic}";
+
+            // Operands
+            if (operation.AddressingMode1 == IMM)
+            {
+                var n = ReadFromBus(address++).ToString("X2", culture);
+                opCode = opCode.Replace("n", $"&{n}", StringComparison.InvariantCulture);
+            }
+            else if (operation.AddressingMode1 == IMS)
+            {
+                var d = (sbyte)ReadFromBus(address++);
+                var e = d > 0 ? d + 2 : d - 2;
+
+                opCode = opCode.Replace("+d", $"{d.ToString("+0;-#", culture)}", StringComparison.InvariantCulture);
+                opCode = opCode.Replace("e", $"${e.ToString("+0;-#", culture)}", StringComparison.InvariantCulture);
+            }
+            else if (operation.AddressingMode1 == IMX)
+            {
+                var loByte = ReadFromBus(address++);
+                var hiByte = (ushort)ReadFromBus(address++);
+                var val = (ushort)((hiByte << 8) + loByte);
+                var nn = val.ToString("X4", culture);
+                opCode = opCode.Replace("nn", $"&{nn}", StringComparison.InvariantCulture);
+            }
+
+
+            return (opCode, address);
+        }
     }
 }

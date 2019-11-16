@@ -26,6 +26,13 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Immediate Mode (Signed)
+        private byte IMS()
+        {
+            _absoluteAddress = PC++;
+            return 0;
+        }
+
         // Extended Immediate Mode
         private byte IMX()
         {
