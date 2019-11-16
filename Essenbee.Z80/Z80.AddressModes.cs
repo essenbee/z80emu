@@ -19,8 +19,15 @@ namespace Essenbee.Z80
         // Indexed Mode
         private byte IDX() => 0;
 
-        // Immediate Mode (called twice for Immediate Extended Mode)
+        // Immediate Mode
         private byte IMM()
+        {
+            _absoluteAddress = PC++;
+            return 0;
+        }
+
+        // Extended Immediate Mode
+        private byte IMX()
         {
             _absoluteAddress = PC++;
             return 0;
