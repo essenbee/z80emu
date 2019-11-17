@@ -35,13 +35,27 @@
                 </DataGrid.Columns>
             </DataGrid>
             
-            <!-- Memory -->
-            <TextBox Grid.Row="1"
-                     IsReadOnly="True"
-                     VerticalScrollBarVisibility="Visible"
-                     HorizontalScrollBarVisibility="Disabled"
-                     TextWrapping="Wrap"
-                     Text="{Binding Memory}" />
+            <!-- Memory Map -->
+            <DataGrid x:Name="MemoryMap" Grid.Row="1" 
+                      VerticalScrollBarVisibility="Visible"
+                      HorizontalScrollBarVisibility="Hidden"
+                      ItemsSource="{Binding Memory}" 
+                      IsReadOnly="True"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False" >
+                <DataGrid.Columns>
+                    <DataGridTextColumn 
+                        Header="Address" 
+                        IsReadOnly="True" 
+                        Width="100" 
+                        Binding="{Binding Path=Key}" />
+                    <DataGridTextColumn 
+                        Header="Contents" 
+                        IsReadOnly="True" 
+                        Width="500"
+                        Binding="{Binding Path=Value}"/>
+                </DataGrid.Columns>
+            </DataGrid>
 
             <!-- Controls and Buttons -->
             <StackPanel Grid.Row="3" Orientation="Horizontal">

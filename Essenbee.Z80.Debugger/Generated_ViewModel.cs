@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -52,16 +53,16 @@ namespace Essenbee.Z80.Debugger
         // --------------------------------------------------------------------
 
         // --------------------------------------------------------------------
-        // BEGIN_PROPERTY: Memory (string)
+        // BEGIN_PROPERTY: Memory (Dictionary<string,string>)
         // --------------------------------------------------------------------
-        string _Memory = default;
+        Dictionary<string,string> _Memory = default;
 
         void Raise_Memory ()
         {
           OnPropertyChanged ("Memory");
         }
 
-        public string Memory
+        public Dictionary<string,string> Memory
         {
             get { return _Memory; }
             set
@@ -81,9 +82,9 @@ namespace Essenbee.Z80.Debugger
             }
         }
         // --------------------------------------------------------------------
-        partial void Changed_Memory (string prev, string current);
+        partial void Changed_Memory (Dictionary<string,string> prev, Dictionary<string,string> current);
         // --------------------------------------------------------------------
-        // END_PROPERTY: Memory (string)
+        // END_PROPERTY: Memory (Dictionary<string,string>)
         // --------------------------------------------------------------------
 
 

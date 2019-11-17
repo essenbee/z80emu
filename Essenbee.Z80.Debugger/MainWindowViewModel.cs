@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Essenbee.Z80.Debugger
@@ -15,6 +17,7 @@ namespace Essenbee.Z80.Debugger
             _cpu = new Z80 { PC = 0x8000 }; //Default start location
             _cpu.ConnectToBus(_basicBus);
             ProgramCounter = _cpu.PC.ToString("X4");
+            Memory = BuildMemoryMap();
         }
 
         // ================== Property Events ==================
@@ -31,11 +34,10 @@ namespace Essenbee.Z80.Debugger
 
         partial void Execute_StepCommand()
         {
-            
-            
-            
-            // ToDo: temporarily memory display as a string
-            Memory = string.Join(" ", _basicBus.RAM.Select(b => b.ToString("X2")));
+
+
+
+            Memory = BuildMemoryMap();
         }
 
         partial void CanExecute_LoadCommand(ref bool result)
@@ -57,10 +59,32 @@ namespace Essenbee.Z80.Debugger
                 var fileName = openFileDialog.FileName;
                 var RAM = HexFileLoader.Read(fileName, new byte[64 * 1024]);
                 _basicBus = new BasicBus(RAM);
+                Memory = BuildMemoryMap();
+
 
                 // ToDo: temporarily memory display as a string
-                Memory = string.Join(" ", _basicBus.RAM.Select(b => b.ToString("X2")));
+                //Memory = new ObservableCollection<string>(_basicBus.RAM.Select(b => b.ToString("X2")));
             }
+        }
+
+        private Dictionary<string, string> BuildMemoryMap()
+        {
+            var memory = _basicBus.RAM.Select((a, b) => new { a, b })
+                                  .ToDictionary(mem => mem.b, mem => mem.a);
+            var memoryMap = new Dictionary<string, string>();
+            for (int i = 0; i < memory.Count; i += 16)
+            {
+                memoryMap[i.ToString("X4")] = memory[i].ToString("X2") + " ";
+
+                for (int x = 1; x < 15; x++)
+                {
+                    memoryMap[i.ToString("X4")] += memory[i + x].ToString("X2") + " ";
+                }
+
+                memoryMap[i.ToString("X4")] += memory[i + 15].ToString("X2");
+            }
+
+            return memoryMap;
         }
     }
 }
