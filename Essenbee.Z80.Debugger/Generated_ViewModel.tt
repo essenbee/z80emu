@@ -1,0 +1,259 @@
+﻿using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Threading;
+
+<#
+  // Model defines what properties and commands are generated
+
+  var properties = new []
+    {
+        P ( "string", "ProgramCounter" ),
+        P ( "string", "Memory"         ),
+    };
+
+  var commands = new []
+    {
+      C ( "StepCommand"         ),
+      C ( "LoadCommand"         ),
+    };
+
+#>
+
+
+<#
+  // The template generates the code from the model
+#>
+
+namespace Essenbee.Z80.Debugger
+{
+    public partial class MainWindowViewModel : INotifyPropertyChanged
+    {
+        readonly Dispatcher _dispatcher;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+<#
+  foreach (var prop in properties)
+  {
+    if (prop.IsCollection)
+    {
+#>
+        // --------------------------------------------------------------------
+        // BEGIN_COLLECTION_PROPERTY: <#=prop.Name#> (<#=prop.Type#>)
+        // --------------------------------------------------------------------
+        ObservableCollection<<#=prop.Type#>> _<#=prop.Name#> = new ObservableCollection<<#=prop.Type#>> ();
+
+        void Raise_<#=prop.Name#> ()
+        {
+<#
+  if (prop.LabelValue.Length > 0)
+  {
+#>
+          OnPropertyChanged ("<#=prop.Name#>Label");
+<#
+  }
+#>
+        }
+
+<#
+  if (prop.LabelValue.Length > 0)
+  {
+#>
+        public string <#=prop.Name#>Label => <#=prop.LabelValue#>;
+
+<#
+  }
+#>
+        public ObservableCollection<<#=prop.Type#>> <#=prop.Name#>
+        {
+            get { return _<#=prop.Name#>; }
+        }
+        // --------------------------------------------------------------------
+        // END_COLLECTION_PROPERTY: <#=prop.Name#> (<#=prop.Type#>)
+        // --------------------------------------------------------------------
+
+<#
+    }
+    else
+    {
+#>
+        // --------------------------------------------------------------------
+        // BEGIN_PROPERTY: <#=prop.Name#> (<#=prop.Type#>)
+        // --------------------------------------------------------------------
+        <#=prop.Type#> _<#=prop.Name#> = <#=prop.DefaultValue#>;
+
+        void Raise_<#=prop.Name#> ()
+        {
+          OnPropertyChanged ("<#=prop.Name#>");
+<#
+  if (prop.LabelValue.Length > 0)
+  {
+#>
+          OnPropertyChanged ("<#=prop.Name#>Label");
+<#
+  }
+#>
+        }
+
+<#
+  if (prop.LabelValue.Length > 0)
+  {
+#>
+        public string <#=prop.Name#>Label => <#=prop.LabelValue#>;
+
+<#
+  }
+#>
+        public <#=prop.Type#> <#=prop.Name#>
+        {
+            get { return _<#=prop.Name#>; }
+            set
+            {
+                if (_<#=prop.Name#> == value)
+                {
+                    return;
+                }
+
+                var prev = _<#=prop.Name#>;
+
+                _<#=prop.Name#> = value;
+
+                Changed_<#=prop.Name#> (prev, _<#=prop.Name#>);
+
+                Raise_<#=prop.Name#> ();
+            }
+        }
+        // --------------------------------------------------------------------
+        partial void Changed_<#=prop.Name#> (<#=prop.Type#> prev, <#=prop.Type#> current);
+        // --------------------------------------------------------------------
+        // END_PROPERTY: <#=prop.Name#> (<#=prop.Type#>)
+        // --------------------------------------------------------------------
+
+<#
+    }
+  }
+#>
+
+<#
+  foreach (var cmd in commands)
+  {
+#>
+        // --------------------------------------------------------------------
+        // BEGIN_COMMAND: <#=cmd.Name#>
+        // --------------------------------------------------------------------
+        readonly UserCommand _<#=cmd.Name#>;
+
+        bool CanExecute<#=cmd.Name#> ()
+        {
+          bool result = false;
+          CanExecute_<#=cmd.Name#> (ref result);
+
+          return result;
+        }
+
+        void Execute<#=cmd.Name#> ()
+        {
+          Execute_<#=cmd.Name#> ();
+        }
+
+        public ICommand <#=cmd.Name#> { get { return _<#=cmd.Name#>;} }
+        // --------------------------------------------------------------------
+        partial void CanExecute_<#=cmd.Name#> (ref bool result);
+        partial void Execute_<#=cmd.Name#> ();
+        // --------------------------------------------------------------------
+        // END_COMMAND: <#=cmd.Name#>
+        // --------------------------------------------------------------------
+
+<#
+  }
+#>
+
+        partial void Constructed ();
+
+        public MainWindowViewModel (Dispatcher dispatcher)
+        {
+          _dispatcher = dispatcher;
+<#
+  foreach (var cmd in commands)
+  {
+#>
+          _<#=cmd.Name#> = new UserCommand (CanExecute<#=cmd.Name#>, Execute<#=cmd.Name#>);
+<#
+  }
+#>
+
+          Constructed ();
+        }
+
+        void ResetCanExecute ()
+        {
+<#
+  foreach (var cmd in commands)
+  {
+#>
+          _<#=cmd.Name#>.RefreshCanExecute ();
+<#
+  }
+#>
+        }
+
+        void Dispatch(Action action)
+        {
+          _dispatcher.BeginInvoke(action);
+        }
+
+        protected virtual void OnPropertyChanged (string propertyChanged)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyChanged));
+        }
+    }
+}
+
+<#+
+  class PropertyInfo
+  {
+    public readonly string Type         ;
+    public readonly string Name         ;
+    public readonly string DefaultValue ;
+    public readonly string LabelValue   ;
+    public readonly bool   IsCollection ;
+
+    public PropertyInfo (string type, string name, string defaultValue, string labelValue, bool isCollection)
+    {
+      Type          = type          ?? "<NoType>";
+      Name          = name          ?? "<NoName>";
+      DefaultValue  = defaultValue  ?? $"default";
+      LabelValue    = labelValue    ?? ""        ;
+      IsCollection  = isCollection               ;
+    }
+  }
+
+  static PropertyInfo P (string type, string name, string defaultValue = null) =>
+    new PropertyInfo (type, name, defaultValue, null, false);
+
+  static PropertyInfo C (string type, string name) =>
+    new PropertyInfo (type, name, null, null, true);
+
+  static PropertyInfo LP (string type, string name, string labelValue, string defaultValue = null) =>
+    new PropertyInfo (type, name, defaultValue, labelValue, false);
+
+  static PropertyInfo LC (string type, string name, string labelValue) =>
+    new PropertyInfo (type, name, null, labelValue, true);
+
+  class CommandInfo
+  {
+    public readonly string Name         ;
+
+    public CommandInfo (string name)
+    {
+      Name          = name          ?? "<NoName>";
+    }
+  }
+
+  static CommandInfo C (string name) =>
+    new CommandInfo (name);
+
+#>
