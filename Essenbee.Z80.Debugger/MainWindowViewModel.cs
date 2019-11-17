@@ -29,20 +29,19 @@ namespace Essenbee.Z80.Debugger
         // ================== Command Events ==================
         partial void CanExecute_StepCommand(ref bool result)
         {
-            result = true;
+            result = _cpu != null;
         }
 
         partial void Execute_StepCommand()
         {
-
-
-
+            _cpu.Step();
             Memory = BuildMemoryMap();
+            ProgramCounter = _cpu.PC.ToString("X4");
         }
 
         partial void CanExecute_LoadCommand(ref bool result)
         {
-            result = true;
+            result = _cpu != null;
         }
 
         partial void Execute_LoadCommand()
@@ -59,11 +58,8 @@ namespace Essenbee.Z80.Debugger
                 var fileName = openFileDialog.FileName;
                 var RAM = HexFileLoader.Read(fileName, new byte[64 * 1024]);
                 _basicBus = new BasicBus(RAM);
+                _cpu.ConnectToBus(_basicBus);
                 Memory = BuildMemoryMap();
-
-
-                // ToDo: temporarily memory display as a string
-                //Memory = new ObservableCollection<string>(_basicBus.RAM.Select(b => b.ToString("X2")));
             }
         }
 
