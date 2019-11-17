@@ -1,23 +1,29 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Essenbee.Z80.Debugger
 {
     public class BasicBus : IBus
     {
-        private byte[] RAM;
+        private byte[] _memory;
         public BasicBus(int RAMSize)
         {
-            RAM = new byte[RAMSize * 1024];
+            _memory = new byte[RAMSize * 1024];
         }
 
         public BasicBus(byte[] ram)
         {
-            RAM = ram;
+            _memory = ram;
+        }
+
+        public IReadOnlyCollection<byte> RAM
+        {
+            get => _memory;
         }
 
         public byte Read(ushort addr, bool ro = false)
         {
-            return RAM[addr];
+            return _memory[addr];
         }
 
         public byte ReadPeripheral(byte port)
@@ -27,7 +33,7 @@ namespace Essenbee.Z80.Debugger
 
         public void Write(ushort addr, byte data)
         {
-            RAM[addr] = data;
+            _memory[addr] = data;
         }
 
         public void WritePeripheral(byte port, byte data)

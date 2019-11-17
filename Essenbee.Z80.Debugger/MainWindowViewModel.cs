@@ -31,7 +31,11 @@ namespace Essenbee.Z80.Debugger
 
         partial void Execute_StepCommand()
         {
-
+            
+            
+            
+            // ToDo: temporarily memory display as a string
+            Memory = string.Join(" ", _basicBus.RAM.Select(b => b.ToString("X2")));
         }
 
         partial void CanExecute_LoadCommand(ref bool result)
@@ -55,7 +59,7 @@ namespace Essenbee.Z80.Debugger
                 _basicBus = new BasicBus(RAM);
 
                 // ToDo: temporarily memory display as a string
-                Memory = string.Join(" ", RAM.Select(b => b.ToString("X2")));
+                Memory = string.Join(" ", _basicBus.RAM.Select(b => b.ToString("X2")));
             }
         }
     }
