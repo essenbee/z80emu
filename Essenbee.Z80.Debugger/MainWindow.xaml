@@ -22,7 +22,12 @@
 
             <DataGrid x:Name="Code" Grid.Row="0" 
                       VerticalScrollBarVisibility="Visible"
-                      HorizontalScrollBarVisibility="Hidden">
+                      HorizontalScrollBarVisibility="Hidden"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      SelectionMode="Single" >
                 <DataGrid.Columns>
                     <DataGridTextColumn 
                         Header="Address" 
@@ -39,10 +44,12 @@
             <DataGrid x:Name="MemoryMap" Grid.Row="1" 
                       VerticalScrollBarVisibility="Visible"
                       HorizontalScrollBarVisibility="Hidden"
+                      AutoGenerateColumns="False"
                       ItemsSource="{Binding Memory}" 
                       IsReadOnly="True"
                       CanUserAddRows="False"
-                      CanUserDeleteRows="False" >
+                      CanUserDeleteRows="False"
+                      SelectionMode="Single" >
                 <DataGrid.Columns>
                     <DataGridTextColumn 
                         Header="Address" 
