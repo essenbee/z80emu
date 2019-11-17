@@ -9,6 +9,8 @@ namespace Essenbee.Z80.Debugger
     {
         private Z80 _cpu;
         private IBus _basicBus;
+        private ushort _disassembleFrom;
+        private ushort _disassembleTo;
 
         // ================== Construction Event ==================
         partial void Constructed()
@@ -18,12 +20,26 @@ namespace Essenbee.Z80.Debugger
             _cpu.ConnectToBus(_basicBus);
             ProgramCounter = _cpu.PC.ToString("X4");
             Memory = BuildMemoryMap();
-        }
+            _disassembleFrom = 0x8000;
+            _disassembleTo = 0x9000;
+            DisassmFrom = _disassembleFrom.ToString("X4");
+            DisassmTo = _disassembleTo.ToString("X4");
+    }
 
         // ================== Property Events ==================
         partial void Changed_ProgramCounter(string prev, string current)
         {
             _cpu.PC = ushort.Parse(current, System.Globalization.NumberStyles.HexNumber) ;
+        }
+
+        partial void Changed_DisassmFrom(string prev, string current)
+        {
+            _disassembleFrom = ushort.Parse(current, System.Globalization.NumberStyles.HexNumber);
+        }
+
+        partial void Changed_DisassmTo(string prev, string current)
+        {
+            _disassembleTo = ushort.Parse(current, System.Globalization.NumberStyles.HexNumber);
         }
 
         // ================== Command Events ==================
@@ -37,6 +53,8 @@ namespace Essenbee.Z80.Debugger
             _cpu.Step();
             Memory = BuildMemoryMap();
             ProgramCounter = _cpu.PC.ToString("X4");
+            DisassmFrom = _disassembleFrom.ToString("X4");
+            DisassmTo = _disassembleTo.ToString("X4");
         }
 
         partial void CanExecute_LoadCommand(ref bool result)
@@ -61,6 +79,16 @@ namespace Essenbee.Z80.Debugger
                 _cpu.ConnectToBus(_basicBus);
                 Memory = BuildMemoryMap();
             }
+        }
+
+        partial void CanExecute_DisassembleCommand(ref bool result)
+        {
+            result = _cpu != null;
+        }
+
+        partial void Execute_DisassembleCommand()
+        {
+            // ToDo: Disassemble here from addresses _disassembelFrom to _disassembleTo
         }
 
         private Dictionary<string, string> BuildMemoryMap()

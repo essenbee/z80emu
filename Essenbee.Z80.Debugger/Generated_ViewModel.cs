@@ -87,6 +87,76 @@ namespace Essenbee.Z80.Debugger
         // END_PROPERTY: Memory (Dictionary<string,string>)
         // --------------------------------------------------------------------
 
+        // --------------------------------------------------------------------
+        // BEGIN_PROPERTY: DisassmFrom (string)
+        // --------------------------------------------------------------------
+        string _DisassmFrom = default;
+
+        void Raise_DisassmFrom ()
+        {
+          OnPropertyChanged ("DisassmFrom");
+        }
+
+        public string DisassmFrom
+        {
+            get { return _DisassmFrom; }
+            set
+            {
+                if (_DisassmFrom == value)
+                {
+                    return;
+                }
+
+                var prev = _DisassmFrom;
+
+                _DisassmFrom = value;
+
+                Changed_DisassmFrom (prev, _DisassmFrom);
+
+                Raise_DisassmFrom ();
+            }
+        }
+        // --------------------------------------------------------------------
+        partial void Changed_DisassmFrom (string prev, string current);
+        // --------------------------------------------------------------------
+        // END_PROPERTY: DisassmFrom (string)
+        // --------------------------------------------------------------------
+
+        // --------------------------------------------------------------------
+        // BEGIN_PROPERTY: DisassmTo (string)
+        // --------------------------------------------------------------------
+        string _DisassmTo = default;
+
+        void Raise_DisassmTo ()
+        {
+          OnPropertyChanged ("DisassmTo");
+        }
+
+        public string DisassmTo
+        {
+            get { return _DisassmTo; }
+            set
+            {
+                if (_DisassmTo == value)
+                {
+                    return;
+                }
+
+                var prev = _DisassmTo;
+
+                _DisassmTo = value;
+
+                Changed_DisassmTo (prev, _DisassmTo);
+
+                Raise_DisassmTo ();
+            }
+        }
+        // --------------------------------------------------------------------
+        partial void Changed_DisassmTo (string prev, string current);
+        // --------------------------------------------------------------------
+        // END_PROPERTY: DisassmTo (string)
+        // --------------------------------------------------------------------
+
 
         // --------------------------------------------------------------------
         // BEGIN_COMMAND: StepCommand
@@ -140,6 +210,32 @@ namespace Essenbee.Z80.Debugger
         // END_COMMAND: LoadCommand
         // --------------------------------------------------------------------
 
+        // --------------------------------------------------------------------
+        // BEGIN_COMMAND: DisassembleCommand
+        // --------------------------------------------------------------------
+        readonly UserCommand _DisassembleCommand;
+
+        bool CanExecuteDisassembleCommand ()
+        {
+          bool result = false;
+          CanExecute_DisassembleCommand (ref result);
+
+          return result;
+        }
+
+        void ExecuteDisassembleCommand ()
+        {
+          Execute_DisassembleCommand ();
+        }
+
+        public ICommand DisassembleCommand { get { return _DisassembleCommand;} }
+        // --------------------------------------------------------------------
+        partial void CanExecute_DisassembleCommand (ref bool result);
+        partial void Execute_DisassembleCommand ();
+        // --------------------------------------------------------------------
+        // END_COMMAND: DisassembleCommand
+        // --------------------------------------------------------------------
+
 
         partial void Constructed ();
 
@@ -148,6 +244,7 @@ namespace Essenbee.Z80.Debugger
           _dispatcher = dispatcher;
           _StepCommand = new UserCommand (CanExecuteStepCommand, ExecuteStepCommand);
           _LoadCommand = new UserCommand (CanExecuteLoadCommand, ExecuteLoadCommand);
+          _DisassembleCommand = new UserCommand (CanExecuteDisassembleCommand, ExecuteDisassembleCommand);
 
           Constructed ();
         }
@@ -156,6 +253,7 @@ namespace Essenbee.Z80.Debugger
         {
           _StepCommand.RefreshCanExecute ();
           _LoadCommand.RefreshCanExecute ();
+          _DisassembleCommand.RefreshCanExecute ();
         }
 
         void Dispatch(Action action)
