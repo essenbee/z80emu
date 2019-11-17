@@ -577,21 +577,20 @@ namespace Essenbee.Z80
             }
         }
 
-        public string Disassemble(ushort start, ushort end)
+        public Dictionary<ushort,string> Disassemble(ushort start, ushort end)
         {
             var address = start;
-            var sb = new StringBuilder();
+            var retVal = new Dictionary<ushort, string>();
             var culture = new CultureInfo("en-US");
 
             while (address <= end)
             {
-                var (op, nextAddr) = DisassembleInstruction(address, culture);
+                var (addr, op, nextAddr) = DisassembleInstruction(address, culture);
                 address = nextAddr;
-                sb.Append(op);
-                sb.AppendLine();
+                retVal.Add(addr, op);
             }
 
-            return sb.ToString();
+            return retVal;
         }
 
         private void Tick()
@@ -734,9 +733,9 @@ namespace Essenbee.Z80
 
         private void SetQ() => Q = F;
 
-        private (string opString, ushort nextAddress) DisassembleInstruction(ushort address, CultureInfo culture)
+        private (ushort opAddress, string opString, ushort nextAddress) DisassembleInstruction(ushort address, CultureInfo culture)
         {
-            var opCode = @$"{address.ToString("X4", culture)}    ";
+            var opAddress = address;
             var aByte = ReadFromBus(address++);
             Instruction operation;
 
@@ -782,7 +781,7 @@ namespace Essenbee.Z80
                     break;
             }
 
-            opCode += $"{operation.Mnemonic}";
+            var opCode = $"{operation.Mnemonic}";
 
             // Operands
             if (operation.AddressingMode1 == IMM)
@@ -808,7 +807,7 @@ namespace Essenbee.Z80
             }
 
 
-            return (opCode, address);
+            return (opAddress, opCode, address);
         }
     }
 }
