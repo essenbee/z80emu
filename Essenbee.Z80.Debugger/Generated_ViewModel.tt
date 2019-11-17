@@ -9,7 +9,7 @@ using System.Windows.Threading;
 <#
   // Model defines what properties and commands are generated
 
-  var properties = new []
+  var properties = new [] 
     {
         P ( "string", "ProgramCounter"               ),
         P ( "Dictionary<string,string>", "Memory"    ),
