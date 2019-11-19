@@ -8,9 +8,80 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <StackPanel Grid.Row="0" Orientation="Vertical">
+
+            <controls:CpuFlags />
+
+            <StackPanel Orientation="Horizontal">
+                <Label Content="AF:"
+                           Margin="30,2,0,2"/>
+                <TextBox x:Name="AF"
+                             Margin="0,2,2,2"
+                             Width="40"
+                             VerticalAlignment="Center"
+                             Text="{Binding AccuFlags}" />
+                <Label Content="AF':"
+                           Margin="2,2,0,2"/>
+                <TextBox x:Name="ShadowAF"
+                             Margin="0,2,2,2"
+                             Width="40"
+                             VerticalAlignment="Center"
+                             Text="{Binding AccuFlagsPrime}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <Label Content="HL:"
+                           Margin="30,2,0,2"/>
+                <TextBox x:Name="PrimeHL"
+                             Margin="0,2,2,2"
+                             Width="40"
+                             VerticalAlignment="Center"
+                             Text="{Binding HLPair}" />
+                <Label Content="HL':"
+                           Margin="2,2,0,2"/>
+                <TextBox x:Name="AltHL"
+                             Margin="0,2,2,2"
+                             Width="40"
+                             VerticalAlignment="Center"
+                             Text="{Binding HLPairPrime}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <Label Content="BC:"
+                           Margin="30,2,0,2"/>
+                <TextBox x:Name="PrimeBC"
+                             Margin="0,2,2,2"
+                             Width="40"
+                             VerticalAlignment="Center"
+                             Text="{Binding BCPair}" />
+                <Label Content="BC':"
+                           Margin="2,2,0,2"/>
+                <TextBox x:Name="AltBC"
+                             Margin="0,2,2,2"
+                             Width="40"
+                             VerticalAlignment="Center"
+                             Text="{Binding BCPairPrime}" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <Label Content="DE:"
+                           Margin="30,2,0,2"/>
+                <TextBox x:Name="PrimeDE"
+                             Margin="0,2,2,2"
+                             Width="40"
+                             VerticalAlignment="Center"
+                             Text="{Binding DEPair}" />
+                <Label Content="DE':"
+                           Margin="2,2,0,2"/>
+                <TextBox x:Name="AltDE"
+                             Margin="0,2,2,2"
+                             Width="40"
+                             VerticalAlignment="Center"
+                             Text="{Binding DEPairPrime}" />
+            </StackPanel>
+
             <StackPanel Orientation="Horizontal">
                 <Label Content="PC:"
-                           Margin="2,2,0,2"/>
+                           Margin="30,2,0,2"/>
                 <TextBox x:Name="PC"
                              Margin="0,2,2,2"
                              Width="40"

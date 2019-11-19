@@ -12,9 +12,25 @@ using System.Windows.Threading;
   var properties = new [] 
     {
         P ( "string", "ProgramCounter"               ),
+        P ( "bool" , "SignBit"                       ),
+        P ( "bool" , "ZeroBit"                       ),
+        P ( "bool" , "UBit"                          ),
+        P ( "bool" , "HalfCarryBit"                  ),
+        P ( "bool" , "XBit"                          ),
+        P ( "bool" , "ParityOverflowBit"             ),
+        P ( "bool" , "NegationBit"                   ),
+        P ( "bool" , "CarryBit"                      ),
+        P ( "string", "AccuFlags"                    ),
+        P ( "string", "AccuFlagsPrime"               ),
+        P ( "string", "HLPair"                       ),
+        P ( "string", "HLPairPrime"                  ),
+        P ( "string", "BCPair"                       ),
+        P ( "string", "BCPairPrime"                  ),
+        P ( "string", "DEPair"                       ),
+        P ( "string", "DEPairPrime"                  ),
         P ( "Dictionary<string,string>", "Memory"    ),
-        P ( "string", "DisassmFrom"                     ),
-        P ( "string", "DisassmTo"                       ),
+        P ( "string", "DisassmFrom"                  ),
+        P ( "string", "DisassmTo"                    ),
     };
 
   var commands = new []

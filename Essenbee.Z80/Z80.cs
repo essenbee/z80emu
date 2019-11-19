@@ -32,7 +32,7 @@ namespace Essenbee.Z80
 
         // CPU Registers
         //`
-        //` ![](E5D9CCCCCD8B82BB1159F822CFE086F8.png;;;0.03343,0.03512)
+        //` ![](E5D9CCCCCD8B82BB1159F822CFE086F8.png;;;0.03403,0.03945)
         //`
         // ========================================
         // General Purpose Registers
@@ -71,11 +71,13 @@ namespace Essenbee.Z80
         public ushort PC { get; set; } = 0x0000;
 
         // 16-bit Combined Registers
+        public ushort AF => (ushort)(F + (A << 8));
         public ushort HL => (ushort)(L + (H << 8));
         public ushort BC => (ushort)((B << 8) + C);
         public ushort DE => (ushort)((D << 8) + E);
 
         // 16-bit Combined Shadow Registers
+        public ushort AF1 => (ushort)(F1 + (A1 << 8));
         public ushort HL1 => (ushort)(L1 + (H1 << 8));
         public ushort BC1 => (ushort)((B1 << 8) + C1);
         public ushort DE1 => (ushort)((D1 << 8) + E1);
@@ -805,7 +807,6 @@ namespace Essenbee.Z80
                 var nn = val.ToString("X4", culture);
                 opCode = opCode.Replace("nn", $"&{nn}", StringComparison.InvariantCulture);
             }
-
 
             return (opAddress, opCode, address);
         }

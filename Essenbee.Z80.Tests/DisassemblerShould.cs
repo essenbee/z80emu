@@ -30,7 +30,6 @@ namespace Essenbee.Z80.Tests
             A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
                 .ReturnsLazily((ushort addr, bool ro) => ram[addr]);
 
-
             var cpu = new Z80() { A = 0x00, PC = 0x0080 };
             cpu.ConnectToBus(fakeBus);
             var disassembledCode = cpu.Disassemble(0x0080, 0x008E);

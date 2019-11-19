@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using static Essenbee.Z80.Z80;
 
 namespace Essenbee.Z80.Debugger
 {
@@ -19,17 +20,76 @@ namespace Essenbee.Z80.Debugger
             _cpu = new Z80 { PC = 0x8000 }; //Default start location
             _cpu.ConnectToBus(_basicBus);
             ProgramCounter = _cpu.PC.ToString("X4");
+            SetRegisterPairs();
+
+            // Flags
+            SetFlags();
+
             Memory = BuildMemoryMap();
             _disassembleFrom = 0x8000;
             _disassembleTo = 0x9000;
             DisassmFrom = _disassembleFrom.ToString("X4");
             DisassmTo = _disassembleTo.ToString("X4");
-    }
+        }
 
         // ================== Property Events ==================
         partial void Changed_ProgramCounter(string prev, string current)
         {
             _cpu.PC = ushort.Parse(current, System.Globalization.NumberStyles.HexNumber) ;
+        }
+
+        partial void Changed_AccuFlags(string prev, string current)
+        {
+            var temp = ushort.Parse(current, System.Globalization.NumberStyles.HexNumber);
+            _cpu.A = (byte)((temp & 0xFF00) >> 8);
+            _cpu.F = (Flags)(temp & 0x00FF);
+        }
+
+        partial void Changed_AccuFlagsPrime(string prev, string current)
+        {
+            var temp = ushort.Parse(current, System.Globalization.NumberStyles.HexNumber);
+            _cpu.A1 = (byte)((temp & 0xFF00) >> 8);
+            _cpu.F1 = (Flags)(temp & 0x00FF);
+        }
+
+        partial void Changed_SignBit(bool prev, bool current)
+        {
+            SetFlag(Flags.S, current);
+        }
+
+        partial void Changed_ZeroBit(bool prev, bool current)
+        {
+            SetFlag(Flags.Z, current);
+        }
+
+        partial void Changed_UBit(bool prev, bool current)
+        {
+            SetFlag(Flags.U, current);
+        }
+
+        partial void Changed_HalfCarryBit(bool prev, bool current)
+        {
+            SetFlag(Flags.H, current);
+        }
+
+        partial void Changed_XBit(bool prev, bool current)
+        {
+            SetFlag(Flags.X, current);
+        }
+
+        partial void Changed_ParityOverflowBit(bool prev, bool current)
+        {
+            SetFlag(Flags.P, current);
+        }
+
+        partial void Changed_NegationBit(bool prev, bool current)
+        {
+            SetFlag(Flags.N, current);
+        }
+
+        partial void Changed_CarryBit(bool prev, bool current)
+        {
+            SetFlag(Flags.C, current);
         }
 
         partial void Changed_DisassmFrom(string prev, string current)
@@ -53,8 +113,37 @@ namespace Essenbee.Z80.Debugger
             _cpu.Step();
             Memory = BuildMemoryMap();
             ProgramCounter = _cpu.PC.ToString("X4");
+            SetRegisterPairs();
+
+            // Flags
+            SetFlags();
+
             DisassmFrom = _disassembleFrom.ToString("X4");
             DisassmTo = _disassembleTo.ToString("X4");
+        }
+
+        private void SetFlags()
+        {
+            SignBit = CheckFlag(Flags.S);
+            ZeroBit = CheckFlag(Flags.Z);
+            UBit = CheckFlag(Flags.U);
+            HalfCarryBit = CheckFlag(Flags.H);
+            XBit = CheckFlag(Flags.X);
+            ParityOverflowBit = CheckFlag(Flags.P);
+            NegationBit = CheckFlag(Flags.N);
+            CarryBit = CheckFlag(Flags.C);
+        }
+
+        private void SetRegisterPairs()
+        {
+            AccuFlags = _cpu.AF.ToString("X4");
+            AccuFlagsPrime = _cpu.AF1.ToString("X4");
+            HLPair = _cpu.HL.ToString("X4");
+            HLPairPrime = _cpu.HL1.ToString("X4");
+            BCPair = _cpu.BC.ToString("X4");
+            BCPairPrime = _cpu.BC1.ToString("X4");
+            DEPair = _cpu.DE.ToString("X4");
+            DEPairPrime = _cpu.DE1.ToString("X4");
         }
 
         partial void CanExecute_LoadCommand(ref bool result)
@@ -109,6 +198,28 @@ namespace Essenbee.Z80.Debugger
             }
 
             return memoryMap;
+        }
+
+        private bool CheckFlag(Flags flag)
+        {
+                if ((_cpu.F & flag) == flag)
+                {
+                    return true;
+                }
+
+            return false;
+        }
+
+        private void SetFlag(Flags flag, bool value)
+        {
+                if (value)
+                {
+                    _cpu.F |= flag;
+                }
+                else
+                {
+                    _cpu.F &= ~flag;
+                }
         }
     }
 }
