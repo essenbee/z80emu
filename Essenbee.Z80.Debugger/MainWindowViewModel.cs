@@ -50,6 +50,48 @@ namespace Essenbee.Z80.Debugger
             _cpu.F1 = (Flags)(temp & 0x00FF);
         }
 
+        partial void Changed_HLPair(string prev, string current)
+        {
+            var temp = ushort.Parse(current, System.Globalization.NumberStyles.HexNumber);
+            _cpu.H = (byte)((temp & 0xFF00) >> 8);
+            _cpu.L = (byte)(temp & 0x00FF);
+        }
+
+        partial void Changed_HLPairPrime(string prev, string current)
+        {
+            var temp = ushort.Parse(current, System.Globalization.NumberStyles.HexNumber);
+            _cpu.H1 = (byte)((temp & 0xFF00) >> 8);
+            _cpu.L1 = (byte)(temp & 0x00FF);
+        }
+
+        partial void Changed_BCPair(string prev, string current)
+        {
+            var temp = ushort.Parse(current, System.Globalization.NumberStyles.HexNumber);
+            _cpu.B = (byte)((temp & 0xFF00) >> 8);
+            _cpu.C = (byte)(temp & 0x00FF);
+        }
+
+        partial void Changed_BCPairPrime(string prev, string current)
+        {
+            var temp = ushort.Parse(current, System.Globalization.NumberStyles.HexNumber);
+            _cpu.B1 = (byte)((temp & 0xFF00) >> 8);
+            _cpu.C1 = (byte)(temp & 0x00FF);
+        }
+
+        partial void Changed_DEPair(string prev, string current)
+        {
+            var temp = ushort.Parse(current, System.Globalization.NumberStyles.HexNumber);
+            _cpu.D = (byte)((temp & 0xFF00) >> 8);
+            _cpu.E = (byte)(temp & 0x00FF);
+        }
+
+        partial void Changed_DEPairPrime(string prev, string current)
+        {
+            var temp = ushort.Parse(current, System.Globalization.NumberStyles.HexNumber);
+            _cpu.D1 = (byte)((temp & 0xFF00) >> 8);
+            _cpu.E1 = (byte)(temp & 0x00FF);
+        }
+
         partial void Changed_SignBit(bool prev, bool current)
         {
             SetFlag(Flags.S, current);
