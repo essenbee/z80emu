@@ -21,8 +21,6 @@ namespace Essenbee.Z80.Debugger
             _cpu.ConnectToBus(_basicBus);
             ProgramCounter = _cpu.PC.ToString("X4");
             SetRegisterPairs();
-
-            // Flags
             SetFlags();
 
             Memory = BuildMemoryMap();
@@ -114,36 +112,10 @@ namespace Essenbee.Z80.Debugger
             Memory = BuildMemoryMap();
             ProgramCounter = _cpu.PC.ToString("X4");
             SetRegisterPairs();
-
-            // Flags
             SetFlags();
 
             DisassmFrom = _disassembleFrom.ToString("X4");
             DisassmTo = _disassembleTo.ToString("X4");
-        }
-
-        private void SetFlags()
-        {
-            SignBit = CheckFlag(Flags.S);
-            ZeroBit = CheckFlag(Flags.Z);
-            UBit = CheckFlag(Flags.U);
-            HalfCarryBit = CheckFlag(Flags.H);
-            XBit = CheckFlag(Flags.X);
-            ParityOverflowBit = CheckFlag(Flags.P);
-            NegationBit = CheckFlag(Flags.N);
-            CarryBit = CheckFlag(Flags.C);
-        }
-
-        private void SetRegisterPairs()
-        {
-            AccuFlags = _cpu.AF.ToString("X4");
-            AccuFlagsPrime = _cpu.AF1.ToString("X4");
-            HLPair = _cpu.HL.ToString("X4");
-            HLPairPrime = _cpu.HL1.ToString("X4");
-            BCPair = _cpu.BC.ToString("X4");
-            BCPairPrime = _cpu.BC1.ToString("X4");
-            DEPair = _cpu.DE.ToString("X4");
-            DEPairPrime = _cpu.DE1.ToString("X4");
         }
 
         partial void CanExecute_LoadCommand(ref bool result)
@@ -177,7 +149,7 @@ namespace Essenbee.Z80.Debugger
 
         partial void Execute_DisassembleCommand()
         {
-            // ToDo: Disassemble here from addresses _disassembelFrom to _disassembleTo
+            // ToDo: Disassemble here from addresses _disassembleFrom to _disassembleTo
         }
 
         private Dictionary<string, string> BuildMemoryMap()
@@ -199,6 +171,31 @@ namespace Essenbee.Z80.Debugger
 
             return memoryMap;
         }
+
+        private void SetFlags()
+        {
+            SignBit = CheckFlag(Flags.S);
+            ZeroBit = CheckFlag(Flags.Z);
+            UBit = CheckFlag(Flags.U);
+            HalfCarryBit = CheckFlag(Flags.H);
+            XBit = CheckFlag(Flags.X);
+            ParityOverflowBit = CheckFlag(Flags.P);
+            NegationBit = CheckFlag(Flags.N);
+            CarryBit = CheckFlag(Flags.C);
+        }
+
+        private void SetRegisterPairs()
+        {
+            AccuFlags = _cpu.AF.ToString("X4");
+            AccuFlagsPrime = _cpu.AF1.ToString("X4");
+            HLPair = _cpu.HL.ToString("X4");
+            HLPairPrime = _cpu.HL1.ToString("X4");
+            BCPair = _cpu.BC.ToString("X4");
+            BCPairPrime = _cpu.BC1.ToString("X4");
+            DEPair = _cpu.DE.ToString("X4");
+            DEPairPrime = _cpu.DE1.ToString("X4");
+        }
+
 
         private bool CheckFlag(Flags flag)
         {
