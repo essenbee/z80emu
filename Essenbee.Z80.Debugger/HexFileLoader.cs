@@ -6,10 +6,11 @@ namespace Essenbee.Z80.Debugger
 {
     public static class HexFileLoader
     {
-        public static (byte[], ushort) Read(string filePath, byte[] RAM)
+        public static (byte[], ushort, ushort) Read(string filePath, byte[] RAM)
         {
             var lines = File.ReadAllLines(filePath);
-            ushort initialMemoryLocation = 0;
+            ushort initialAddr = 0;
+            ushort endAddr = 0;
             var lineNo = 0;
 
             foreach (var line in lines)
@@ -27,7 +28,7 @@ namespace Essenbee.Z80.Debugger
 
                 if (recType == "00")
                 {
-                    if (lineNo == 1) initialMemoryLocation = startAddr;
+                    if (lineNo == 1) initialAddr = startAddr;
 
                     // Data record
                     var dataEnd = (2 * dataLength) + 9;
@@ -47,9 +48,11 @@ namespace Essenbee.Z80.Debugger
                         RAM[startAddr++] = datum;
                     }
                 }
+
+                endAddr = startAddr;
             }
 
-            return (RAM, initialMemoryLocation);
+            return (RAM, initialAddr, endAddr);
         }
     }
 }

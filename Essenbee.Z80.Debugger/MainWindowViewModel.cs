@@ -214,13 +214,15 @@ namespace Essenbee.Z80.Debugger
             if (result ?? false)
             {
                 var fileName = openFileDialog.FileName;
-                var (RAM, startAddr) = HexFileLoader.Read(fileName, new byte[64 * 1024]);
+                var (RAM, startAddr, endAddr) = HexFileLoader.Read(fileName, new byte[64 * 1024]);
                 _basicBus = new BasicBus(RAM);
                 _cpu.ConnectToBus(_basicBus);
                 Memory = BuildMemoryMap();
                 _cpu.PC = startAddr;
                 ProgramCounter = _cpu.PC.ToString("X4");
                 MemoryMapRow = GetMemoryMapRow(startAddr);
+                var disassembly = _cpu.Disassemble(startAddr, endAddr);
+                DisAsm = GetDisassembedProgram(disassembly);
             }
         }
 
