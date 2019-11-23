@@ -231,7 +231,23 @@ namespace Essenbee.Z80.Debugger
 
         partial void Execute_DisassembleCommand()
         {
-            // ToDo: Disassemble here from addresses _disassembleFrom to _disassembleTo
+            var from = ushort.Parse(DisassmFrom, System.Globalization.NumberStyles.HexNumber);
+            var to = ushort.Parse(DisassmTo, System.Globalization.NumberStyles.HexNumber);
+            var disassembly = _cpu.Disassemble(from, to);
+            DisAsm = GetDisassembedProgram(disassembly);
+        }
+
+        private Dictionary<string, string> GetDisassembedProgram(Dictionary<ushort, string> disassembly)
+        {
+            var retVal = new Dictionary<string, string>();
+
+            foreach (var line in disassembly)
+            {
+                var addr = line.Key.ToString("X4");
+                retVal.Add(addr, line.Value);
+            }
+
+            return retVal;
         }
 
         private Dictionary<string, string> BuildMemoryMap()

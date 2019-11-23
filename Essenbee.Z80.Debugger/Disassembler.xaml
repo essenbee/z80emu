@@ -8,22 +8,25 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <DataGrid x:Name="Code"
-                      VerticalScrollBarVisibility="Visible"
-                      HorizontalScrollBarVisibility="Hidden"
-                      AutoGenerateColumns="False"
-                      IsReadOnly="True"
-                      CanUserAddRows="False"
-                      CanUserDeleteRows="False"
-                      SelectionMode="Single" >
+                  VerticalScrollBarVisibility="Visible"
+                  HorizontalScrollBarVisibility="Hidden"
+                  AutoGenerateColumns="False"
+                  ItemsSource="{Binding DisAsm}" 
+                  IsReadOnly="True"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  SelectionMode="Single" >
             <DataGrid.Columns>
                 <DataGridTextColumn 
-                        Header="Address" 
-                        IsReadOnly="True" 
-                        Width="100" />
+                    Header="Address" 
+                    IsReadOnly="True" 
+                    Binding="{Binding Path=Key}"
+                    Width="100" />
                 <DataGridTextColumn 
-                        Header="Instruction" 
-                        IsReadOnly="True" 
-                        Width="200"/>
+                    Header="Instruction" 
+                    IsReadOnly="True" 
+                    Binding="{Binding Path=Value}"
+                    Width="500"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

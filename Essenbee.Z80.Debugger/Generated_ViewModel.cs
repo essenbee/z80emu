@@ -893,6 +893,41 @@ namespace Essenbee.Z80.Debugger
         // --------------------------------------------------------------------
 
         // --------------------------------------------------------------------
+        // BEGIN_PROPERTY: DisAsm (Dictionary<string,string>)
+        // --------------------------------------------------------------------
+        Dictionary<string,string> _DisAsm = default;
+
+        void Raise_DisAsm ()
+        {
+          OnPropertyChanged ("DisAsm");
+        }
+
+        public Dictionary<string,string> DisAsm
+        {
+            get { return _DisAsm; }
+            set
+            {
+                if (_DisAsm == value)
+                {
+                    return;
+                }
+
+                var prev = _DisAsm;
+
+                _DisAsm = value;
+
+                Changed_DisAsm (prev, _DisAsm);
+
+                Raise_DisAsm ();
+            }
+        }
+        // --------------------------------------------------------------------
+        partial void Changed_DisAsm (Dictionary<string,string> prev, Dictionary<string,string> current);
+        // --------------------------------------------------------------------
+        // END_PROPERTY: DisAsm (Dictionary<string,string>)
+        // --------------------------------------------------------------------
+
+        // --------------------------------------------------------------------
         // BEGIN_PROPERTY: DisassmFrom (string)
         // --------------------------------------------------------------------
         string _DisassmFrom = default;

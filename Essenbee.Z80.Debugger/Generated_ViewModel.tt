@@ -36,6 +36,7 @@ using System.Windows.Threading;
         P ( "string", "Refresh"                      ),
         P ( "Dictionary<string,string>", "Memory"    ),
         P ( "int", "MemoryMapRow"                    ),
+        P ( "Dictionary<string,string>", "DisAsm"    ),
         P ( "string", "DisassmFrom"                  ),
         P ( "string", "DisassmTo"                    ),
     };
