@@ -595,6 +595,42 @@ namespace Essenbee.Z80
             return retVal;
         }
 
+        public bool IsOpCodeSupported(string opCode)
+        {
+            if (string.IsNullOrWhiteSpace(opCode)) return false;
+
+            var c = new CultureInfo("en-US");
+
+            if (opCode.Length == 2)
+            {
+                return RootInstructions.ContainsKey(byte.Parse(opCode, NumberStyles.HexNumber, c));
+            }
+
+            if (opCode.Length == 4)
+            {
+                return (opCode[0..2]) switch
+                {
+                    "DD" => DDInstructions.ContainsKey(byte.Parse(opCode[2..], NumberStyles.HexNumber, c)),
+                    "FD" => FDInstructions.ContainsKey(byte.Parse(opCode[2..], NumberStyles.HexNumber, c)),
+                    "ED" => EDInstructions.ContainsKey(byte.Parse(opCode[2..], NumberStyles.HexNumber, c)),
+                    "CB" => CBInstructions.ContainsKey(byte.Parse(opCode[2..], NumberStyles.HexNumber, c)),
+                    _ => false,
+                };
+            }
+
+            if (opCode.Length == 6)
+            {
+                return (opCode[0..4]) switch
+                {
+                    "DDCB" => DDCBInstructions.ContainsKey(byte.Parse(opCode[4..], NumberStyles.HexNumber, c)),
+                    "FDCB" => FDCBInstructions.ContainsKey(byte.Parse(opCode[4..], NumberStyles.HexNumber, c)),
+                    _ => false,
+                };
+            }
+
+            return false;
+        }
+
         private void Tick()
         {
             if (_clockCycles == 0)
