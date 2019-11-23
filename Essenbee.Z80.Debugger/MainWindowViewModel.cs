@@ -102,6 +102,7 @@ namespace Essenbee.Z80.Debugger
         partial void Changed_StackPointer(string prev, string current)
         {
             _cpu.SP = ushort.Parse(current, System.Globalization.NumberStyles.HexNumber);
+            MemoryMapRow = GetMemoryMapRow(_cpu.PC);
         }
 
         partial void Changed_IndexX(string prev, string current)
@@ -213,10 +214,13 @@ namespace Essenbee.Z80.Debugger
             if (result ?? false)
             {
                 var fileName = openFileDialog.FileName;
-                var RAM = HexFileLoader.Read(fileName, new byte[64 * 1024]);
+                var (RAM, startAddr) = HexFileLoader.Read(fileName, new byte[64 * 1024]);
                 _basicBus = new BasicBus(RAM);
                 _cpu.ConnectToBus(_basicBus);
                 Memory = BuildMemoryMap();
+                _cpu.PC = startAddr;
+                ProgramCounter = _cpu.PC.ToString("X4");
+                MemoryMapRow = GetMemoryMapRow(startAddr);
             }
         }
 
