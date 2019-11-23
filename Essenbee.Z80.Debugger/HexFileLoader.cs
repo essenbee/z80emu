@@ -52,6 +52,11 @@ namespace Essenbee.Z80.Debugger
                 endAddr = startAddr;
             }
 
+            if (endAddr > RAM.Length)
+            {
+                endAddr = (ushort)RAM.Length;
+            }
+
             return (RAM, initialAddr, endAddr);
         }
     }
