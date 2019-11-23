@@ -184,6 +184,7 @@ namespace Essenbee.Z80.Debugger
         partial void Execute_StepCommand()
         {
             _cpu.Step();
+            SelectedRow = _cpu.PC.ToString("X4");
             Memory = BuildMemoryMap();
             ProgramCounter = _cpu.PC.ToString("X4");
             MemoryMapRow = GetMemoryMapRow(_cpu.PC);
@@ -223,6 +224,7 @@ namespace Essenbee.Z80.Debugger
                 MemoryMapRow = GetMemoryMapRow(startAddr);
                 var disassembly = _cpu.Disassemble(startAddr, endAddr);
                 DisAsm = GetDisassembedProgram(disassembly);
+                SelectedRow = startAddr.ToString("X4");
             }
         }
 

@@ -997,6 +997,41 @@ namespace Essenbee.Z80.Debugger
         // END_PROPERTY: DisassmTo (string)
         // --------------------------------------------------------------------
 
+        // --------------------------------------------------------------------
+        // BEGIN_PROPERTY: SelectedRow (string)
+        // --------------------------------------------------------------------
+        string _SelectedRow = default;
+
+        void Raise_SelectedRow ()
+        {
+          OnPropertyChanged ("SelectedRow");
+        }
+
+        public string SelectedRow
+        {
+            get { return _SelectedRow; }
+            set
+            {
+                if (_SelectedRow == value)
+                {
+                    return;
+                }
+
+                var prev = _SelectedRow;
+
+                _SelectedRow = value;
+
+                Changed_SelectedRow (prev, _SelectedRow);
+
+                Raise_SelectedRow ();
+            }
+        }
+        // --------------------------------------------------------------------
+        partial void Changed_SelectedRow (string prev, string current);
+        // --------------------------------------------------------------------
+        // END_PROPERTY: SelectedRow (string)
+        // --------------------------------------------------------------------
+
 
         // --------------------------------------------------------------------
         // BEGIN_COMMAND: StepCommand

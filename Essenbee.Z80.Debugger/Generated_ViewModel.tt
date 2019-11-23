@@ -39,6 +39,7 @@ using System.Windows.Threading;
         P ( "Dictionary<string,string>", "DisAsm"    ),
         P ( "string", "DisassmFrom"                  ),
         P ( "string", "DisassmTo"                    ),
+        P ( "string", "SelectedRow"                  ),
     };
 
   var commands = new []
