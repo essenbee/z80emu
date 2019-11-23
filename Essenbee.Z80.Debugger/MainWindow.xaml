@@ -29,8 +29,8 @@
         <!-- Right-hand side -->
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="40*" />
-                <RowDefinition Height="60*" />
+                <RowDefinition Height="50*" />
+                <RowDefinition Height="50*" />
             </Grid.RowDefinitions>
 
             <controls:CpuStatus Grid.Row="0" />

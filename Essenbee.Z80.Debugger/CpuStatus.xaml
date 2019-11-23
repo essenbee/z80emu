@@ -6,6 +6,7 @@
              xmlns:controls="clr-namespace:Essenbee.Z80.Debugger"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
     <Grid>
         <StackPanel Grid.Row="0" Orientation="Vertical">
 
@@ -13,14 +14,16 @@
 
             <StackPanel Orientation="Horizontal">
                 <Label Content="AF:"
-                           Margin="30,2,0,2"/>
+                       Width="25"
+                       Margin="30,2,0,2"/>
                 <TextBox x:Name="AF"
                              Margin="0,2,2,2"
                              Width="40"
                              VerticalAlignment="Center"
                              Text="{Binding AccuFlags}" />
                 <Label Content="AF':"
-                           Margin="2,2,0,2"/>
+                       Width="25"
+                       Margin="2,2,0,2"/>
                 <TextBox x:Name="ShadowAF"
                              Margin="0,2,2,2"
                              Width="40"
@@ -30,14 +33,16 @@
 
             <StackPanel Orientation="Horizontal">
                 <Label Content="HL:"
-                           Margin="30,2,0,2"/>
+                       Width="25"
+                       Margin="30,2,0,2"/>
                 <TextBox x:Name="PrimeHL"
                              Margin="0,2,2,2"
                              Width="40"
                              VerticalAlignment="Center"
                              Text="{Binding HLPair}" />
                 <Label Content="HL':"
-                           Margin="2,2,0,2"/>
+                       Width="25"
+                       Margin="2,2,0,2"/>
                 <TextBox x:Name="AltHL"
                              Margin="0,2,2,2"
                              Width="40"
@@ -47,14 +52,16 @@
 
             <StackPanel Orientation="Horizontal">
                 <Label Content="BC:"
-                           Margin="30,2,0,2"/>
+                       Width="25"
+                       Margin="30,2,0,2"/>
                 <TextBox x:Name="PrimeBC"
                              Margin="0,2,2,2"
                              Width="40"
                              VerticalAlignment="Center"
                              Text="{Binding BCPair}" />
                 <Label Content="BC':"
-                           Margin="2,2,0,2"/>
+                       Width="25"
+                       Margin="2,2,0,2"/>
                 <TextBox x:Name="AltBC"
                              Margin="0,2,2,2"
                              Width="40"
@@ -64,14 +71,16 @@
 
             <StackPanel Orientation="Horizontal">
                 <Label Content="DE:"
-                           Margin="30,2,0,2"/>
+                       Width="25"
+                       Margin="30,2,0,2"/>
                 <TextBox x:Name="PrimeDE"
                              Margin="0,2,2,2"
                              Width="40"
                              VerticalAlignment="Center"
                              Text="{Binding DEPair}" />
                 <Label Content="DE':"
-                           Margin="2,2,0,2"/>
+                       Width="25"
+                       Margin="2,2,0,2"/>
                 <TextBox x:Name="AltDE"
                              Margin="0,2,2,2"
                              Width="40"
@@ -81,15 +90,71 @@
 
             <StackPanel Orientation="Horizontal">
                 <Label Content="PC:"
-                           Margin="30,2,0,2"/>
+                       Width="25"
+                       Margin="30,2,0,2"/>
                 <TextBox x:Name="PC"
                              Margin="0,2,2,2"
                              Width="40"
                              VerticalAlignment="Center"
                              Text="{Binding ProgramCounter}" />
+                <Label Content="SP:"
+                       Width="25"
+                       Margin="2,2,0,2"/>
+                <TextBox x:Name="StackPtr"
+                             Margin="0,2,2,2"
+                             Width="40"
+                             VerticalAlignment="Center"
+                             Text="{Binding StackPointer}" />
+            </StackPanel>
 
+            <StackPanel Orientation="Horizontal">
+                <Label Content="IX:"
+                       Width="25"
+                       Margin="30,2,0,2"/>
+                <TextBox x:Name="IX"
+                             Margin="0,2,2,2"
+                             Width="40"
+                             VerticalAlignment="Center"
+                             Text="{Binding IndexX}" />
+                <Label Content="IY:"
+                       Width="25"
+                       Margin="2,2,0,2"/>
+                <TextBox x:Name="IY"
+                             Margin="0,2,2,2"
+                             Width="40"
+                             VerticalAlignment="Center"
+                             Text="{Binding IndexY}" />
+            </StackPanel>
 
+            <StackPanel Orientation="Horizontal">
+                <Label Content="I:"
+                       Width="25"
+                       Margin="30,2,0,2"/>
+                <TextBox x:Name="I"
+                             Margin="0,2,2,2"
+                             Width="40"
+                             VerticalAlignment="Center"
+                             Text="{Binding InterruptVector}" />
+                <Label Content="R:"
+                       Width="25"
+                       Margin="2,2,0,2"/>
+                <TextBox x:Name="R"
+                             Margin="0,2,2,2"
+                             Width="40"
+                             VerticalAlignment="Center"
+                             Text="{Binding Refresh}" />
+
+                <Label Content="IM:"
+                       Width="25"
+                       Margin="0,2,0,2"/>
+                <TextBox x:Name="IM"
+                         Margin="0,2,2,2"
+                         Width="20"
+                         IsReadOnly="true"
+                         VerticalAlignment="Center"
+                         Text="{Binding Mode}" />
             </StackPanel>
         </StackPanel>
+
     </Grid>
 </UserControl>

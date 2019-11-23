@@ -8,14 +8,24 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
         <DataGrid x:Name="MemoryMapControl"
-                      VerticalScrollBarVisibility="Visible"
-                      HorizontalScrollBarVisibility="Hidden"
-                      AutoGenerateColumns="False"
-                      ItemsSource="{Binding Memory}" 
-                      IsReadOnly="True"
-                      CanUserAddRows="False"
-                      CanUserDeleteRows="False"
-                      SelectionMode="Single" >
+                  VerticalScrollBarVisibility="Visible"
+                  HorizontalScrollBarVisibility="Hidden"
+                  AutoGenerateColumns="False"
+                  ItemsSource="{Binding Memory}" 
+                  IsReadOnly="True"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  SelectionMode="Single"
+                  SelectedIndex="{Binding MemoryMapRow}">
+            <DataGrid.Resources>
+                <Style TargetType="{x:Type DataGridCell}">
+                    <Style.Triggers>
+                        <Trigger Property="DataGridCell.IsSelected" Value="True">
+                            <Setter Property="Background" Value="#CCDAFF" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Resources>
             <DataGrid.Columns>
                 <DataGridTextColumn 
                         Header="Address" 

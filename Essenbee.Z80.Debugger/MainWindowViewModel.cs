@@ -20,10 +20,17 @@ namespace Essenbee.Z80.Debugger
             _cpu = new Z80 { PC = 0x8000 }; //Default start location
             _cpu.ConnectToBus(_basicBus);
             ProgramCounter = _cpu.PC.ToString("X4");
+            StackPointer = _cpu.SP.ToString("X4");
+            IndexX = _cpu.IX.ToString("X4");
+            IndexY = _cpu.IY.ToString("X4");
+            InterruptVector = _cpu.I.ToString("X2");
+            Refresh = _cpu.R.ToString("X2");
             SetRegisterPairs();
             SetFlags();
+            Mode = GetInterruptMode();
 
             Memory = BuildMemoryMap();
+            MemoryMapRow = GetMemoryMapRow(_cpu.PC);
             _disassembleFrom = 0x8000;
             _disassembleTo = 0x9000;
             DisassmFrom = _disassembleFrom.ToString("X4");
@@ -92,6 +99,31 @@ namespace Essenbee.Z80.Debugger
             _cpu.E1 = (byte)(temp & 0x00FF);
         }
 
+        partial void Changed_StackPointer(string prev, string current)
+        {
+            _cpu.SP = ushort.Parse(current, System.Globalization.NumberStyles.HexNumber);
+        }
+
+        partial void Changed_IndexX(string prev, string current)
+        {
+            _cpu.IX = ushort.Parse(current, System.Globalization.NumberStyles.HexNumber);
+        }
+
+        partial void Changed_IndexY(string prev, string current)
+        {
+            _cpu.IY = ushort.Parse(current, System.Globalization.NumberStyles.HexNumber);
+        }
+
+        partial void Changed_InterruptVector(string prev, string current)
+        {
+            _cpu.I = byte.Parse(current, System.Globalization.NumberStyles.HexNumber);
+        }
+
+        partial void Changed_Refresh(string prev, string current)
+        {
+            _cpu.R = byte.Parse(current, System.Globalization.NumberStyles.HexNumber);
+        }
+
         partial void Changed_SignBit(bool prev, bool current)
         {
             SetFlag(Flags.S, current);
@@ -153,11 +185,15 @@ namespace Essenbee.Z80.Debugger
             _cpu.Step();
             Memory = BuildMemoryMap();
             ProgramCounter = _cpu.PC.ToString("X4");
+            MemoryMapRow = GetMemoryMapRow(_cpu.PC);
+            StackPointer = _cpu.SP.ToString("X4");
+            IndexX = _cpu.IX.ToString("X4");
+            IndexY = _cpu.IY.ToString("X4");
+            InterruptVector = _cpu.I.ToString("X2");
+            Refresh = _cpu.R.ToString("X2");
+            Mode = GetInterruptMode();
             SetRegisterPairs();
             SetFlags();
-
-            DisassmFrom = _disassembleFrom.ToString("X4");
-            DisassmTo = _disassembleTo.ToString("X4");
         }
 
         partial void CanExecute_LoadCommand(ref bool result)
@@ -214,6 +250,12 @@ namespace Essenbee.Z80.Debugger
             return memoryMap;
         }
 
+        private int GetMemoryMapRow(int programCounter)
+        {
+            var row = programCounter / 16;
+            return row;
+        }
+
         private void SetFlags()
         {
             SignBit = CheckFlag(Flags.S);
@@ -238,6 +280,13 @@ namespace Essenbee.Z80.Debugger
             DEPairPrime = _cpu.DE1.ToString("X4");
         }
 
+        private int GetInterruptMode() => _cpu.InterruptMode switch
+            {
+                InterruptMode.Mode0 => 0,
+                InterruptMode.Mode1 => 1,
+                InterruptMode.Mode2 => 2,
+                _ => 0
+            };
 
         private bool CheckFlag(Flags flag)
         {

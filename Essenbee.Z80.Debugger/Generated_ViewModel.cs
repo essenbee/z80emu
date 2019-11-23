@@ -613,6 +613,216 @@ namespace Essenbee.Z80.Debugger
         // --------------------------------------------------------------------
 
         // --------------------------------------------------------------------
+        // BEGIN_PROPERTY: StackPointer (string)
+        // --------------------------------------------------------------------
+        string _StackPointer = default;
+
+        void Raise_StackPointer ()
+        {
+          OnPropertyChanged ("StackPointer");
+        }
+
+        public string StackPointer
+        {
+            get { return _StackPointer; }
+            set
+            {
+                if (_StackPointer == value)
+                {
+                    return;
+                }
+
+                var prev = _StackPointer;
+
+                _StackPointer = value;
+
+                Changed_StackPointer (prev, _StackPointer);
+
+                Raise_StackPointer ();
+            }
+        }
+        // --------------------------------------------------------------------
+        partial void Changed_StackPointer (string prev, string current);
+        // --------------------------------------------------------------------
+        // END_PROPERTY: StackPointer (string)
+        // --------------------------------------------------------------------
+
+        // --------------------------------------------------------------------
+        // BEGIN_PROPERTY: IndexX (string)
+        // --------------------------------------------------------------------
+        string _IndexX = default;
+
+        void Raise_IndexX ()
+        {
+          OnPropertyChanged ("IndexX");
+        }
+
+        public string IndexX
+        {
+            get { return _IndexX; }
+            set
+            {
+                if (_IndexX == value)
+                {
+                    return;
+                }
+
+                var prev = _IndexX;
+
+                _IndexX = value;
+
+                Changed_IndexX (prev, _IndexX);
+
+                Raise_IndexX ();
+            }
+        }
+        // --------------------------------------------------------------------
+        partial void Changed_IndexX (string prev, string current);
+        // --------------------------------------------------------------------
+        // END_PROPERTY: IndexX (string)
+        // --------------------------------------------------------------------
+
+        // --------------------------------------------------------------------
+        // BEGIN_PROPERTY: IndexY (string)
+        // --------------------------------------------------------------------
+        string _IndexY = default;
+
+        void Raise_IndexY ()
+        {
+          OnPropertyChanged ("IndexY");
+        }
+
+        public string IndexY
+        {
+            get { return _IndexY; }
+            set
+            {
+                if (_IndexY == value)
+                {
+                    return;
+                }
+
+                var prev = _IndexY;
+
+                _IndexY = value;
+
+                Changed_IndexY (prev, _IndexY);
+
+                Raise_IndexY ();
+            }
+        }
+        // --------------------------------------------------------------------
+        partial void Changed_IndexY (string prev, string current);
+        // --------------------------------------------------------------------
+        // END_PROPERTY: IndexY (string)
+        // --------------------------------------------------------------------
+
+        // --------------------------------------------------------------------
+        // BEGIN_PROPERTY: InterruptVector (string)
+        // --------------------------------------------------------------------
+        string _InterruptVector = default;
+
+        void Raise_InterruptVector ()
+        {
+          OnPropertyChanged ("InterruptVector");
+        }
+
+        public string InterruptVector
+        {
+            get { return _InterruptVector; }
+            set
+            {
+                if (_InterruptVector == value)
+                {
+                    return;
+                }
+
+                var prev = _InterruptVector;
+
+                _InterruptVector = value;
+
+                Changed_InterruptVector (prev, _InterruptVector);
+
+                Raise_InterruptVector ();
+            }
+        }
+        // --------------------------------------------------------------------
+        partial void Changed_InterruptVector (string prev, string current);
+        // --------------------------------------------------------------------
+        // END_PROPERTY: InterruptVector (string)
+        // --------------------------------------------------------------------
+
+        // --------------------------------------------------------------------
+        // BEGIN_PROPERTY: Mode (int)
+        // --------------------------------------------------------------------
+        int _Mode = default;
+
+        void Raise_Mode ()
+        {
+          OnPropertyChanged ("Mode");
+        }
+
+        public int Mode
+        {
+            get { return _Mode; }
+            set
+            {
+                if (_Mode == value)
+                {
+                    return;
+                }
+
+                var prev = _Mode;
+
+                _Mode = value;
+
+                Changed_Mode (prev, _Mode);
+
+                Raise_Mode ();
+            }
+        }
+        // --------------------------------------------------------------------
+        partial void Changed_Mode (int prev, int current);
+        // --------------------------------------------------------------------
+        // END_PROPERTY: Mode (int)
+        // --------------------------------------------------------------------
+
+        // --------------------------------------------------------------------
+        // BEGIN_PROPERTY: Refresh (string)
+        // --------------------------------------------------------------------
+        string _Refresh = default;
+
+        void Raise_Refresh ()
+        {
+          OnPropertyChanged ("Refresh");
+        }
+
+        public string Refresh
+        {
+            get { return _Refresh; }
+            set
+            {
+                if (_Refresh == value)
+                {
+                    return;
+                }
+
+                var prev = _Refresh;
+
+                _Refresh = value;
+
+                Changed_Refresh (prev, _Refresh);
+
+                Raise_Refresh ();
+            }
+        }
+        // --------------------------------------------------------------------
+        partial void Changed_Refresh (string prev, string current);
+        // --------------------------------------------------------------------
+        // END_PROPERTY: Refresh (string)
+        // --------------------------------------------------------------------
+
+        // --------------------------------------------------------------------
         // BEGIN_PROPERTY: Memory (Dictionary<string,string>)
         // --------------------------------------------------------------------
         Dictionary<string,string> _Memory = default;
@@ -645,6 +855,41 @@ namespace Essenbee.Z80.Debugger
         partial void Changed_Memory (Dictionary<string,string> prev, Dictionary<string,string> current);
         // --------------------------------------------------------------------
         // END_PROPERTY: Memory (Dictionary<string,string>)
+        // --------------------------------------------------------------------
+
+        // --------------------------------------------------------------------
+        // BEGIN_PROPERTY: MemoryMapRow (int)
+        // --------------------------------------------------------------------
+        int _MemoryMapRow = default;
+
+        void Raise_MemoryMapRow ()
+        {
+          OnPropertyChanged ("MemoryMapRow");
+        }
+
+        public int MemoryMapRow
+        {
+            get { return _MemoryMapRow; }
+            set
+            {
+                if (_MemoryMapRow == value)
+                {
+                    return;
+                }
+
+                var prev = _MemoryMapRow;
+
+                _MemoryMapRow = value;
+
+                Changed_MemoryMapRow (prev, _MemoryMapRow);
+
+                Raise_MemoryMapRow ();
+            }
+        }
+        // --------------------------------------------------------------------
+        partial void Changed_MemoryMapRow (int prev, int current);
+        // --------------------------------------------------------------------
+        // END_PROPERTY: MemoryMapRow (int)
         // --------------------------------------------------------------------
 
         // --------------------------------------------------------------------
