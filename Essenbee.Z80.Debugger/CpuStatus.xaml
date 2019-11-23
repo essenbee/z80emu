@@ -154,6 +154,28 @@
                          VerticalAlignment="Center"
                          Text="{Binding Mode}" />
             </StackPanel>
+
+
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Q:"
+                       Width="25"
+                       Margin="30,2,0,2"/>
+                <TextBox x:Name="Q"
+                         Margin="0,2,2,2"
+                         Width="20"
+                         IsReadOnly="True"
+                         VerticalAlignment="Center"
+                         Text="{Binding QRegister}" />
+                <Label Content="MEMPTR:"
+                       Width="60"
+                       Margin="20,2,15,2"/>
+                <TextBox x:Name="MemPtr"
+                         Margin="0,2,2,2"
+                         IsReadOnly="True"
+                         Width="40"
+                         VerticalAlignment="Center"
+                         Text="{Binding MemPointer}" />
+            </StackPanel>
         </StackPanel>
 
     </Grid>

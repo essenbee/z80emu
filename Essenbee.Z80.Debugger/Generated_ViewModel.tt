@@ -34,6 +34,8 @@ using System.Windows.Threading;
         P ( "string", "InterruptVector"              ),
         P ( "int", "Mode"                            ),
         P ( "string", "Refresh"                      ),
+        P ( "string", "QRegister"                    ),
+        P ( "string", "MemPointer"                   ),
         P ( "Dictionary<string,string>", "Memory"    ),
         P ( "int", "MemoryMapRow"                    ),
         P ( "Dictionary<string,string>", "DisAsm"    ),

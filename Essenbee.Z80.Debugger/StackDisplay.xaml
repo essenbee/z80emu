@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Essenbee.Z80.Debugger.MemoryMap"
+﻿<UserControl x:Class="Essenbee.Z80.Debugger.StackDisplay"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,26 +7,15 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <DataGrid x:Name="MemoryMapControl"
+        <DataGrid x:Name="TheStack"
                   VerticalScrollBarVisibility="Visible"
                   HorizontalScrollBarVisibility="Hidden"
-                  AutoGenerateColumns="False"
-                  ItemsSource="{Binding Memory}" 
+                  AutoGenerateColumns="False" 
                   IsReadOnly="True"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
                   RowBackground="LightGray"
-                  SelectionMode="Single"
-                  SelectedIndex="{Binding MemoryMapRow}">
-            <DataGrid.Resources>
-                <Style TargetType="{x:Type DataGridCell}">
-                    <Style.Triggers>
-                        <Trigger Property="DataGridCell.IsSelected" Value="True">
-                            <Setter Property="Background" Value="#CCDAFF" />
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.Resources>
+                  SelectionMode="Single">
             <DataGrid.Columns>
                 <DataGridTextColumn 
                         Header="Address" 
@@ -36,7 +25,7 @@
                 <DataGridTextColumn 
                         Header="Contents" 
                         IsReadOnly="True" 
-                        Width="500"
+                        Width="100"
                         Binding="{Binding Path=Value}"/>
             </DataGrid.Columns>
         </DataGrid>

@@ -25,6 +25,8 @@ namespace Essenbee.Z80.Debugger
             IndexY = _cpu.IY.ToString("X4");
             InterruptVector = _cpu.I.ToString("X2");
             Refresh = _cpu.R.ToString("X2");
+            QRegister = ((byte)_cpu.Q).ToString("X2");
+            MemPointer = _cpu.MEMPTR.ToString("X4");
             SetRegisterPairs();
             SetFlags();
             Mode = GetInterruptMode();
@@ -193,6 +195,8 @@ namespace Essenbee.Z80.Debugger
             IndexY = _cpu.IY.ToString("X4");
             InterruptVector = _cpu.I.ToString("X2");
             Refresh = _cpu.R.ToString("X2");
+            QRegister = ((byte)_cpu.Q).ToString("X2");
+            MemPointer = _cpu.MEMPTR.ToString("X4");
             Mode = GetInterruptMode();
             SetRegisterPairs();
             SetFlags();

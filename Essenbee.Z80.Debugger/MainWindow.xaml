@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="clr-namespace:Essenbee.Z80.Debugger"
         mc:Ignorable="d"
-        Title="Z80 Emulator - Debugger" Height="600" Width="1000">
+        Background="LightGray"
+        Title="Z80 Emulator - Debugger" Height="650" Width="1000">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="75*" />
@@ -16,12 +17,20 @@
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="60*" />
-                <RowDefinition Height="25*" />
-                <RowDefinition Height="15*" />
+                <RowDefinition Height="30*" />
+                <RowDefinition Height="10*" />
             </Grid.RowDefinitions>
 
-            <controls:Disassembler Grid.Row="0" />
-            <controls:MemoryMap Grid.Row="1" />
+            <GroupBox Header="Disassembler"
+                      Grid.Row="0"
+                      Margin="5,0,0,5">
+                <controls:Disassembler Grid.Row="0" />
+            </GroupBox>
+            <GroupBox Header="Memory"
+                      Grid.Row="1"
+                  Margin="5,0,0,5">
+                <controls:MemoryMap Grid.Row="1" />
+                </GroupBox>
             <controls:ControlPanel Grid.Row="2" />
 
         </Grid>
@@ -29,12 +38,21 @@
         <!-- Right-hand side -->
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="50*" />
-                <RowDefinition Height="50*" />
+                <RowDefinition Height="60*" />
+                <RowDefinition Height="40*" />
             </Grid.RowDefinitions>
 
-            <controls:CpuStatus Grid.Row="0" />
-
+            <GroupBox Grid.Row="0"
+                      Header="Z80"
+                      Margin="5,0,5,5" >
+                <controls:CpuStatus Grid.Row="0" />
+            </GroupBox>
+            
+            <GroupBox Header="Stack"
+                      Margin="5,0,5,5"
+                      Grid.Row="1">
+                <controls:StackDisplay Grid.Row="1" />
+            </GroupBox>
         </Grid>
     </Grid>
     

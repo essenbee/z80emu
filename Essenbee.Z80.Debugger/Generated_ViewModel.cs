@@ -823,6 +823,76 @@ namespace Essenbee.Z80.Debugger
         // --------------------------------------------------------------------
 
         // --------------------------------------------------------------------
+        // BEGIN_PROPERTY: QRegister (string)
+        // --------------------------------------------------------------------
+        string _QRegister = default;
+
+        void Raise_QRegister ()
+        {
+          OnPropertyChanged ("QRegister");
+        }
+
+        public string QRegister
+        {
+            get { return _QRegister; }
+            set
+            {
+                if (_QRegister == value)
+                {
+                    return;
+                }
+
+                var prev = _QRegister;
+
+                _QRegister = value;
+
+                Changed_QRegister (prev, _QRegister);
+
+                Raise_QRegister ();
+            }
+        }
+        // --------------------------------------------------------------------
+        partial void Changed_QRegister (string prev, string current);
+        // --------------------------------------------------------------------
+        // END_PROPERTY: QRegister (string)
+        // --------------------------------------------------------------------
+
+        // --------------------------------------------------------------------
+        // BEGIN_PROPERTY: MemPointer (string)
+        // --------------------------------------------------------------------
+        string _MemPointer = default;
+
+        void Raise_MemPointer ()
+        {
+          OnPropertyChanged ("MemPointer");
+        }
+
+        public string MemPointer
+        {
+            get { return _MemPointer; }
+            set
+            {
+                if (_MemPointer == value)
+                {
+                    return;
+                }
+
+                var prev = _MemPointer;
+
+                _MemPointer = value;
+
+                Changed_MemPointer (prev, _MemPointer);
+
+                Raise_MemPointer ();
+            }
+        }
+        // --------------------------------------------------------------------
+        partial void Changed_MemPointer (string prev, string current);
+        // --------------------------------------------------------------------
+        // END_PROPERTY: MemPointer (string)
+        // --------------------------------------------------------------------
+
+        // --------------------------------------------------------------------
         // BEGIN_PROPERTY: Memory (Dictionary<string,string>)
         // --------------------------------------------------------------------
         Dictionary<string,string> _Memory = default;

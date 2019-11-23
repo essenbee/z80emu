@@ -15,6 +15,7 @@
                   IsReadOnly="True"
                   CanUserAddRows="False"
                   CanUserDeleteRows="False"
+                  RowBackground="LightGray"
                   SelectionMode="Single"
                   SelectedValuePath="Key"
                   SelectedValue="{Binding SelectedRow}">

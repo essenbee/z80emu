@@ -88,6 +88,7 @@ namespace Essenbee.Z80
         public bool IsHalted { get; set; }
         public InterruptMode InterruptMode { get; set; } = InterruptMode.Mode0;
         public ushort MEMPTR { get; set; } = 0x0000; // aka WZ
+        public Flags Q { get; set; } = 0x00; // See https://www.worldofspectrum.org/forums/discussion/41704/redirect/p1
 
         private IBus _bus = null!;
 
@@ -102,7 +103,6 @@ namespace Essenbee.Z80
         private ushort _absoluteAddress = 0x0000;
         private byte _currentOpCode = 0x00;
         private int _clockCycles = 0;
-        private Flags Q = 0x00; // See https://www.worldofspectrum.org/forums/discussion/41704/redirect/p1
 
         public Z80()
         {
