@@ -26,8 +26,8 @@ namespace Essenbee.Z80
             return 0;
         }
 
-        // Immediate Mode (Signed)
-        private byte IMS()
+        // Relative Addressing
+        private byte REL()
         {
             _absoluteAddress = PC++;
             return 0;
