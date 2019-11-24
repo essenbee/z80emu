@@ -570,7 +570,8 @@ namespace Essenbee.Z80
 
         public void Step()
         {
-            var nextIns = PeekNextInstruction(ReadFromBus(PC));
+            var address = PC;
+            var nextIns = PeekNextInstruction(ReadFromBus(address), ref address);
             var tStates = nextIns.operation.TStates;
 
             for (int i = 0; i < tStates; i++)
@@ -630,8 +631,10 @@ namespace Essenbee.Z80
         {
             if (_clockCycles == 0)
             {
-                _currentOpCode = ReadFromBus(PC);
-                var nextIns = FetchNextInstruction(_currentOpCode);
+                var address = PC;
+                _currentOpCode = ReadFromBus(address);
+                var nextIns = FetchNextInstruction(_currentOpCode, ref address);
+                PC = address;
                 _currentOpCode = nextIns.opCode;
                 _clockCycles = nextIns.operation.TStates;
                 nextIns.operation.Op(_currentOpCode);
@@ -645,49 +648,25 @@ namespace Essenbee.Z80
         private byte ReadFromBusPort(byte port) => _bus.ReadPeripheral(port);
         private void WriteToBusPort(byte port, byte data) => _bus.WritePeripheral(port, data);
 
-        private bool CheckFlag(Flags flag, bool isAlternate = false)
+        private bool CheckFlag(Flags flag)
         {
-            if (!isAlternate)
+            if ((F & flag) == flag)
             {
-                if ((F & flag) == flag)
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                if ((F1 & flag) == flag)
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;
         }
 
-        private void SetFlag(Flags flag, bool value, bool isAlternate = false)
+        private void SetFlag(Flags flag, bool value)
         {
-            if (!isAlternate)
+            if (value)
             {
-                if (value)
-                {
-                    F |= flag;
-                }
-                else
-                {
-                    F &= ~flag;
-                }
+                F |= flag;
             }
             else
             {
-                if (value)
-                {
-                    F1 |= flag;
-                }
-                else
-                {
-                    F1 &= ~flag;
-                }
+                F &= ~flag;
             }
         }
 
@@ -715,51 +694,18 @@ namespace Essenbee.Z80
             return 0x00;
         }
 
-        private (byte opCode, Instruction operation) PeekNextInstruction(byte code) => FetchNextInstruction(code, false);
+        private (byte opCode, Instruction operation) PeekNextInstruction(byte code, ref ushort address) => 
+            FetchNextInstruction(code, ref address);
 
-        private (byte opCode, Instruction operation) FetchNextInstruction(byte code, bool incPC = true)
+        private (byte opCode, Instruction operation) FetchNextInstruction(byte code, ref ushort address)
         {
             // ToDo: Need to handle interrupts to release CPU from HALT state!
             if (!RootInstructions[code].Mnemonic.Equals("HALT", StringComparison.InvariantCultureIgnoreCase))
             {
-                if (incPC) PC++;
+                address++;
             }
 
-            switch (code)
-            {
-                case 0xCB:
-                    var opCB = incPC ? ReadFromBus(PC) : ReadFromBus((ushort)(PC + 1));
-                    if (incPC) PC++;
-                    return (opCB, CBInstructions[opCB]);
-                case 0xDD:
-                    var opDD = incPC ? ReadFromBus(PC) : ReadFromBus((ushort)(PC + 1));
-                    if (incPC) PC++;
-                    if (opDD == 0xCB)
-                    {
-                        var opDDCB = incPC ? ReadFromBus(PC) : ReadFromBus((ushort)(PC + 2));
-                        if (incPC) PC++;
-                        return (opDDCB, DDCBInstructions[opDDCB]);
-                    }
-
-                    return (opDD, DDInstructions[opDD]);
-                case 0xED:
-                    var opED = incPC ? ReadFromBus(PC) : ReadFromBus((ushort)(PC + 1));
-                    if (incPC) PC++;
-                    return (opED, EDInstructions[opED]);
-                case 0xFD:
-                    var opFD = incPC ? ReadFromBus(PC) : ReadFromBus((ushort)(PC + 1));
-                    if (incPC) PC++;
-                    if (opFD == 0xCB)
-                    {
-                        var opFDCB = incPC ? ReadFromBus(PC) : ReadFromBus((ushort)(PC + 2));
-                        if (incPC) PC++;
-                        return (opFDCB, FDCBInstructions[opFDCB]);
-                    }
-
-                    return (opFD, FDInstructions[opFD]);
-                default:
-                    return (code, RootInstructions[code]);
-            }
+            return GetInstruction(code, ref address);
         }
 
         private void ResetQ() => Q = (Flags)(0b00000000);
@@ -772,47 +718,7 @@ namespace Essenbee.Z80
             var aByte = ReadFromBus(address++);
             Instruction operation;
 
-            switch (aByte)
-            {
-                case 0xCB:
-                    var opCB = ReadFromBus(address++);
-                    operation = CBInstructions[opCB];
-                    break;
-                case 0xDD:
-                    var opDD = ReadFromBus(address++);
-
-                    if (opDD == 0xCB)
-                    {
-                        var opDDCB = ReadFromBus(address++);
-                        operation = DDCBInstructions[opDDCB];
-                        break;
-                    }
-
-                    operation = DDInstructions[opDD];
-                    break;
-
-                case 0xED:
-                    var opED = ReadFromBus(address++);
-                    operation = EDInstructions[opED];
-                    break;
-
-                case 0xFD:
-                    var opFD = ReadFromBus(address++);
-                    
-                    if (opFD == 0xCB)
-                    {
-                        var opFDCB = ReadFromBus(address++);
-                        operation = FDCBInstructions[opFDCB];
-                        break;
-                    }
-
-                    operation = FDInstructions[opFD];
-                    break;
-
-                default:
-                    operation = RootInstructions[aByte];
-                    break;
-            }
+            (_, operation) = GetInstruction(aByte, ref address);
 
             var opCode = $"{operation.Mnemonic}";
 
@@ -840,6 +746,47 @@ namespace Essenbee.Z80
             }
 
             return (opAddress, opCode, address);
+        }
+
+        private (byte opCode, Instruction operation) GetInstruction(byte code, ref ushort address)
+        {
+            switch (code)
+            {
+                case 0xCB:
+                    var opCB = ReadFromBus(address);
+                    address++;
+                    return (opCB, CBInstructions[opCB]);
+                case 0xDD:
+                    var opDD = ReadFromBus(address);
+                    address++;
+
+                    if (opDD == 0xCB)
+                    {
+                        var opDDCB = ReadFromBus(address);
+                        address++;
+                        return (opDDCB, DDCBInstructions[opDDCB]);
+                    }
+
+                    return (opDD, DDInstructions[opDD]);
+                case 0xED:
+                    var opED = ReadFromBus(address);
+                    address++;
+                    return (opED, EDInstructions[opED]);
+                case 0xFD:
+                    var opFD = ReadFromBus(address);
+                    address++;
+
+                    if (opFD == 0xCB)
+                    {
+                        var opFDCB = ReadFromBus(address);
+                        address++;
+                        return (opFDCB, FDCBInstructions[opFDCB]);
+                    }
+
+                    return (opFD, FDInstructions[opFD]);
+                default:
+                    return (code, RootInstructions[code]);
+            }
         }
     }
 }

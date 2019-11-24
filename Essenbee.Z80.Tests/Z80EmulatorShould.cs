@@ -62,8 +62,8 @@ namespace Essenbee.Z80.Tests
         {
             var fakeBus = A.Fake<IBus>();
 
-            //` Arithmetic Test Routine #1 - 10 instructions
-            //` Filename: Arithmetic1.hex
+            //` Arithmetic Test Routine #2
+            //` Filename: Multiplication.hex
             //`
             //` 8000                          .ORG   8000h
             //`
@@ -102,8 +102,8 @@ namespace Essenbee.Z80.Tests
         {
             var fakeBus = A.Fake<IBus>();
 
-            //` Arithmetic Test Routine #1 - 10 instructions
-            //` Filename: Arithmetic1.hex
+            //` Arithmetic Test Routine #3
+            //` Filename: Multiplication2.hex
             //`
             //` 8000                          .ORG   8000h
             //`
@@ -119,7 +119,7 @@ namespace Essenbee.Z80.Tests
             //`8014   CB 12                  RL D
             //`8016   10 F5                  DJNZ   MULTI
 
-var ram = HexFileReader.Read("../../../HexFiles/Multiplication2.hex");
+            var ram = HexFileReader.Read("../../../HexFiles/Multiplication2.hex");
 
             A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
                 .ReturnsLazily((ushort addr, bool ro) => ram[addr]);
