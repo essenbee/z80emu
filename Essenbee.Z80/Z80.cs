@@ -584,10 +584,12 @@ namespace Essenbee.Z80
             if (IFF1 && IFF2)
             {
                 IFF1 = IFF2 = false;
+                UnhaltIfHalted();
+
                 switch (InterruptMode)
                 {
                     case InterruptMode.Mode0:
-                        // ToDo: Read instruction from interrupting device
+                        // ToDo: Read instruction from interrupting device (address bus)
                         // ToDo: If its CALL or RST, push the PC onto the stack
                         // ToDo: Execute the instruction
                         break;
@@ -608,8 +610,8 @@ namespace Essenbee.Z80
 
         public void NonMaskableInterrupt()
         {
+            UnhaltIfHalted();
             PushProgramCounter();
-
             IFF2 = IFF1;
             IFF1 = false;
             PC = 0x0066; // There must be a handling routine here!
@@ -740,7 +742,6 @@ namespace Essenbee.Z80
             }
             else
             {
-                // ToDo: Need to handle interrupts to release CPU from HALTed state!
                 // Do not increment PC
                 // Execute NOP
                 IsHalted = true;
@@ -753,6 +754,15 @@ namespace Essenbee.Z80
         private void ResetQ() => Q = (Flags)(0b00000000);
 
         private void SetQ() => Q = F;
+
+        private void UnhaltIfHalted()
+        {
+            if (IsHalted)
+            {
+                IsHalted = false;
+                PC++;
+            }
+        }
 
         private (ushort opAddress, string opString, ushort nextAddress) DisassembleInstruction(ushort address, CultureInfo c)
         {
@@ -840,6 +850,17 @@ namespace Essenbee.Z80
             WriteToBus(SP, loByte);
             SP--;
             WriteToBus(SP, (byte)hiByte);
+            ResetQ();
+        }
+
+        private void PopProgramCounter()
+        {
+            var loByte = ReadFromBus(SP);
+            SP++;
+            var hiByte = ReadFromBus(SP);
+            SP++;
+
+            PC = (ushort)((hiByte << 8) + loByte);
             ResetQ();
         }
     }
