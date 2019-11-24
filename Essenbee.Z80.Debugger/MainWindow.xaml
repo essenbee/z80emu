@@ -6,7 +6,11 @@
         xmlns:controls="clr-namespace:Essenbee.Z80.Debugger"
         mc:Ignorable="d"
         Background="LightGray"
-        Title="Z80 Emulator - Debugger" Height="650" Width="1000">
+        MinHeight="650"
+        MinWidth="1000"
+        Title="Essenbee Z80 Emulator - Debugger" 
+        Height="650" 
+        Width="1000">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="75*" />
