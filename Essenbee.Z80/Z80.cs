@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 
 namespace Essenbee.Z80
 {
@@ -571,13 +570,49 @@ namespace Essenbee.Z80
         public void Step()
         {
             var address = PC;
-            var nextIns = PeekNextInstruction(ReadFromBus(address), ref address);
-            var tStates = nextIns.operation.TStates;
+            var (_, operation) = PeekNextInstruction(ReadFromBus(address), ref address);
+            var tStates = operation.TStates;
 
             for (int i = 0; i < tStates; i++)
             {
                 Tick();
             }
+        }
+
+        public void Interrupt()
+        {
+            if (IFF1 && IFF2)
+            {
+                IFF1 = IFF2 = false;
+                switch (InterruptMode)
+                {
+                    case InterruptMode.Mode0:
+                        // ToDo: Read instruction from interrupting device
+                        // ToDo: If its CALL or RST, push the PC onto the stack
+                        // ToDo: Execute the instruction
+                        break;
+                    case InterruptMode.Mode1:
+                        PushProgramCounter();
+                        PC = 0x0038; // There must be a handling routine here!
+                        break;
+                    case InterruptMode.Mode2:
+                        PushProgramCounter();
+                        // ToDo: form vector table address
+                        // ToDo: Get starting address from vector table
+                        // ToDo: Jump to that location
+
+                        break;
+                }
+            }
+        }
+
+        public void NonMaskableInterrupt()
+        {
+            PushProgramCounter();
+
+            IFF2 = IFF1;
+            IFF1 = false;
+            PC = 0x0066; // There must be a handling routine here!
         }
 
         public Dictionary<ushort,string> Disassemble(ushort start, ushort end)
@@ -600,7 +635,7 @@ namespace Essenbee.Z80
         {
             var c = new CultureInfo("en-US");
 
-            if (string.IsNullOrWhiteSpace(opCode) || !int.TryParse(opCode, NumberStyles.HexNumber, c, out var val))
+            if (string.IsNullOrWhiteSpace(opCode) || !int.TryParse(opCode, NumberStyles.HexNumber, c, out var _))
             {
                 return false;
             }
@@ -633,11 +668,11 @@ namespace Essenbee.Z80
             {
                 var address = PC;
                 _currentOpCode = ReadFromBus(address);
-                var nextIns = FetchNextInstruction(_currentOpCode, ref address);
+                var (opCode, operation) = FetchNextInstruction(_currentOpCode, ref address);
                 PC = address;
-                _currentOpCode = nextIns.opCode;
-                _clockCycles = nextIns.operation.TStates;
-                nextIns.operation.Op(_currentOpCode);
+                _currentOpCode = opCode;
+                _clockCycles = operation.TStates;
+                operation.Op(_currentOpCode);
             }
 
             _clockCycles--;
@@ -699,10 +734,17 @@ namespace Essenbee.Z80
 
         private (byte opCode, Instruction operation) FetchNextInstruction(byte code, ref ushort address)
         {
-            // ToDo: Need to handle interrupts to release CPU from HALT state!
-            if (!RootInstructions[code].Mnemonic.Equals("HALT", StringComparison.InvariantCultureIgnoreCase))
+            if (code != 0x76)
             {
                 address++;
+            }
+            else
+            {
+                // ToDo: Need to handle interrupts to release CPU from HALTed state!
+                // Do not increment PC
+                // Execute NOP
+                IsHalted = true;
+                return (0x00, new Instruction("NOP", IMP, IMP, NOP, new List<int> { 4 }));
             }
 
             return GetInstruction(code, ref address);
@@ -712,7 +754,7 @@ namespace Essenbee.Z80
 
         private void SetQ() => Q = F;
 
-        private (ushort opAddress, string opString, ushort nextAddress) DisassembleInstruction(ushort address, CultureInfo culture)
+        private (ushort opAddress, string opString, ushort nextAddress) DisassembleInstruction(ushort address, CultureInfo c)
         {
             var opAddress = address;
             var aByte = ReadFromBus(address++);
@@ -725,7 +767,7 @@ namespace Essenbee.Z80
             // Operands
             if (operation.AddressingMode1 == IMM)
             {
-                var n = ReadFromBus(address++).ToString("X2", culture);
+                var n = ReadFromBus(address++).ToString("X2", c);
                 opCode = opCode.Replace("n", $"&{n}", StringComparison.InvariantCulture);
             }
             else if (operation.AddressingMode1 == IMS)
@@ -733,15 +775,15 @@ namespace Essenbee.Z80
                 var d = (sbyte)ReadFromBus(address++);
                 var e = d > 0 ? d + 2 : d - 2;
 
-                opCode = opCode.Replace("+d", $"{d.ToString("+0;-#", culture)}", StringComparison.InvariantCulture);
-                opCode = opCode.Replace("e", $"${e.ToString("+0;-#", culture)}", StringComparison.InvariantCulture);
+                opCode = opCode.Replace("+d", $"{d.ToString("+0;-#", c)}", StringComparison.InvariantCulture);
+                opCode = opCode.Replace("e", $"${e.ToString("+0;-#", c)}", StringComparison.InvariantCulture);
             }
             else if (operation.AddressingMode1 == IMX)
             {
                 var loByte = ReadFromBus(address++);
                 var hiByte = (ushort)ReadFromBus(address++);
                 var val = (ushort)((hiByte << 8) + loByte);
-                var nn = val.ToString("X4", culture);
+                var nn = val.ToString("X4", c);
                 opCode = opCode.Replace("nn", $"&{nn}", StringComparison.InvariantCulture);
             }
 
@@ -787,6 +829,18 @@ namespace Essenbee.Z80
                 default:
                     return (code, RootInstructions[code]);
             }
+        }
+
+        private void PushProgramCounter()
+        {
+            var loByte = (byte)(PC & 0xff);
+            var hiByte = (byte)((PC >> 8) & 0xff);
+
+            SP--;
+            WriteToBus(SP, loByte);
+            SP--;
+            WriteToBus(SP, (byte)hiByte);
+            ResetQ();
         }
     }
 }
