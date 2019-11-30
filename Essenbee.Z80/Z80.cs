@@ -160,7 +160,7 @@ namespace Essenbee.Z80
                 { 0x2E, new Instruction("LD L,n", IMM, IMP, LDRN, new List<int>{ 4, 3 }) },
 
                 { 0x2F, new Instruction("CPL", IMP, IMP, CPL, new List<int>{ 4 }) },
-                { 0x30, new Instruction("JR C,e", REL, IMP, JRNC, new List<int>{ 4, 3, 5 }) },
+                { 0x30, new Instruction("JR C,e", REL, IMP, JRNC, new List<int>{ 4, 3 }) },
                 { 0x31, new Instruction("LD SP,nn", IMX, IMP, LDSPNN, new List<int>{ 4, 3, 3 }) },
                 { 0x32, new Instruction("LD (nn),A", IMX, IMP, LDNNA, new List<int>{ 4, 3, 3, 3 }) },
 
@@ -169,7 +169,7 @@ namespace Essenbee.Z80
 
                 { 0x36, new Instruction("LD (HL),n", IMM, IMP, LDHLN, new List<int>{ 4, 3, 3 }) },
                 { 0x37, new Instruction("SCF", IMP, IMP, SCF, new List<int>{ 4 }) },
-                { 0x38, new Instruction("JR C,e", REL, IMP, JRC, new List<int>{ 4, 3, 5 }) },
+                { 0x38, new Instruction("JR C,e", REL, IMP, JRC, new List<int>{ 4, 3 }) },
                 { 0x39, new Instruction("ADD HL,SP", IMP, IMP, ADDHLSS, new List<int>{ 4, 4, 3 }) },
                 { 0x3A, new Instruction("LD A,(nn)", IMX, IDX, LDANN, new List<int>{ 4, 3, 3, 3 }) },
 
@@ -674,7 +674,8 @@ namespace Essenbee.Z80
                 PC = address;
                 _currentOpCode = opCode;
                 _clockCycles = operation.TStates;
-                operation.Op(_currentOpCode);
+                var additionalTStates = operation.Op(_currentOpCode);
+                _clockCycles += additionalTStates;
             }
 
             _clockCycles--;

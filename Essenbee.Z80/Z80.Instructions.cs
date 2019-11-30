@@ -2003,16 +2003,18 @@ namespace Essenbee.Z80
         // Notes          : Assembler with compensate automatically for the twice-incremented PC
         private byte JRC(byte opCode)
         {
+            byte additionalTStates = 0;
             var e = (sbyte)Fetch1(RootInstructions);
 
             if (CheckFlag(Flags.C))
             {
+                additionalTStates = 5;
                 PC = (ushort)(PC + e);
                 MEMPTR = PC;
             }
 
             ResetQ();
-            return 0;
+            return additionalTStates;
         }
 
         // Instruction    : JR NC, e
@@ -2021,16 +2023,18 @@ namespace Essenbee.Z80
         // Notes          : Assembler with compensate automatically for the twice-incremented PC
         private byte JRNC(byte opCode)
         {
+            byte additionalTStates = 0;
             var e = (sbyte)Fetch1(RootInstructions);
 
             if (!CheckFlag(Flags.C))
             {
+                additionalTStates = 5;
                 PC = (ushort)(PC + e);
                 MEMPTR = PC;
             }
 
             ResetQ();
-            return 0;
+            return additionalTStates;
         }
 
         // Instruction    : DJNZ e
@@ -2039,6 +2043,7 @@ namespace Essenbee.Z80
         // Notes          : Assembler with compensate automatically for the twice-incremented PC
         private byte DJNZ(byte opCode)
         {
+            byte additionalTStates = 0;
             var e = (sbyte)Fetch1(RootInstructions);
 
             var initialVal = B;
@@ -2047,14 +2052,14 @@ namespace Essenbee.Z80
 
             if (!CheckFlag(Flags.Z))
             {
-                // ToDo: Additional 5 T-states
+                additionalTStates = 5;
                 PC = (ushort)(PC + e);
                 MEMPTR = PC;
             }
 
             ResetQ();
 
-            return 0;
+            return additionalTStates;
         }
 
 
