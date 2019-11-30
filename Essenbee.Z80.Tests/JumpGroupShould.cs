@@ -459,5 +459,155 @@ namespace Essenbee.Z80.Tests
 
             Assert.Equal(0x082, cpu.PC);
         }
+
+        [Fact]
+        private void JumpForwardFourForJRZPositiveSix_ZeroSet()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0x28 }, // JR Z $+6
+                { 0x0081, 0x04 }, // Assembler with compensate for PC incrementing twice
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+                { 0x0085, 0x00 },
+                { 0x0086, 0x00 }, // <- jump here
+                { 0x0087, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+
+            var cpu = new Z80() { A = 0x00, PC = 0x0080 };
+            cpu.F = (Flags)0b01000000; // Set Z flag
+            cpu.ConnectToBus(fakeBus);
+
+            cpu.Step();
+
+            Assert.Equal(0x086, cpu.PC);
+        }
+
+        [Fact]
+        private void JumpForwardFourForJRNZPositiveSix_NotZeroSet()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0x20 }, // JR NZ $+6
+                { 0x0081, 0x04 }, // Assembler with compensate for PC incrementing twice
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+                { 0x0085, 0x00 },
+                { 0x0086, 0x00 }, // <- jump here
+                { 0x0087, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+
+            var cpu = new Z80() { A = 0x00, PC = 0x0080 };
+            cpu.F = (Flags)0b00000000; // Reset Z flag
+            cpu.ConnectToBus(fakeBus);
+
+            cpu.Step();
+
+            Assert.Equal(0x086, cpu.PC);
+        }
+
+        [Fact]
+        private void JumpToHL()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xE9 }, // JR HL
+                { 0x0081, 0x00 },
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+                { 0x0085, 0x00 },
+                { 0x0086, 0x00 }, // <- jump here
+                { 0x0087, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+
+            var cpu = new Z80() { A = 0x00, H = 0x00, L = 0x86, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+
+            cpu.Step();
+
+            Assert.Equal(0x086, cpu.PC);
+            FlagsUnchanged(cpu);
+        }
+
+        [Fact]
+        private void JumpToIX()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xDD }, // JR IX
+                { 0x0081, 0xE9 },
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+                { 0x0085, 0x00 },
+                { 0x0086, 0x00 }, // <- jump here
+                { 0x0087, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+
+            var cpu = new Z80() { A = 0x00, IX = 0x0086, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+
+            cpu.Step();
+
+            Assert.Equal(0x086, cpu.PC);
+            FlagsUnchanged(cpu);
+        }
+
+        [Fact]
+        private void JumpToIY()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xFD }, // JR IY
+                { 0x0081, 0xE9 },
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+                { 0x0085, 0x00 },
+                { 0x0086, 0x00 }, // <- jump here
+                { 0x0087, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+
+            var cpu = new Z80() { A = 0x00, IY = 0x0086, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+
+            cpu.Step();
+
+            Assert.Equal(0x086, cpu.PC);
+            FlagsUnchanged(cpu);
+        }
     }
 }

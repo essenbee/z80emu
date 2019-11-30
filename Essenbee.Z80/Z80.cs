@@ -143,6 +143,7 @@ namespace Essenbee.Z80
 
                 { 0x1E, new Instruction("LD E,n", IMM, IMP, LDRN, new List<int>{ 4, 3 }) },
                 { 0x1F, new Instruction("RRA", IMP, IMP, RRA, new List<int>{ 4 }) },
+                { 0x20, new Instruction("JR NZ,e", REL, IMP, JRNZ, new List<int>{ 4, 3 }) },
                 { 0x21, new Instruction("LD HL,nn", IMX, IMP, LDHLNN, new List<int>{ 4, 3, 3 }) },
                 { 0x22, new Instruction("LD (nn),HL", IMX, IDX, LDNNHL, new List<int>{ 4, 3, 3, 3, 3 }) },
 
@@ -151,6 +152,7 @@ namespace Essenbee.Z80
 
                 { 0x26, new Instruction("LD H,n", IMM, IMP, LDRN, new List<int>{ 4, 3 }) },
                 { 0x27, new Instruction("DAA", IMP, IMP, DAA, new List<int>{ 4 }) },
+                { 0x28, new Instruction("JR Z,e", REL, IMP, JRZ, new List<int>{ 4, 3 }) },
                 { 0x29, new Instruction("ADD HL,HL", IMP, IMP, ADDHLSS, new List<int>{ 4, 4, 3 }) },
                 { 0x2A, new Instruction("LD HL,(nn)", IMX, IDX, LDHLFNN, new List<int>{ 4, 3, 3, 3, 3 }) },
 
@@ -352,6 +354,7 @@ namespace Essenbee.Z80
                 { 0xE2, new Instruction("JP PO,nn", IMX, IMP, JPCCNN, new List<int>{ 4, 3, 3 }) },
                 { 0xE5, new Instruction("PUSH HL", IMP, IMP, PUSHHL, new List<int>{ 5, 3, 3 }) },
                 { 0xE6, new Instruction("AND n", IMM, IMP, ANDN, new List<int>{ 4, 3 }) },
+                { 0xE9, new Instruction("JP (HL)", IMP, IMP, JPHL, new List<int>{ 4 }) },
                 { 0xEA, new Instruction("JP PE,nn", IMX, IMP, JPCCNN, new List<int>{ 4, 3, 3 }) },
                 { 0xEE, new Instruction("XOR n", IMM, IMP, XORN, new List<int>{ 4, 3 }) },
                 { 0xF1, new Instruction("POP AF", IMP, IMP, POPAF, new List<int>{ 4, 3, 3 }) },
@@ -414,7 +417,7 @@ namespace Essenbee.Z80
 
                 { 0xE1, new Instruction("POP IX", IMP, IMP, POPIX, new List<int>{ 4, 3, 3, 3 }) },
                 { 0xE5, new Instruction("PUSH IX", IMP, IMP, PUSHIX, new List<int>{ 4, 5, 3, 3 }) },
-
+                { 0xE9, new Instruction("JP (IX)", IMP, IMP, JPIX, new List<int>{ 4, 4 }) },
                 { 0xF9, new Instruction("LD SP,IX", IMP, IMP, LDSPIX, new List<int>{ 4, 6 }) },
             };
 
@@ -461,7 +464,7 @@ namespace Essenbee.Z80
 
                 { 0xE1, new Instruction("POP IY", IMP, IMP, POPIY, new List<int>{ 4, 3, 3, 3 }) },
                 { 0xE5, new Instruction("PUSH IY", IMP, IMP, PUSHIY, new List<int>{ 4, 5, 3, 3 }) },
-
+                { 0xE9, new Instruction("JP (IY)", IMP, IMP, JPIY, new List<int>{ 4, 4 }) },
                 { 0xF9, new Instruction("LD SP,IY", IMP, IMP, LDSPIY, new List<int>{ 4, 6 }) },
             };
 

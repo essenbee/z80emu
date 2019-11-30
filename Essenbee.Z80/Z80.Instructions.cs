@@ -2037,6 +2037,85 @@ namespace Essenbee.Z80
             return additionalTStates;
         }
 
+        // Instruction    : JR Z, e
+        // Operation      : PC <- PC + e if Zero flag set
+        // Flags Affected : None
+        // Notes          : Assembler with compensate automatically for the twice-incremented PC
+        private byte JRZ(byte opCode)
+        {
+            byte additionalTStates = 0;
+            var e = (sbyte)Fetch1(RootInstructions);
+
+            if (CheckFlag(Flags.Z))
+            {
+                additionalTStates = 5;
+                PC = (ushort)(PC + e);
+                MEMPTR = PC;
+            }
+
+            ResetQ();
+            return additionalTStates;
+        }
+
+        // Instruction    : JR NZ, e
+        // Operation      : PC <- PC + e if Zero flag not set
+        // Flags Affected : None
+        // Notes          : Assembler with compensate automatically for the twice-incremented PC
+        private byte JRNZ(byte opCode)
+        {
+            byte additionalTStates = 0;
+            var e = (sbyte)Fetch1(RootInstructions);
+
+            if (!CheckFlag(Flags.Z))
+            {
+                additionalTStates = 5;
+                PC = (ushort)(PC + e);
+                MEMPTR = PC;
+            }
+
+            ResetQ();
+            return additionalTStates;
+        }
+
+        // Instruction    : JP HL
+        // Operation      : PC <- HL
+        // Flags Affected : None
+        // Notes          : -
+        private byte JPHL(byte opCode)
+        {
+            PC = HL;
+            MEMPTR = PC;
+
+            ResetQ();
+            return 0;
+        }
+
+        // Instruction    : JP IX
+        // Operation      : PC <- IX
+        // Flags Affected : None
+        // Notes          : -
+        private byte JPIX(byte opCode)
+        {
+            PC = IX;
+            MEMPTR = PC;
+
+            ResetQ();
+            return 0;
+        }
+
+        // Instruction    : JP IY
+        // Operation      : PC <- IY
+        // Flags Affected : None
+        // Notes          : -
+        private byte JPIY(byte opCode)
+        {
+            PC = IY;
+            MEMPTR = PC;
+
+            ResetQ();
+            return 0;
+        }
+
         // Instruction    : DJNZ e
         // Operation      : Decrement B and jump if NZ (PC <- PC + e)
         // Flags Affected : None
