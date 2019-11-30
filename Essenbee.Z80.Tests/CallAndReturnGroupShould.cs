@@ -149,5 +149,188 @@ namespace Essenbee.Z80.Tests
                 program[addr] = data;
             }
         }
+
+        [Fact]
+        private void PopProgramCounterForRET()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xC9 }, // RET
+                { 0x0081, 0x00 },
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+
+                { 0x0190, 0x00 }, // <- Continue from here
+                { 0x0191, 0x00 },
+                { 0x0192, 0x00 },
+
+                { 0x1FFB, 0x00 },
+                { 0x1FFC, 0x00 },
+                { 0x1FFD, 0x00 },
+                { 0x1FFE, 0x90 },// <- SP
+                { 0x1FFF, 0x01 },
+                { 0x2000, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+            A.CallTo(() => fakeBus.Write(A<ushort>._, A<byte>._))
+                .Invokes((ushort addr, byte data) => UpdateMemory(addr, data));
+
+            var cpu = new Z80() { A = 0x00, PC = 0x0080, SP = 0x1FFE };
+            cpu.ConnectToBus(fakeBus);
+
+            cpu.Step();
+
+            Assert.Equal(0x0190, cpu.PC);
+            Assert.Equal(0x2000, cpu.SP);
+
+            void UpdateMemory(ushort addr, byte data)
+            {
+                program[addr] = data;
+            }
+        }
+
+        [Fact]
+        private void PopProgramCounterForRETCC_GivenCarryFlagSet()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0x37 }, // SCF
+                { 0x0081, 0xD8 }, // RET C
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+
+                { 0x0190, 0x00 }, // <- Continue from here
+                { 0x0191, 0x00 },
+                { 0x0192, 0x00 },
+
+                { 0x1FFB, 0x00 },
+                { 0x1FFC, 0x00 },
+                { 0x1FFD, 0x00 },
+                { 0x1FFE, 0x90 },// <- SP
+                { 0x1FFF, 0x01 },
+                { 0x2000, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+            A.CallTo(() => fakeBus.Write(A<ushort>._, A<byte>._))
+                .Invokes((ushort addr, byte data) => UpdateMemory(addr, data));
+
+            var cpu = new Z80() { A = 0x00, PC = 0x0080, SP = 0x1FFE };
+            cpu.ConnectToBus(fakeBus);
+
+            cpu.Step();
+            cpu.Step();
+
+            Assert.Equal(0x0190, cpu.PC);
+            Assert.Equal(0x2000, cpu.SP);
+
+            void UpdateMemory(ushort addr, byte data)
+            {
+                program[addr] = data;
+            }
+        }
+
+        [Fact]
+        private void DoNothingForRETCC_GivenCarryFlagNotSet()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xD8 }, // RET C
+                { 0x0081, 0x00 },
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+
+                { 0x0190, 0x00 }, // <- Continue from here
+                { 0x0191, 0x00 },
+                { 0x0192, 0x00 },
+
+                { 0x1FFB, 0x00 },
+                { 0x1FFC, 0x00 },
+                { 0x1FFD, 0x00 },
+                { 0x1FFE, 0x90 },// <- SP
+                { 0x1FFF, 0x01 },
+                { 0x2000, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+            A.CallTo(() => fakeBus.Write(A<ushort>._, A<byte>._))
+                .Invokes((ushort addr, byte data) => UpdateMemory(addr, data));
+
+            var cpu = new Z80() { A = 0x00, PC = 0x0080, SP = 0x1FFE };
+            cpu.ConnectToBus(fakeBus);
+
+            cpu.Step();
+
+            Assert.Equal(0x0081, cpu.PC);
+            Assert.Equal(0x1FFE, cpu.SP);
+
+            void UpdateMemory(ushort addr, byte data)
+            {
+                program[addr] = data;
+            }
+        }
+
+        [Fact]
+        private void PushAndSetProgramCounterForRST()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xFF }, // RST &38
+                { 0x0081, 0x00 },
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+
+                { 0x0190, 0x00 },
+                { 0x0191, 0x00 },
+                { 0x0192, 0x00 },
+
+                { 0x1FFB, 0x00 },
+                { 0x1FFC, 0x00 },
+                { 0x1FFD, 0x00 },
+                { 0x1FFE, 0x00 },
+                { 0x1FFF, 0x00 },
+                { 0x2000, 0x00 }, // <- SP
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+            A.CallTo(() => fakeBus.Write(A<ushort>._, A<byte>._))
+                .Invokes((ushort addr, byte data) => UpdateMemory(addr, data));
+
+            var cpu = new Z80() { A = 0x00, PC = 0x0080, SP = 0x2000 };
+            cpu.ConnectToBus(fakeBus);
+
+            cpu.Step();
+
+            Assert.Equal(0x0038, cpu.PC);
+            Assert.Equal(0x1FFE, cpu.SP);
+            Assert.Equal(0x00, program[0x1FFF]);
+            Assert.Equal(0x81, program[0x1FFE]);
+
+            void UpdateMemory(ushort addr, byte data)
+            {
+                program[addr] = data;
+            }
+        }
     }
 }

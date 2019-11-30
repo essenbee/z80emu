@@ -2517,8 +2517,8 @@ namespace Essenbee.Z80
             return 0;
         }
 
-        // Instruction    : CALL nn
-        // Operation      : Push PC onto Stack, then PC <- nn
+        // Instruction    : CALL cc,nn
+        // Operation      : Conditionally push PC onto Stack, then PC <- nn
         // Flags Affected : None
 
         private byte CALLCC(byte opCode)
@@ -2543,8 +2543,89 @@ namespace Essenbee.Z80
             return additionalTStates;
         }
 
+        // Instruction    : RET
+        // Operation      : Pop PC
+        // Flags Affected : None
+
+        private byte RET(byte opCode)
+        {
+            PopProgramCounter();
+            MEMPTR = PC;
+            ResetQ();
+
+            return 0;
+        }
+
+        // Instruction    : RET cc
+        // Operation      : Conditionally POP PCn
+        // Flags Affected : None
+
+        private byte RETCC(byte opCode)
+        {
+            byte additionalTStates = 0;
+            var cc = (opCode & 0b00111000) >> 3;
+
+            if (EvaluateCC(cc))
+            {
+                PopProgramCounter();
+                MEMPTR = PC;
+                additionalTStates = 6;
+            }
+
+            ResetQ();
+
+            return additionalTStates;
+        }
+
+        // Instruction    : RETI
+        // Operation      : Return from Interrupt
+        // Flags Affected : None
+
+        private byte RETI(byte opCode)
+        {
+            PopProgramCounter();
+            MEMPTR = PC;
+            ResetQ();
+
+            // ToDo: signal interrupting device that interrupt is complete
+
+            return 0;
+        }
+
+        // Instruction    : RETN
+        // Operation      : Return from NMI
+        // Flags Affected : None
+
+        private byte RETN(byte opCode)
+        {
+            PopProgramCounter();
+            IFF1 = IFF2;
+            MEMPTR = PC;
+            ResetQ();
+
+            return 0;
+        }
+
+        // Instruction    : RST p
+        // Operation      : Restart at page zero address p
+        // Flags Affected : None
+
+        private byte RST(byte opCode)
+        {
+            var val = (byte)((opCode & 0b00111000) >> 3);
+            var addr = GetPageZeroAddress(val);
+
+            PushProgramCounter();
+            PC = addr;
+            MEMPTR = addr;
+            ResetQ();
+
+            return 0;
+        }
 
 
+
+        
 
 
         // =========================== H E L P E R S ===========================
@@ -2890,6 +2971,20 @@ namespace Essenbee.Z80
                 6 => !CheckFlag(Flags.S),
                 7 => CheckFlag(Flags.S),
                 _ => false
+            };
+
+        private ushort GetPageZeroAddress(byte value) =>
+            value switch
+            {
+                0 => 0x0000,
+                1 => 0x0008,
+                2 => 0x0010,
+                3 => 0x0018,
+                4 => 0x0020,
+                5 => 0x0028,
+                6 => 0x0030,
+                7 => 0x0038,
+                _ => 0x0000
             };
     }
 }
