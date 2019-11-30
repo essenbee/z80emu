@@ -2141,10 +2141,6 @@ namespace Essenbee.Z80
             return additionalTStates;
         }
 
-
-
-
-
         // ========================================
         // Rotate and Shift Group
         // ========================================
@@ -2499,10 +2495,61 @@ namespace Essenbee.Z80
 
 
 
+        // ========================================
+        // Call and Return Group
+        // ========================================
 
-            // =========================== H E L P E R S ===========================
+        // Instruction    : CALL nn
+        // Operation      : Push PC onto Stack, then PC <- nn
+        // Flags Affected : None
 
-            private byte Add8(byte a, byte b, byte c = 0)
+        private byte CALL(byte opCode)
+        {
+            var loByte = Fetch1(RootInstructions);
+            var hiByte = Fetch1(RootInstructions);
+
+            PushProgramCounter();
+            var addr = (ushort)((hiByte << 8) + loByte);
+            PC = addr;
+            MEMPTR = addr;
+            ResetQ();
+
+            return 0;
+        }
+
+        // Instruction    : CALL nn
+        // Operation      : Push PC onto Stack, then PC <- nn
+        // Flags Affected : None
+
+        private byte CALLCC(byte opCode)
+        {
+            byte additionalTStates = 0;
+            var loByte = Fetch1(RootInstructions);
+            var hiByte = Fetch1(RootInstructions);
+
+            var cc = (opCode & 0b00111000) >> 3;
+
+            if (EvaluateCC(cc))
+            {
+                PushProgramCounter();
+                var addr = (ushort)((hiByte << 8) + loByte);
+                PC = addr;
+                MEMPTR = addr;
+                additionalTStates = 7;
+            }
+
+            ResetQ();
+
+            return additionalTStates;
+        }
+
+
+
+
+
+        // =========================== H E L P E R S ===========================
+
+        private byte Add8(byte a, byte b, byte c = 0)
         {
             var sum = (a + b + c);
 

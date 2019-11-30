@@ -337,34 +337,42 @@ namespace Essenbee.Z80
                 { 0xC2, new Instruction("JP NZ,nn", IMX, IMP, JPCCNN, new List<int>{ 4, 3, 3 }) },
                 { 0xC3, new Instruction("JP nn", IMX, IMP, JPNN, new List<int>{ 4, 3, 3 }) },
                 { 0xC5, new Instruction("PUSH BC", IMP, IMP, PUSHBC, new List<int>{ 5, 3, 3 }) },
-
+                { 0xC4, new Instruction("CALL NZ,nn", IMX, IMP, CALLCC, new List<int>{ 4, 3, 3 }) },
                 { 0xC6, new Instruction("ADD A,n", IMM, IMP, ADDAN, new List<int>{ 4, 3 }) },
                 { 0xCA, new Instruction("JP Z,nn", IMX, IMP, JPCCNN, new List<int>{ 4, 3, 3 }) },
+
+                { 0xCC, new Instruction("CALL Z,nn", IMX, IMP, CALLCC, new List<int>{ 4, 3, 3 }) },
+                { 0xCD, new Instruction("CALL nn", IMX, IMP, CALL, new List<int>{ 4, 3, 4, 3, 3 }) },
                 { 0xCE, new Instruction("ADC A,n", IMM, IMP, ADCAN, new List<int>{ 4, 3 }) },
 
                 { 0xD1, new Instruction("POP DE", IMP, IMP, POPDE, new List<int>{ 4, 3, 3 }) },
                 { 0xD2, new Instruction("JP NC,nn", IMX, IMP, JPCCNN, new List<int>{ 4, 3, 3 }) },
                 { 0xD5, new Instruction("PUSH DE", IMP, IMP, PUSHDE, new List<int>{ 5, 3, 3 }) },
-
+                { 0xD4, new Instruction("CALL NC,nn", IMX, IMP, CALLCC, new List<int>{ 4, 3, 3 }) },
                 { 0xD6, new Instruction("SUB A,n", IMM, IMP, SUBAN, new List<int>{ 4, 3 }) },
                 { 0xDA, new Instruction("JP C,nn", IMX, IMP, JPCCNN, new List<int>{ 4, 3, 3 }) },
+                { 0xDC, new Instruction("CALL C,nn", IMX, IMP, CALLCC, new List<int>{ 4, 3, 3 }) },
                 { 0xDE, new Instruction("SBC A,n", IMM, IMP, SBCAN, new List<int>{ 4, 3 }) },
 
                 { 0xE1, new Instruction("POP HL", IMP, IMP, POPHL, new List<int>{ 4, 3, 3 }) },
                 { 0xE2, new Instruction("JP PO,nn", IMX, IMP, JPCCNN, new List<int>{ 4, 3, 3 }) },
+                { 0xE4, new Instruction("CALL PO,nn", IMX, IMP, CALLCC, new List<int>{ 4, 3, 3 }) },
                 { 0xE5, new Instruction("PUSH HL", IMP, IMP, PUSHHL, new List<int>{ 5, 3, 3 }) },
                 { 0xE6, new Instruction("AND n", IMM, IMP, ANDN, new List<int>{ 4, 3 }) },
                 { 0xE9, new Instruction("JP (HL)", IMP, IMP, JPHL, new List<int>{ 4 }) },
                 { 0xEA, new Instruction("JP PE,nn", IMX, IMP, JPCCNN, new List<int>{ 4, 3, 3 }) },
+                { 0xEC, new Instruction("CALL PE,nn", IMX, IMP, CALLCC, new List<int>{ 4, 3, 3 }) },
                 { 0xEE, new Instruction("XOR n", IMM, IMP, XORN, new List<int>{ 4, 3 }) },
                 { 0xF1, new Instruction("POP AF", IMP, IMP, POPAF, new List<int>{ 4, 3, 3 }) },
                 { 0xF2, new Instruction("JP P,nn", IMX, IMP, JPCCNN, new List<int>{ 4, 3, 3 }) },
                 { 0xF3, new Instruction("DI", IMP, IMP, DI, new List<int>{ 4 }) },
+                { 0xF4, new Instruction("CALL P,nn", IMX, IMP, CALLCC, new List<int>{ 4, 3, 3 }) },
                 { 0xF5, new Instruction("PUSH AF", IMP, IMP, PUSHAF, new List<int>{ 5, 3, 3 }) },
                 { 0xF6, new Instruction("OR n", IMM, IMP, ORN, new List<int>{ 4, 3 }) },
                 { 0xF9, new Instruction("LD SP,HL", IMP, IMP, LDSPHL, new List<int>{ 6 }) },
                 { 0xFA, new Instruction("JP M,nn", IMX, IMM, JPCCNN, new List<int>{ 4, 3, 3 }) },
                 { 0xFB, new Instruction("EI", IMP, IMP, EI, new List<int>{ 4 }) },
+                { 0xFC, new Instruction("CALL M,nn", IMX, IMP, CALLCC, new List<int>{ 4, 3, 3 }) },
                 { 0xFE, new Instruction("CP n", IMM, IMP, CPN, new List<int>{ 4, 3 }) },
 
                 // Multi-byte Opcode Prefixes
@@ -851,9 +859,9 @@ namespace Essenbee.Z80
             var hiByte = (byte)((PC >> 8) & 0xff);
 
             SP--;
-            WriteToBus(SP, loByte);
-            SP--;
             WriteToBus(SP, (byte)hiByte);
+            SP--;
+            WriteToBus(SP, loByte);
             ResetQ();
         }
 
