@@ -388,12 +388,6 @@ namespace Essenbee.Z80
                 { 0xFC, new Instruction("CALL M,nn", IMX, IMP, CALLCC, new List<int>{ 4, 3, 3 }) },
                 { 0xFE, new Instruction("CP n", IMM, IMP, CPN, new List<int>{ 4, 3 }) },
                 { 0xFF, new Instruction("RST &38", IMP, IMP, RST, new List<int>{ 5, 3, 3 }) },
-
-                // Multi-byte Opcode Prefixes
-                { 0xCB, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4 }) },
-                { 0xDD, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4 }) },
-                { 0xED, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4 }) },
-                { 0xFD, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4 }) },
             };
 
             DDInstructions = new Dictionary<byte, Instruction>
@@ -568,14 +562,14 @@ namespace Essenbee.Z80
 
             DDCBInstructions = new Dictionary<byte, Instruction>
             {
-                { 0x06, new Instruction("RLC (IX+d)", REL, IDX, RLCIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
-                { 0x16, new Instruction("RL (IX+d)", REL, IDX, RLIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
+                { 0x06, new Instruction("RLC (IX+d)", RELS, IDX, RLCIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
+                { 0x16, new Instruction("RL (IX+d)", RELS, IDX, RLIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
             };
 
             FDCBInstructions = new Dictionary<byte, Instruction>
             {
-                { 0x06, new Instruction("RLC (IY+d)", REL, IDX, RLCIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
-                { 0x16, new Instruction("RL (IY+d)", REL, IDX, RLIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
+                { 0x06, new Instruction("RLC (IY+d)", RELS, IDX, RLCIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
+                { 0x16, new Instruction("RL (IY+d)", RELS, IDX, RLIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
             };
         }
 
@@ -823,6 +817,11 @@ namespace Essenbee.Z80
 
                 opCode = opCode.Replace("+d", $"{d.ToString("+0;-#", c)}", StringComparison.InvariantCulture);
                 opCode = opCode.Replace("e", $"${e.ToString("+0;-#", c)}", StringComparison.InvariantCulture);
+            }
+            else if (operation.AddressingMode1 == RELS)
+            {
+                var d = (sbyte)ReadFromBus((ushort)(address-2));
+                opCode = opCode.Replace("+d", $"{d.ToString("+0;-#", c)}", StringComparison.InvariantCulture);
             }
             else if (operation.AddressingMode1 == IMX)
             {

@@ -33,6 +33,13 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Relative Special Addressing
+        private byte RELS()
+        {
+            _absoluteAddress = PC++;
+            return 0;
+        }
+
         // Extended Immediate Mode
         private byte IMX()
         {

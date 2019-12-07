@@ -68,5 +68,27 @@ namespace Essenbee.Z80.Tests
 
             Assert.Equal(expectedDisassembly, disassembledCode);
         }
+
+        [Fact]
+        private void DisassembleDDCBandFDCBOpcodesCorrectly()
+        {
+            var fakeBus = A.Fake<IBus>();
+            var ram = HexFileReader.Read("../../../HexFiles/TestDDCBandFDCB.hex");
+
+            var expectedDisassembly = new Dictionary<ushort, string>
+            {   { 0x8000, "RL (IX+2)" },
+                { 0x8004, "RL (IY-3)" },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => ram[addr]);
+
+
+            var cpu = new Z80() { A = 0x00, PC = 0x8000 };
+            cpu.ConnectToBus(fakeBus);
+            var disassembledCode = cpu.Disassemble(0x8000, 0x8007);
+
+            Assert.Equal(expectedDisassembly, disassembledCode);
+        }
     }
 }
