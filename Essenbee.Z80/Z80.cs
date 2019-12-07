@@ -569,11 +569,13 @@ namespace Essenbee.Z80
             DDCBInstructions = new Dictionary<byte, Instruction>
             {
                 { 0x06, new Instruction("RLC (IX+d)", REL, IDX, RLCIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
+                { 0x16, new Instruction("RL (IX+d)", REL, IDX, RLIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
             };
 
             FDCBInstructions = new Dictionary<byte, Instruction>
             {
                 { 0x06, new Instruction("RLC (IY+d)", REL, IDX, RLCIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
+                { 0x16, new Instruction("RL (IY+d)", REL, IDX, RLIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
             };
         }
 
@@ -686,10 +688,10 @@ namespace Essenbee.Z80
                     "CB" => CBInstructions.ContainsKey(byte.Parse(opCode[2..], NumberStyles.HexNumber, c)),
                     _ => false,
                 },
-                6 => (opCode[0..4]) switch
+                8 => (opCode[0..4]) switch
                 {
-                    "DDCB" => DDCBInstructions.ContainsKey(byte.Parse(opCode[4..], NumberStyles.HexNumber, c)),
-                    "FDCB" => FDCBInstructions.ContainsKey(byte.Parse(opCode[4..], NumberStyles.HexNumber, c)),
+                    "DDCB" => DDCBInstructions.ContainsKey(byte.Parse(opCode[6..], NumberStyles.HexNumber, c)),
+                    "FDCB" => FDCBInstructions.ContainsKey(byte.Parse(opCode[6..], NumberStyles.HexNumber, c)),
                     _ => false,
                 },
 
@@ -848,6 +850,7 @@ namespace Essenbee.Z80
 
                     if (opDD == 0xCB)
                     {
+                        address++; // Skip over operand
                         var opDDCB = ReadFromBus(address);
                         address++;
                         return (opDDCB, DDCBInstructions[opDDCB]);
@@ -864,6 +867,7 @@ namespace Essenbee.Z80
 
                     if (opFD == 0xCB)
                     {
+                        address++; // Skip over operand
                         var opFDCB = ReadFromBus(address);
                         address++;
                         return (opFDCB, FDCBInstructions[opFDCB]);

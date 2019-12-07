@@ -2403,8 +2403,8 @@ namespace Essenbee.Z80
         private byte RLCIXD(byte opCode)
         {
             var c = 0;
+            sbyte d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
 
-            sbyte d = (sbyte)Fetch1(DDCBInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IX + d);
             MEMPTR = _absoluteAddress;
             var n = Fetch2(DDCBInstructions);
@@ -2432,7 +2432,7 @@ namespace Essenbee.Z80
         {
             var c = 0;
 
-            sbyte d = (sbyte)Fetch1(FDCBInstructions); // displacement -128 to +127
+            sbyte d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
             _absoluteAddress = (ushort)(IY + d);
             MEMPTR = _absoluteAddress;
             var n = Fetch2(FDCBInstructions);
@@ -2492,6 +2492,56 @@ namespace Essenbee.Z80
             SetFlag(Flags.C, newC > 0);
 
             WriteToBus(HL, n);
+            SetRotateLeftFlags(n);
+
+            return 0;
+        }
+
+        // Instruction    : RL (IX+d)
+        // Operation      : (IX+d) is rotated left 1 position, through the carry flag;
+        //                : with the previous content of the carry flag copied to bit 0
+        // Flags Affected : All
+
+        private byte RLIXD(byte opCode)
+        {
+            sbyte d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IX + d);
+            MEMPTR = _absoluteAddress;
+            var n = Fetch2(DDCBInstructions);
+
+            var priorC = CheckFlag(Flags.C) ? 1 : 0;
+            var newC = n & 0b10000000;
+
+            n = (byte)((n << 1) + priorC);
+
+            SetFlag(Flags.C, newC > 0);
+
+            WriteToBus(_absoluteAddress, n);
+            SetRotateLeftFlags(n);
+
+            return 0;
+        }
+
+        // Instruction    : RL (IY+d)
+        // Operation      : (IY+d) is rotated left 1 position, through the carry flag;
+        //                : with the previous content of the carry flag copied to bit 0
+        // Flags Affected : All
+
+        private byte RLIYD(byte opCode)
+        {
+            sbyte d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IY + d);
+            MEMPTR = _absoluteAddress;
+            var n = Fetch2(FDCBInstructions);
+
+            var priorC = CheckFlag(Flags.C) ? 1 : 0;
+            var newC = n & 0b10000000;
+
+            n = (byte)((n << 1) + priorC);
+
+            SetFlag(Flags.C, newC > 0);
+
+            WriteToBus(_absoluteAddress, n);
             SetRotateLeftFlags(n);
 
             return 0;
