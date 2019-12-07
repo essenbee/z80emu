@@ -410,7 +410,7 @@ namespace Essenbee.Z80.Tests
             {
                 // Program Code
                 { 0x0080, 0xDD },
-                { 0x0081, 0x2B },
+                { 0x0081, 0x2A },
                 { 0x0082, 0xFF },
                 { 0x0083, 0x08 },
                 { 0x0084, 0x00 },
@@ -452,7 +452,7 @@ namespace Essenbee.Z80.Tests
             {
                 // Program Code
                 { 0x0080, 0xFD },
-                { 0x0081, 0x2B },
+                { 0x0081, 0x2A },
                 { 0x0082, 0xFF },
                 { 0x0083, 0x08 },
                 { 0x0084, 0x00 },

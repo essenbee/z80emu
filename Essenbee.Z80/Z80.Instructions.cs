@@ -1887,7 +1887,7 @@ namespace Essenbee.Z80
         private byte ADDHLSS(byte opCode)
         {
             var src = (opCode & 0b00110000) >> 4;
-            var n = ReadFromRegisterPair(src);
+            var n = ReadFromRegisterPair(src, HL);
 
             var sum = Add16(HL, n);
 
@@ -1904,7 +1904,7 @@ namespace Essenbee.Z80
         private byte ADCHLSS(byte opCode)
         {
             var src = (opCode & 0b00110000) >> 4;
-            var n = ReadFromRegisterPair(src);
+            var n = ReadFromRegisterPair(src, HL);
             byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
 
             var sum = Add16(HL, n, c);
@@ -1922,20 +1922,116 @@ namespace Essenbee.Z80
         private byte SBCHLSS(byte opCode)
         {
             var src = (opCode & 0b00110000) >> 4;
-            var n = ReadFromRegisterPair(src);
+            var n = ReadFromRegisterPair(src, HL);
             byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
 
-            var sum = Sub16(HL, n, c);
+            var diff = Sub16(HL, n, c);
 
-            H = (byte)((sum & 0xFF00) >> 8);
-            L = (byte)(sum & 0x00FF);
+            H = (byte)((diff & 0xFF00) >> 8);
+            L = (byte)(diff & 0x00FF);
 
             return 0;
         }
 
+        // Instruction    : ADD IX, pp
+        // Operation      : IX <- IX + pp
+        // Flags Affected : H,N,C
 
+        private byte ADDIXPP(byte opCode)
+        {
+            var src = (opCode & 0b00110000) >> 4;
+            var n = ReadFromRegisterPair(src, IX);
 
+            IX = Add16(IX, n);
 
+            return 0;
+        }
+
+        // Instruction    : ADD IY, pp
+        // Operation      : IY <- IY + pp
+        // Flags Affected : H,N,C
+
+        private byte ADDIYPP(byte opCode)
+        {
+            var src = (opCode & 0b00110000) >> 4;
+            var n = ReadFromRegisterPair(src, IY);
+
+            IY = Add16(IY, n);
+
+            return 0;
+        }
+
+        // Instruction    : INC ss
+        // Operation      : ss <- ss + 1
+        // Flags Affected : None
+
+        private byte INCSS(byte opCode)
+        {
+            var src = (opCode & 0b00110000) >> 4;
+            var n = ReadFromRegisterPair(src, HL);
+
+            n++;
+
+            WriteToRegisterPair(src, n);
+
+            return 0;
+        }
+
+        // Instruction    : INC IX
+        // Operation      : IX <- IX + 1
+        // Flags Affected : None
+
+        private byte INCIX(byte opCode)
+        {
+            IX++;
+            return 0;
+        }
+
+        // Instruction    : INC IY
+        // Operation      : IY <- IY + 1
+        // Flags Affected : None
+
+        private byte INCIY(byte opCode)
+        {
+            IY++;
+            return 0;
+        }
+
+        // Instruction    : INC ss
+        // Operation      : ss <- ss - 1
+        // Flags Affected : None
+
+        private byte DECSS(byte opCode)
+        {
+            var src = (opCode & 0b00110000) >> 4;
+            var n = ReadFromRegisterPair(src, HL);
+
+            n--;
+
+            WriteToRegisterPair(src, n);
+
+            return 0;
+        }
+
+        // Instruction    : DEC IX
+        // Operation      : IX <- IX - 1
+        // Flags Affected : None
+
+        private byte DECIX(byte opCode)
+        {
+            IX--;
+            return 0;
+        }
+
+        // Instruction    : DEC IY
+        // Operation      : IY <- IY - 1
+        // Flags Affected : None
+
+        private byte DECIY(byte opCode)
+        {
+            IY--;
+            return 0;
+        }
 
 
 
@@ -2921,15 +3017,37 @@ namespace Essenbee.Z80
                 _ => 0x00
             };
 
-        private ushort ReadFromRegisterPair(int src) =>
+        private ushort ReadFromRegisterPair(int src, ushort self) =>
             src switch
             {
                 0 => BC,
                 1 => DE,
-                2 => HL,
+                2 => self,
                 3 => SP,
                 _ => 0x0000
             };
+
+        private void WriteToRegisterPair(int dest, ushort n)
+        {
+            switch (dest)
+            {
+                case 0:
+                    B = (byte)((n & 0xFF00) >> 8);
+                    C = (byte)(n & 0x00FF);
+                    break;
+                case 1:
+                    D = (byte)((n & 0xFF00) >> 8);
+                    E = (byte)(n & 0x00FF);
+                    break;
+                case 2:
+                    H = (byte)((n & 0xFF00) >> 8);
+                    L = (byte)(n & 0x00FF);
+                    break;
+                case 3:
+                    SP = n;
+                    break;
+            }
+        }
 
         private void AssignToRegister(int dest, byte n)
         {
