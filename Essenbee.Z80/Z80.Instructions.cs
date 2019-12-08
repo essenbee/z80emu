@@ -3274,8 +3274,76 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // ========================================
+        // Exchange, Block Transfer and Search Group
+        // ========================================
 
+        // Instruction    : EX DE, HL
+        // Operation      : DE <--> HL
+        // Flags Affected : None
 
+        private byte EXDEHL(byte opCode)
+        {
+            var temp = DE;
+
+            D = (byte)((HL & 0xFF00) >> 8);
+            E = (byte)(HL & 0x00FF);
+
+            H = (byte)((temp & 0xFF00) >> 8);
+            L = (byte)(temp & 0x00FF);
+
+            return 0;
+        }
+
+        // Instruction    : EX AF, AF'
+        // Operation      : AF <--> AF'
+        // Flags Affected : None
+
+        private byte EXAFAF(byte opCode)
+        {
+            var temp = AF;
+
+            A = (byte)((AF1 & 0xFF00) >> 8);
+            F = (Flags)(AF1 & 0x00FF);
+
+            A1 = (byte)((temp & 0xFF00) >> 8);
+            F1 = (Flags)(temp & 0x00FF);
+
+            return 0;
+        }
+
+        // Instruction    : EXX
+        // Operation      : 
+        // Flags Affected : None
+
+        private byte EXX(byte opCode)
+        {
+            var temp = BC;
+
+            B = (byte)((BC1 & 0xFF00) >> 8);
+            C = (byte)(BC1 & 0x00FF);
+
+            B1 = (byte)((temp & 0xFF00) >> 8);
+            C1 = (byte)(temp & 0x00FF);
+
+            temp = DE;
+
+            D = (byte)((DE1 & 0xFF00) >> 8);
+            E = (byte)(DE1 & 0x00FF);
+
+            D1 = (byte)((temp & 0xFF00) >> 8);
+            E1 = (byte)(temp & 0x00FF);
+
+            temp = HL;
+
+            H = (byte)((HL1 & 0xFF00) >> 8);
+            L = (byte)(HL1 & 0x00FF);
+
+            H1 = (byte)((temp & 0xFF00) >> 8);
+            L1 = (byte)(temp & 0x00FF);
+
+            return 0;
+        }
 
 
 

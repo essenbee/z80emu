@@ -115,7 +115,7 @@ namespace Essenbee.Z80
                 { 0x05, new Instruction("DEC B", IMP, IMP, DECR, new List<int>{ 4 }) },
                 { 0x06, new Instruction("LD B,n", IMM, IMP, LDRN, new List<int>{ 4, 3 }) },
                 { 0x07, new Instruction("RLCA", IMP, IMP, RLCA, new List<int>{ 4 }) },
-
+                { 0x08, new Instruction("EX AF,AF'", IMP, IMP, EXAFAF, new List<int>{ 4 }) },
                 { 0x09, new Instruction("ADD HL,BC", IMP, IMP, ADDHLSS, new List<int>{ 4, 4, 3 }) },
                 { 0x0A, new Instruction("LD A,(BC)", IDX, IMP, LDABC, new List<int>{ 4, 3 }) },
                 { 0x0B, new Instruction("DEC BC", IMP, IMP, DECSS, new List<int>{ 6 }) },
@@ -323,6 +323,7 @@ namespace Essenbee.Z80
                 { 0xD6, new Instruction("SUB A,n", IMM, IMP, SUBAN, new List<int>{ 4, 3 }) },
                 { 0xD7, new Instruction("RST &10", IMP, IMP, RST, new List<int>{ 5, 3, 3 }) },
                 { 0xD8, new Instruction("RET Z", IMP, IMP, RETCC, new List<int>{ 5 }) },
+                { 0xD9, new Instruction("EXX", IMP, IMP, EXX, new List<int>{ 4 }) },
                 { 0xDA, new Instruction("JP C,nn", IMX, IMP, JPCCNN, new List<int>{ 4, 3, 3 }) },
                 { 0xDC, new Instruction("CALL C,nn", IMX, IMP, CALLCC, new List<int>{ 4, 3, 3 }) },
                 { 0xDE, new Instruction("SBC A,n", IMM, IMP, SBCAN, new List<int>{ 4, 3 }) },
@@ -338,7 +339,7 @@ namespace Essenbee.Z80
                 { 0xE8, new Instruction("RET PE", IMP, IMP, RETCC, new List<int>{ 5 }) },
                 { 0xE9, new Instruction("JP (HL)", IMP, IMP, JPHL, new List<int>{ 4 }) },
                 { 0xEA, new Instruction("JP PE,nn", IMX, IMP, JPCCNN, new List<int>{ 4, 3, 3 }) },
-
+                { 0xEB, new Instruction("EX DE,HL", IMP, IMP, EXDEHL, new List<int>{ 4 }) },
                 { 0xEC, new Instruction("CALL PE,nn", IMX, IMP, CALLCC, new List<int>{ 4, 3, 3 }) },
                 { 0xEE, new Instruction("XOR n", IMM, IMP, XORN, new List<int>{ 4, 3 }) },
                 { 0xEF, new Instruction("RST &28", IMP, IMP, RST, new List<int>{ 5, 3, 3 }) },
