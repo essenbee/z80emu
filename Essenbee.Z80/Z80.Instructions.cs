@@ -2650,7 +2650,7 @@ namespace Essenbee.Z80
 
             _absoluteAddress = (ushort)(IY + d);
             MEMPTR = _absoluteAddress;
-            var n = Fetch2(DDCBInstructions);
+            var n = Fetch2(FDCBInstructions);
 
             if ((n & 0b00000001) > 0)
             {
@@ -2768,7 +2768,7 @@ namespace Essenbee.Z80
 
             _absoluteAddress = (ushort)(IY + d);
             MEMPTR = _absoluteAddress;
-            var n = Fetch2(DDCBInstructions);
+            var n = Fetch2(FDCBInstructions);
 
             var priorC = CheckFlag(Flags.C) ? 1 : 0;
             var newC = n & 0b10000000;
@@ -2862,7 +2862,7 @@ namespace Essenbee.Z80
 
             _absoluteAddress = (ushort)(IY + d);
             MEMPTR = _absoluteAddress;
-            var n = Fetch2(DDCBInstructions);
+            var n = Fetch2(FDCBInstructions);
 
             var newCarry = n & 0b10000000;
             n = (byte)(n << 1);
@@ -2921,9 +2921,53 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction    : SRL (IX+d)
+        // Operation      : (IX+d) is shifted right 1 position, through the carry flag;
+        //                : a 0 is shifted into bit 7
+        // Flags Affected : All
 
+        private byte SRLIXD(byte opCode)
+        {
+            sbyte d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
 
+            _absoluteAddress = (ushort)(IX + d);
+            MEMPTR = _absoluteAddress;
+            var n = Fetch2(DDCBInstructions);
 
+            var newCarry = n & 0b00000001;
+
+            n = (byte)(n >> 1);
+            WriteToBus(_absoluteAddress, n);
+
+            SetFlag(Flags.C, newCarry > 0);
+            SetShiftRightLogicalFlags(n);
+
+            return 0;
+        }
+
+        // Instruction    : SRL (IY+d)
+        // Operation      : (IY+d) is shifted right 1 position, through the carry flag;
+        //                : a 0 is shifted into bit 7
+        // Flags Affected : All
+
+        private byte SRLIYD(byte opCode)
+        {
+            sbyte d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+
+            _absoluteAddress = (ushort)(IY + d);
+            MEMPTR = _absoluteAddress;
+            var n = Fetch2(FDCBInstructions);
+
+            var newCarry = n & 0b00000001;
+
+            n = (byte)(n >> 1);
+            WriteToBus(_absoluteAddress, n);
+
+            SetFlag(Flags.C, newCarry > 0);
+            SetShiftRightLogicalFlags(n);
+
+            return 0;
+        }
 
 
 

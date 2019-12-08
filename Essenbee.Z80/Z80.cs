@@ -555,6 +555,7 @@ namespace Essenbee.Z80
                 { 0x16, new Instruction("RL (IX+d)", RELS, IDX, RLIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
                 { 0x1E, new Instruction("RR (IX+d)", RELS, IDX, RRIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
                 { 0x26, new Instruction("SLA (IX+d)", RELS, IDX, SLAIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
+                { 0x3E, new Instruction("SRL (IX+d)", RELS, IDX, SRLIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
             };
 
             // Note: FDCB operations are in the form FDCB{displacement}{opCode} - use RELS, IDX addressing mode
@@ -565,6 +566,7 @@ namespace Essenbee.Z80
                 { 0x16, new Instruction("RL (IY+d)", RELS, IDX, RLIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
                 { 0x1E, new Instruction("RR (IY+d)", RELS, IDX, RRIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
                 { 0x26, new Instruction("SLA (IY+d)", RELS, IDX, SLAIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
+                { 0x3E, new Instruction("SRL (IY+d)", RELS, IDX, SRLIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
             };
         }
 
