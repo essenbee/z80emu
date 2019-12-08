@@ -3292,6 +3292,7 @@ namespace Essenbee.Z80
             H = (byte)((temp & 0xFF00) >> 8);
             L = (byte)(temp & 0x00FF);
 
+            ResetQ();
             return 0;
         }
 
@@ -3309,6 +3310,7 @@ namespace Essenbee.Z80
             A1 = (byte)((temp & 0xFF00) >> 8);
             F1 = (Flags)(temp & 0x00FF);
 
+            ResetQ();
             return 0;
         }
 
@@ -3341,6 +3343,8 @@ namespace Essenbee.Z80
 
             H1 = (byte)((temp & 0xFF00) >> 8);
             L1 = (byte)(temp & 0x00FF);
+
+            ResetQ();
 
             return 0;
         }
