@@ -3078,10 +3078,73 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction    : RLD
+        // Operation      : Low nibble of (HL) <- Low nibble of A
+        //                : Low nibble of A < - High nibble of (HL)
+        //                : High nibble of (HL) <- Low nibble of (HL)
+        // Flags Affected : All
+        private byte RLD(byte opCode)
+        {
+            var n = Fetch1(EDInstructions);
 
+            var lowNibbleA = (byte)(A & 0b00001111);
+            var hiNibbleA = (byte)(A & 0b11110000);
+            var lowNibbleN = (byte)(n & 0b00001111);
+            var hiNibbleN = (byte)(n & 0b11110000);
 
+            A = (byte)(hiNibbleA + (hiNibbleN >> 4));
+            var newN = (byte)((lowNibbleN << 4) + lowNibbleA);
 
+            WriteToBus(HL, newN);
 
+            SetFlag(Flags.N, false);
+            SetFlag(Flags.H, false);
+            SetFlag(Flags.Z, A == 0);
+            SetFlag(Flags.S, (sbyte)A < 0);
+            SetFlag(Flags.P, Parity(A));
+            // Carry flag is unaffected
+
+            // Undocumented Flags
+            SetFlag(Flags.X, ((A & 0x08) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((A & 0x20) > 0) ? true : false); //Copy of bit 5
+            SetQ();
+
+            return 0;
+        }
+
+        // Instruction    : RRD
+        // Operation      : High nibble of (HL) <- Low nibble of A
+        //                : Low nibble of (HL) < - High nibble of (HL)
+        //                : Low nibble of A <- Low nibble of (HL)
+        // Flags Affected : All
+        private byte RRD(byte opCode)
+        {
+            var n = Fetch1(EDInstructions);
+
+            var lowNibbleA = (byte)(A & 0b00001111);
+            var hiNibbleA = (byte)(A & 0b11110000);
+            var lowNibbleN = (byte)(n & 0b00001111);
+            var hiNibbleN = (byte)(n & 0b11110000);
+
+            A = (byte)(hiNibbleA + lowNibbleN);
+            var newN = (byte)((lowNibbleA << 4) + (hiNibbleN >> 4));
+
+            WriteToBus(HL, newN);
+
+            SetFlag(Flags.N, false);
+            SetFlag(Flags.H, false);
+            SetFlag(Flags.Z, A == 0);
+            SetFlag(Flags.S, (sbyte)A < 0);
+            SetFlag(Flags.P, Parity(A));
+            // Carry flag is unaffected
+
+            // Undocumented Flags
+            SetFlag(Flags.X, ((A & 0x08) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((A & 0x20) > 0) ? true : false); //Copy of bit 5
+            SetQ();
+
+            return 0;
+        }
 
         // ========================================
         // Call and Return Group
