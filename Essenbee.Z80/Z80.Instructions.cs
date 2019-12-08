@@ -67,7 +67,7 @@ namespace Essenbee.Z80
         private byte LDRIXD(byte opCode)
         {
             var dest = (opCode & 0b00111000) >> 3;
-            sbyte d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
 
             _absoluteAddress = (ushort)(IX + d);
             var n = Fetch2(DDInstructions);
@@ -86,7 +86,7 @@ namespace Essenbee.Z80
         private byte LDRIYD(byte opCode)
         {
             var dest = (opCode & 0b00111000) >> 3;
-            sbyte d = (sbyte)Fetch1(FDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(FDInstructions); // displacement -128 to +127
 
             _absoluteAddress = (ushort)(IY + d);
             var n = Fetch2(FDInstructions);
@@ -104,7 +104,7 @@ namespace Essenbee.Z80
         // Flags Affected: None
         private byte LDHLR(byte opCode)
         {
-            var src = (opCode & 0b00000111);
+            var src = opCode & 0b00000111;
             var n = ReadFromRegister(src);
 
             WriteToBus(HL, n);
@@ -118,9 +118,9 @@ namespace Essenbee.Z80
         // Flags Affected: None
         private byte LDIXDR(byte opCode)
         {
-            var src = (opCode & 0b00000111);
+            var src = opCode & 0b00000111;
             var n = ReadFromRegister(src);
-            sbyte d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
             var addr = (ushort)(IX + d);
 
             WriteToBus(addr, n);
@@ -136,9 +136,9 @@ namespace Essenbee.Z80
         // Flags Affected: None
         private byte LDIYDR(byte opCode)
         {
-            var src = (opCode & 0b00000111);
+            var src = opCode & 0b00000111;
             var n = ReadFromRegister(src);
-            sbyte d = (sbyte)Fetch1(FDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(FDInstructions); // displacement -128 to +127
             var addr = (ushort)(IY + d);
 
             WriteToBus(addr, n);
@@ -167,7 +167,7 @@ namespace Essenbee.Z80
         // Flags Affected: None
         private byte LDIXDN(byte opCode)
         {
-            sbyte d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
             var n = Fetch2(DDInstructions);
             var addr = (ushort)(IX + d);
 
@@ -184,7 +184,7 @@ namespace Essenbee.Z80
         // Flags Affected: None
         private byte LDIYDN(byte opCode)
         {
-            sbyte d = (sbyte)Fetch1(FDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(FDInstructions); // displacement -128 to +127
             var n = Fetch2(FDInstructions);
             var addr = (ushort)(IY + d);
 
@@ -961,7 +961,7 @@ namespace Essenbee.Z80
         // Flags Affected : All except N
         private byte ADDAR(byte opCode)
         {
-            var src = (opCode & 0b00000111);
+            var src = opCode & 0b00000111;
             byte n = ReadFromRegister(src);
             A = Add8(A, n);
 
@@ -984,7 +984,7 @@ namespace Essenbee.Z80
         // Flags Affected: All except N
         private byte ADDAIXDN(byte opCode)
         {
-            sbyte d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IX + d);
             var n = Fetch2(DDInstructions);
             A = Add8(A, n);
@@ -999,7 +999,7 @@ namespace Essenbee.Z80
         // Flags Affected: All except N
         private byte ADDAIYDN(byte opCode)
         {
-            sbyte d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IY + d);
             var n = Fetch2(DDInstructions);
             A = Add8(A, n);
@@ -1015,7 +1015,7 @@ namespace Essenbee.Z80
         private byte ADCAN(byte opCode)
         {
             byte n = Fetch1(RootInstructions);
-            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+            byte c = CheckFlag(Flags.C) ? ((byte)0x01) : ((byte)0x00);
             A = Add8(A, n, c);
 
             return 0;
@@ -1026,9 +1026,9 @@ namespace Essenbee.Z80
         // Flags Affected : All except N
         private byte ADCAR(byte opCode)
         {
-            var src = (opCode & 0b00000111);
+            var src = opCode & 0b00000111;
             byte n = ReadFromRegister(src);
-            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+            byte c = CheckFlag(Flags.C) ? ((byte)0x01) : ((byte)0x00);
             A = Add8(A, n, c);
 
             return 0;
@@ -1040,7 +1040,7 @@ namespace Essenbee.Z80
         private byte ADCAHL(byte opCode)
         {
             byte n = Fetch1(RootInstructions);
-            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+            byte c = CheckFlag(Flags.C) ? ((byte)0x01) : ((byte)0x00);
             A = Add8(A, n, c);
 
             return 0;
@@ -1051,10 +1051,10 @@ namespace Essenbee.Z80
         // Flags Affected: All except N
         private byte ADCAIXDN(byte opCode)
         {
-            sbyte d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IX + d);
             var n = Fetch2(DDInstructions);
-            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+            byte c = CheckFlag(Flags.C) ? ((byte)0x01) : ((byte)0x00);
             A = Add8(A, n, c);
 
             MEMPTR = _absoluteAddress;
@@ -1067,10 +1067,10 @@ namespace Essenbee.Z80
         // Flags Affected: All except N
         private byte ADCAIYDN(byte opCode)
         {
-            sbyte d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IY + d);
             var n = Fetch2(DDInstructions);
-            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+            byte c = CheckFlag(Flags.C) ? ((byte)0x01) : ((byte)0x00);
             A = Add8(A, n, c);
 
             MEMPTR = _absoluteAddress;
@@ -1094,7 +1094,7 @@ namespace Essenbee.Z80
         // Flags Affected : All
         private byte SUBAR(byte opCode)
         {
-            var src = (opCode & 0b00000111);
+            var src = opCode & 0b00000111;
             byte n = ReadFromRegister(src);
             A = Sub8(A, n);
 
@@ -1117,7 +1117,7 @@ namespace Essenbee.Z80
         // Flags Affected: All
         private byte SUBAIXDN(byte opCode)
         {
-            sbyte d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IX + d);
             var n = Fetch2(DDInstructions);
             A = Sub8(A, n);
@@ -1132,7 +1132,7 @@ namespace Essenbee.Z80
         // Flags Affected: All
         private byte SUBAIYDN(byte opCode)
         {
-            sbyte d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IY + d);
             var n = Fetch2(DDInstructions);
             A = Sub8(A, n);
@@ -1148,7 +1148,7 @@ namespace Essenbee.Z80
         private byte SBCAN(byte opCode)
         {
             byte n = Fetch1(RootInstructions);
-            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+            byte c = CheckFlag(Flags.C) ? ((byte)0x01) : ((byte)0x00);
             A = Sub8(A, n, c);
 
             return 0;
@@ -1159,9 +1159,9 @@ namespace Essenbee.Z80
         // Flags Affected : All
         private byte SBCAR(byte opCode)
         {
-            var src = (opCode & 0b00000111);
+            var src = opCode & 0b00000111;
             byte n = ReadFromRegister(src);
-            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+            byte c = CheckFlag(Flags.C) ? ((byte)0x01) : ((byte)0x00);
             A = Sub8(A, n, c);
 
             return 0;
@@ -1173,7 +1173,7 @@ namespace Essenbee.Z80
         private byte SBCAHL(byte opCode)
         {
             byte n = Fetch1(RootInstructions);
-            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+            byte c = CheckFlag(Flags.C) ? ((byte)0x01) : ((byte)0x00);
             A = Sub8(A, n, c);
 
             return 0;
@@ -1184,10 +1184,10 @@ namespace Essenbee.Z80
         // Flags Affected: All
         private byte SBCAIXDN(byte opCode)
         {
-            sbyte d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IX + d);
             var n = Fetch2(DDInstructions);
-            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+            byte c = CheckFlag(Flags.C) ? ((byte)0x01) : ((byte)0x00);
             A = Sub8(A, n, c);
 
             MEMPTR = _absoluteAddress;
@@ -1200,10 +1200,10 @@ namespace Essenbee.Z80
         // Flags Affected: All
         private byte SBCAIYDN(byte opCode)
         {
-            sbyte d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IY + d);
             var n = Fetch2(DDInstructions);
-            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+            byte c = CheckFlag(Flags.C) ? ((byte)0x01) : ((byte)0x00);
             A = Sub8(A, n, c);
 
             MEMPTR = _absoluteAddress;
@@ -1247,8 +1247,8 @@ namespace Essenbee.Z80
         // Operation     : (IX+d) <- (IX+d) + 1
         // Flags Affected: S,Z,H,P/V,N
         private byte INCIXD(byte opCode)
-        { 
-            sbyte d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
+        {
+            var d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IX + d);
             var val = Fetch2(DDInstructions);
 
@@ -1266,7 +1266,7 @@ namespace Essenbee.Z80
         // Flags Affected: S,Z,H,P/V,N
         private byte INCIYD(byte opCode)
         {
-            sbyte d = (sbyte)Fetch1(FDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(FDInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IY + d);
             var val = Fetch2(FDInstructions);
 
@@ -1316,7 +1316,7 @@ namespace Essenbee.Z80
         // Flags Affected: S,Z,H,P/V,N
         private byte DECIXD(byte opCode)
         {
-            sbyte d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IX + d);
             var val = Fetch2(DDInstructions);
 
@@ -1334,7 +1334,7 @@ namespace Essenbee.Z80
         // Flags Affected: S,Z,H,P/V,N
         private byte DECIYD(byte opCode)
         {
-            sbyte d = (sbyte)Fetch1(FDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(FDInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IY + d);
             var val = Fetch2(FDInstructions);
 
@@ -1392,7 +1392,7 @@ namespace Essenbee.Z80
         // Flags Affected: S,Z,H,P/V,N,C
         private byte CPIXD(byte opCode)
         {
-            sbyte d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IX + d);
             var n = Fetch2(DDInstructions);
             var diff = A - n;
@@ -1408,7 +1408,7 @@ namespace Essenbee.Z80
         // Flags Affected: S,Z,H,P/V,N,C
         private byte CPIYD(byte opCode)
         {
-            sbyte d = (sbyte)Fetch1(FDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(FDInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IY + d);
             var n = Fetch2(FDInstructions);
             var diff = A - n;
@@ -1424,7 +1424,7 @@ namespace Essenbee.Z80
         // Flags Affected: All
         private byte ANDR(byte opCode)
         {
-            var src = (opCode & 0b00000111);
+            var src = opCode & 0b00000111;
             var n = ReadFromRegister(src);
             A = And(A, n);
 
@@ -1458,7 +1458,7 @@ namespace Essenbee.Z80
         // Flags Affected: All
         private byte ANDIXD(byte opCode)
         {
-            sbyte d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IX + d);
             var n = Fetch2(DDInstructions);
 
@@ -1473,7 +1473,7 @@ namespace Essenbee.Z80
         // Flags Affected: All
         private byte ANDIYD(byte opCode)
         {
-            sbyte d = (sbyte)Fetch1(FDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(FDInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IY + d);
             var n = Fetch2(FDInstructions);
 
@@ -1488,7 +1488,7 @@ namespace Essenbee.Z80
         // Flags Affected: All
         private byte ORR(byte opCode)
         {
-            var src = (opCode & 0b00000111);
+            var src = opCode & 0b00000111;
             var n = ReadFromRegister(src);
             A = Or(A, n);
 
@@ -1522,7 +1522,7 @@ namespace Essenbee.Z80
         // Flags Affected: All
         private byte ORIXD(byte opCode)
         {
-            sbyte d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IX + d);
             var n = Fetch2(DDInstructions);
 
@@ -1537,7 +1537,7 @@ namespace Essenbee.Z80
         // Flags Affected: All
         private byte ORIYD(byte opCode)
         {
-            sbyte d = (sbyte)Fetch1(FDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(FDInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IY + d);
             var n = Fetch2(FDInstructions);
 
@@ -1552,7 +1552,7 @@ namespace Essenbee.Z80
         // Flags Affected: All
         private byte XORR(byte opCode)
         {
-            var src = (opCode & 0b00000111);
+            var src = opCode & 0b00000111;
             var n = ReadFromRegister(src);
             A = Xor(A, n);
 
@@ -1586,7 +1586,7 @@ namespace Essenbee.Z80
         // Flags Affected: All
         private byte XORIXD(byte opCode)
         {
-            sbyte d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IX + d);
             var n = Fetch2(DDInstructions);
 
@@ -1601,7 +1601,7 @@ namespace Essenbee.Z80
         // Flags Affected: All
         private byte XORIYD(byte opCode)
         {
-            sbyte d = (sbyte)Fetch1(FDInstructions); // displacement -128 to +127
+            var d = (sbyte)Fetch1(FDInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IY + d);
             var n = Fetch2(FDInstructions);
 
@@ -1655,24 +1655,24 @@ namespace Essenbee.Z80
             switch (t)
             {
                 case 1:
-                    A += CheckFlag(Flags.N) ? (byte)0xFA : (byte)0x06; // -6:6
+                    A += CheckFlag(Flags.N) ? ((byte)0xFA) : ((byte)0x06); // -6:6
                     break;
                 case 2:
-                    A += CheckFlag(Flags.N) ? (byte)0xA0 : (byte)0x60; // -0x60:0x60
+                    A += CheckFlag(Flags.N) ? ((byte)0xA0) : ((byte)0x60); // -0x60:0x60
                     break;
                 case 3:
-                    A += CheckFlag(Flags.N) ? (byte)0x9A : (byte)0x66; // -0x66:0x66
+                    A += CheckFlag(Flags.N) ? ((byte)0x9A) : ((byte)0x66); // -0x66:0x66
                     break;
             }
 
             // Other Flags
-            SetFlag(Flags.S, (A & 0x80) > 0 ? true : false);
+            SetFlag(Flags.S, ((A & 0x80) > 0) ? true : false);
             SetFlag(Flags.Z, A == 0);
             SetFlag(Flags.P, Parity(A));
 
             // Undocumented Flags
-            SetFlag(Flags.X, (A & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (A & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((A & 0x08) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((A & 0x20) > 0) ? true : false); //Copy of bit 5
             SetQ();
 
             return 0;
@@ -1702,15 +1702,15 @@ namespace Essenbee.Z80
             A++;
 
             SetFlag(Flags.N, true);
-            SetFlag(Flags.S, (A & 0x80) > 0 ? true : false);
-            SetFlag(Flags.C, temp != 0 ? true : false);
-            SetFlag(Flags.P, temp == 0x80 ? true : false);
-            SetFlag(Flags.Z, A == 0 ? true : false);
-            SetFlag(Flags.H, (temp & 0x0F) + ((~temp + 1) & 0x0F) > 0xF ? true : false);
+            SetFlag(Flags.S, ((A & 0x80) > 0) ? true : false);
+            SetFlag(Flags.C, (temp != 0) ? true : false);
+            SetFlag(Flags.P, (temp == 0x80) ? true : false);
+            SetFlag(Flags.Z, (A == 0) ? true : false);
+            SetFlag(Flags.H, ((temp & 0x0F) + (((~temp) + 1) & 0x0F) > 0xF) ? true : false);
 
             // Undocumented Flags
-            SetFlag(Flags.X, (A & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (A & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((A & 0x08) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((A & 0x20) > 0) ? true : false); //Copy of bit 5
             SetQ();
 
             return 0;
@@ -1723,14 +1723,14 @@ namespace Essenbee.Z80
         {
             var temp = CheckFlag(Flags.C);
             SetFlag(Flags.C, !temp);
-            SetFlag(Flags.N, false);;
+            SetFlag(Flags.N, false); ;
             SetFlag(Flags.H, temp);
 
             // Undocumented Flags set as per Patrik Rak
             //` https://www.worldofspectrum.org/forums/discussion/41704/redirect/p1
-            var x = (byte)(((byte)Q ^ (byte)F) | A);
-            SetFlag(Flags.X, (x & 0x08) > 0 ? true : false);
-            SetFlag(Flags.U, (x & 0x20) > 0 ? true : false);
+            var x = (byte)((((byte)Q) ^ ((byte)F)) | A);
+            SetFlag(Flags.X, ((x & 0x08) > 0) ? true : false);
+            SetFlag(Flags.U, ((x & 0x20) > 0) ? true : false);
 
             SetQ();
 
@@ -1748,9 +1748,9 @@ namespace Essenbee.Z80
 
             // Undocumented Flags set as per Patrik Rak
             //` https://www.worldofspectrum.org/forums/discussion/41704/redirect/p1
-            var x = (byte)(((byte)Q ^ (byte)F) | A);
-            SetFlag(Flags.X, (x & 0x08) > 0 ? true : false);
-            SetFlag(Flags.U, (x & 0x20) > 0 ? true : false);
+            var x = (byte)((((byte)Q) ^ ((byte)F)) | A);
+            SetFlag(Flags.X, ((x & 0x08) > 0) ? true : false);
+            SetFlag(Flags.U, ((x & 0x20) > 0) ? true : false);
 
             SetQ();
 
@@ -1905,7 +1905,7 @@ namespace Essenbee.Z80
         {
             var src = (opCode & 0b00110000) >> 4;
             var n = ReadFromRegisterPair(src, HL);
-            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+            byte c = CheckFlag(Flags.C) ? ((byte)0x01) : ((byte)0x00);
 
             var sum = Add16(HL, n, c);
 
@@ -1923,7 +1923,7 @@ namespace Essenbee.Z80
         {
             var src = (opCode & 0b00110000) >> 4;
             var n = ReadFromRegisterPair(src, HL);
-            byte c = CheckFlag(Flags.C) ? (byte)0x01 : (byte)0x00;
+            byte c = CheckFlag(Flags.C) ? ((byte)0x01) : ((byte)0x00);
 
             var diff = Sub16(HL, n, c);
 
@@ -2262,8 +2262,8 @@ namespace Essenbee.Z80
             SetFlag(Flags.N, false);
 
             // Undocumented Flags
-            SetFlag(Flags.X, (A & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (A & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((A & 0x08) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((A & 0x20) > 0) ? true : false); //Copy of bit 5
             SetQ();
 
             return 0;
@@ -2287,8 +2287,8 @@ namespace Essenbee.Z80
             SetFlag(Flags.N, false);
 
             // Undocumented Flags
-            SetFlag(Flags.X, (A & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (A & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((A & 0x08) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((A & 0x20) > 0) ? true : false); //Copy of bit 5
             SetQ();
 
             return 0;
@@ -2315,8 +2315,8 @@ namespace Essenbee.Z80
             SetFlag(Flags.N, false);
 
             // Undocumented Flags
-            SetFlag(Flags.X, (A & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (A & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((A & 0x08) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((A & 0x20) > 0) ? true : false); //Copy of bit 5
             SetQ();
 
             return 0;
@@ -2340,8 +2340,8 @@ namespace Essenbee.Z80
             SetFlag(Flags.N, false);
 
             // Undocumented Flags
-            SetFlag(Flags.X, (A & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (A & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((A & 0x08) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((A & 0x20) > 0) ? true : false); //Copy of bit 5
             SetQ();
 
             return 0;
@@ -2354,7 +2354,7 @@ namespace Essenbee.Z80
         private byte RLCR(byte opCode)
         {
             var c = 0;
-            var src = (opCode & 0b00000111);
+            var src = opCode & 0b00000111;
             var n = ReadFromRegister(src);
 
             if ((n & 0b10000000) > 0)
@@ -2403,7 +2403,7 @@ namespace Essenbee.Z80
         private byte RLCIXD(byte opCode)
         {
             var c = 0;
-            sbyte d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+            var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
 
             _absoluteAddress = (ushort)(IX + d);
             MEMPTR = _absoluteAddress;
@@ -2432,7 +2432,7 @@ namespace Essenbee.Z80
         {
             var c = 0;
 
-            sbyte d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+            var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
             _absoluteAddress = (ushort)(IY + d);
             MEMPTR = _absoluteAddress;
             var n = Fetch2(FDCBInstructions);
@@ -2459,7 +2459,7 @@ namespace Essenbee.Z80
 
         private byte RLR(byte opCode)
         {
-            var src = (opCode & 0b00000111);
+            var src = opCode & 0b00000111;
             var n = ReadFromRegister(src);
 
             var priorC = CheckFlag(Flags.C) ? 1 : 0;
@@ -2504,7 +2504,7 @@ namespace Essenbee.Z80
 
         private byte RLIXD(byte opCode)
         {
-            sbyte d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+            var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
             _absoluteAddress = (ushort)(IX + d);
             MEMPTR = _absoluteAddress;
             var n = Fetch2(DDCBInstructions);
@@ -2529,7 +2529,7 @@ namespace Essenbee.Z80
 
         private byte RLIYD(byte opCode)
         {
-            sbyte d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+            var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
             _absoluteAddress = (ushort)(IY + d);
             MEMPTR = _absoluteAddress;
             var n = Fetch2(FDCBInstructions);
@@ -2554,7 +2554,7 @@ namespace Essenbee.Z80
         private byte RRCR(byte opCode)
         {
             var c = 0;
-            var src = (opCode & 0b00000111);
+            var src = opCode & 0b00000111;
             var n = ReadFromRegister(src);
 
             if ((n & 0b00000001) > 0)
@@ -2563,7 +2563,7 @@ namespace Essenbee.Z80
             }
 
             n = (byte)(n >> 1);
-            
+
             if (c == 1)
             {
                 n |= 0b10000000;
@@ -2613,7 +2613,7 @@ namespace Essenbee.Z80
         private byte RRCIXD(byte opCode)
         {
             var c = 0;
-            sbyte d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+            var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
 
             _absoluteAddress = (ushort)(IX + d);
             MEMPTR = _absoluteAddress;
@@ -2646,7 +2646,7 @@ namespace Essenbee.Z80
         private byte RRCIYD(byte opCode)
         {
             var c = 0;
-            sbyte d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+            var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
 
             _absoluteAddress = (ushort)(IY + d);
             MEMPTR = _absoluteAddress;
@@ -2679,7 +2679,7 @@ namespace Essenbee.Z80
 
         private byte RRR(byte opCode)
         {
-            var src = (opCode & 0b00000111);
+            var src = opCode & 0b00000111;
             var n = ReadFromRegister(src);
 
             var priorC = CheckFlag(Flags.C) ? 1 : 0;
@@ -2734,7 +2734,7 @@ namespace Essenbee.Z80
 
         private byte RRIXD(byte opCode)
         {
-            sbyte d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+            var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
 
             _absoluteAddress = (ushort)(IX + d);
             MEMPTR = _absoluteAddress;
@@ -2764,7 +2764,7 @@ namespace Essenbee.Z80
 
         private byte RRIYD(byte opCode)
         {
-            sbyte d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+            var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
 
             _absoluteAddress = (ushort)(IY + d);
             MEMPTR = _absoluteAddress;
@@ -2803,7 +2803,7 @@ namespace Essenbee.Z80
             AssignToRegister(src, n);
 
             SetFlag(Flags.C, newCarry > 0);
-            SetShiftLeftArithmeticFlags(n);
+            SetShiftArithmeticFlags(n);
 
             return 0;
         }
@@ -2822,7 +2822,7 @@ namespace Essenbee.Z80
             WriteToBus(HL, n);
 
             SetFlag(Flags.C, newCarry > 0);
-            SetShiftLeftArithmeticFlags(n);
+            SetShiftArithmeticFlags(n);
 
             return 0;
         }
@@ -2834,7 +2834,7 @@ namespace Essenbee.Z80
 
         private byte SLAIXD(byte opCode)
         {
-            sbyte d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+            var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
 
             _absoluteAddress = (ushort)(IX + d);
             MEMPTR = _absoluteAddress;
@@ -2846,7 +2846,7 @@ namespace Essenbee.Z80
             WriteToBus(_absoluteAddress, n);
 
             SetFlag(Flags.C, newCarry > 0);
-            SetShiftLeftArithmeticFlags(n);
+            SetShiftArithmeticFlags(n);
 
             return 0;
         }
@@ -2858,7 +2858,7 @@ namespace Essenbee.Z80
 
         private byte SLAIYD(byte opCode)
         {
-            sbyte d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+            var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
 
             _absoluteAddress = (ushort)(IY + d);
             MEMPTR = _absoluteAddress;
@@ -2870,15 +2870,10 @@ namespace Essenbee.Z80
             WriteToBus(_absoluteAddress, n);
 
             SetFlag(Flags.C, newCarry > 0);
-            SetShiftLeftArithmeticFlags(n);
+            SetShiftArithmeticFlags(n);
 
             return 0;
         }
-
-
-
-
-
 
         // Instruction    : SRL r
         // Operation      : r is shifted right 1 position, through the carry flag;
@@ -2928,7 +2923,7 @@ namespace Essenbee.Z80
 
         private byte SRLIXD(byte opCode)
         {
-            sbyte d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+            var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
 
             _absoluteAddress = (ushort)(IX + d);
             MEMPTR = _absoluteAddress;
@@ -2952,7 +2947,7 @@ namespace Essenbee.Z80
 
         private byte SRLIYD(byte opCode)
         {
-            sbyte d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+            var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
 
             _absoluteAddress = (ushort)(IY + d);
             MEMPTR = _absoluteAddress;
@@ -2968,6 +2963,121 @@ namespace Essenbee.Z80
 
             return 0;
         }
+
+        // Instruction    : SRA r
+        // Operation      : r is shifted right 1 position; the contents of bit 0 are copied to the carry lag
+        //                : and the previous contents of bit 7 remain unchanged.
+        // Flags Affected : All
+
+        private byte SRAR(byte opCode)
+        {
+            var src = opCode & 0b00000111;
+            var n = ReadFromRegister(src);
+
+            var newCarry = n & 0b00000001;
+            var bit7Set = (n & 0b10000000) > 0;
+
+            n = (byte)(n >> 1);
+
+            if (bit7Set)
+            {
+                n += 0b10000000;
+            }
+
+            AssignToRegister(src, n);
+
+            SetFlag(Flags.C, newCarry > 0);
+            SetShiftArithmeticFlags(n);
+
+            return 0;
+        }
+
+        // Instruction    : SRA (HL)
+        // Operation      : (HL) is shifted right 1 position; the contents of bit 0 are copied to the carry lag
+        //                : and the previous contents of bit 7 remain unchanged.
+        // Flags Affected : All
+        private byte SRAHL(byte opCode)
+        {
+            var n = Fetch1(CBInstructions);
+
+            var newCarry = n & 0b00000001;
+            var bit7Set = (n & 0b10000000) > 0;
+
+            n = (byte)(n >> 1);
+
+            if (bit7Set)
+            {
+                n += 0b10000000;
+            }
+
+            WriteToBus(HL, n);
+
+            SetFlag(Flags.C, newCarry > 0);
+            SetShiftArithmeticFlags(n); ;
+
+            return 0;
+        }
+
+        // Instruction    : SRA (IX+d)
+        // Operation      : (IX+d) is shifted right 1 position; the contents of bit 0 are copied to the carry lag
+        //                : and the previous contents of bit 7 remain unchanged.
+        // Flags Affected : All
+        private byte SRAIXD(byte opCode)
+        {
+            var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+
+            _absoluteAddress = (ushort)(IX + d);
+            MEMPTR = _absoluteAddress;
+            var n = Fetch2(DDCBInstructions);
+
+            var newCarry = n & 0b00000001;
+            var bit7Set = (n & 0b10000000) > 0;
+
+            n = (byte)(n >> 1);
+
+            if (bit7Set)
+            {
+                n += 0b10000000;
+            }
+
+            WriteToBus(_absoluteAddress, n);
+
+            SetFlag(Flags.C, newCarry > 0);
+            SetShiftArithmeticFlags(n); ;
+
+            return 0;
+        }
+
+        // Instruction    : SRA (IY+d)
+        // Operation      : (IY+d) is shifted right 1 position; the contents of bit 0 are copied to the carry lag
+        //                : and the previous contents of bit 7 remain unchanged.
+        // Flags Affected : All
+        private byte SRAIYD(byte opCode)
+        {
+            var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+
+            _absoluteAddress = (ushort)(IY + d);
+            MEMPTR = _absoluteAddress;
+            var n = Fetch2(FDCBInstructions);
+
+            var newCarry = n & 0b00000001;
+            var bit7Set = (n & 0b10000000) > 0;
+
+            n = (byte)(n >> 1);
+
+            if (bit7Set)
+            {
+                n += 0b10000000;
+            }
+
+            WriteToBus(_absoluteAddress, n);
+
+            SetFlag(Flags.C, newCarry > 0);
+            SetShiftArithmeticFlags(n); ;
+
+            return 0;
+        }
+
 
 
 
@@ -3103,23 +3213,23 @@ namespace Essenbee.Z80
 
 
 
-        
+
 
 
         // =========================== H E L P E R S ===========================
 
         private byte Add8(byte a, byte b, byte c = 0)
         {
-            var sum = (a + b + c);
+            var sum = a + b + c;
 
             SetFlag(Flags.N, false);
-            SetFlag(Flags.Z, (byte)sum == 0 ? true : false);
-            SetFlag(Flags.S, ((byte)sum & 0x80) > 0 ? true : false);
-            SetFlag(Flags.H, (a & 0x0F) + (b & 0x0F) > 0xF ? true : false);
+            SetFlag(Flags.Z, ((byte)sum == 0) ? true : false);
+            SetFlag(Flags.S, ((((byte)sum) & 0x80) > 0) ? true : false);
+            SetFlag(Flags.H, ((a & 0x0F) + (b & 0x0F) > 0xF) ? true : false);
 
             // Overflow flag
-            if (((a ^ (b + c)) & 0x80) == 0 // Same sign
-                && ((a ^ sum) & 0x80) != 0) // Different sign
+            if ((((a ^ (b + c)) & 0x80) == 0) // Same sign
+                && (((a ^ sum) & 0x80) != 0)) // Different sign
             {
                 SetFlag(Flags.P, true);
             }
@@ -3128,11 +3238,11 @@ namespace Essenbee.Z80
                 SetFlag(Flags.P, false);
             }
 
-            SetFlag(Flags.C, sum > 0xFF ? true : false); // Set if there is a carry into bit 8
+            SetFlag(Flags.C, (sum > 0xFF) ? true : false); // Set if there is a carry into bit 8
 
             // Undocumented Flags
-            SetFlag(Flags.X, ((byte)sum & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, ((byte)sum & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((((byte)sum) & 0x08) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((((byte)sum) & 0x20) > 0) ? true : false); //Copy of bit 5
             SetQ();
 
             return (byte)sum;
@@ -3140,16 +3250,16 @@ namespace Essenbee.Z80
 
         private ushort Add16(ushort a, ushort b, byte c = 0)
         {
-            var sum = (a + b + c);
+            var sum = a + b + c;
 
             SetFlag(Flags.N, false);
             // SetFlag(Flags.Z, (ushort)sum == 0 ? true : false);
-            SetFlag(Flags.H, (a & 0xFF) + (b & 0xFF) > 0xFF ? true : false);
-            SetFlag(Flags.C, sum > 0xFFFF ? true : false); // Set if there is a carry into bit 15
+            SetFlag(Flags.H, ((a & 0xFF) + (b & 0xFF) > 0xFF) ? true : false);
+            SetFlag(Flags.C, (sum > 0xFFFF) ? true : false); // Set if there is a carry into bit 15
 
             // Undocumented Flags - from high byte
-            SetFlag(Flags.X, (sum & 0x0800) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (sum & 0x2000) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((sum & 0x0800) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((sum & 0x2000) > 0) ? true : false); //Copy of bit 5
 
             SetQ();
 
@@ -3161,13 +3271,13 @@ namespace Essenbee.Z80
             var diff = a - b - c;
 
             SetFlag(Flags.N, true);
-            SetFlag(Flags.Z, (byte)diff == 0 ? true : false);
-            SetFlag(Flags.S, ((byte)diff & 0x80) > 0 ? true : false);
+            SetFlag(Flags.Z, ((byte)diff == 0) ? true : false);
+            SetFlag(Flags.S, ((((byte)diff) & 0x80) > 0) ? true : false);
             SetFlag(Flags.H, ((a & 0x0F) < ((b + c) & 0x0F)) ? true : false);
 
             // Overflow flag
-            if (((a ^ (b + c)) & 0x80) != 0              // Different sign
-                && (((b + c) ^ (byte)diff) & 0x80) == 0) // Same sign
+            if ((((a ^ (b + c)) & 0x80) != 0)              // Different sign
+                && ((((b + c) ^ ((byte)diff)) & 0x80) == 0)) // Same sign
             {
                 SetFlag(Flags.P, true);
             }
@@ -3176,11 +3286,11 @@ namespace Essenbee.Z80
                 SetFlag(Flags.P, false);
             }
 
-            SetFlag(Flags.C, diff < 0 ? true : false); // Set if there is not a borrow from bit 8
+            SetFlag(Flags.C, (diff < 0) ? true : false); // Set if there is not a borrow from bit 8
 
             // Undocumented Flags
-            SetFlag(Flags.X, ((ushort)diff & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, ((ushort)diff & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((((ushort)diff) & 0x08) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((((ushort)diff) & 0x20) > 0) ? true : false); //Copy of bit 5
             SetQ();
 
             return (byte)diff;
@@ -3191,13 +3301,13 @@ namespace Essenbee.Z80
             var diff = a - b - c;
 
             SetFlag(Flags.N, true);
-            SetFlag(Flags.Z, (ushort)diff == 0 ? true : false);
-            SetFlag(Flags.S, ((ushort)diff & 0x8000) > 0 ? true : false);
+            SetFlag(Flags.Z, ((ushort)diff == 0) ? true : false);
+            SetFlag(Flags.S, ((((ushort)diff) & 0x8000) > 0) ? true : false);
             SetFlag(Flags.H, ((a & 0xFF) < ((b + c) & 0xFF)) ? true : false);
 
             // Overflow flag
-            if (((a ^ (b + c)) & 0x8000) != 0                // Different sign
-                && (((b + c) ^ (ushort)diff) & 0x8000) == 0) // Same sign
+            if ((((a ^ (b + c)) & 0x8000) != 0)                // Different sign
+                && ((((b + c) ^ ((ushort)diff)) & 0x8000) == 0)) // Same sign
             {
                 SetFlag(Flags.P, true);
             }
@@ -3206,11 +3316,11 @@ namespace Essenbee.Z80
                 SetFlag(Flags.P, false);
             }
 
-            SetFlag(Flags.C, diff < 0 ? true : false); // Set if there is not a borrow from bit 15
+            SetFlag(Flags.C, (diff < 0) ? true : false); // Set if there is not a borrow from bit 15
 
             // Undocumented Flags - from high byte
-            SetFlag(Flags.X, (diff & 0x0800) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (diff & 0x2000) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((diff & 0x0800) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((diff & 0x2000) > 0) ? true : false); //Copy of bit 5
 
             SetQ();
 
@@ -3229,8 +3339,8 @@ namespace Essenbee.Z80
             SetFlag(Flags.H, true);
 
             // Undocumented Flags
-            SetFlag(Flags.X, (result & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (result & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((result & 0x08) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((result & 0x20) > 0) ? true : false); //Copy of bit 5
             SetQ();
 
             return result;
@@ -3248,8 +3358,8 @@ namespace Essenbee.Z80
             SetFlag(Flags.H, false);
 
             // Undocumented Flags
-            SetFlag(Flags.X, (result & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (result & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((result & 0x08) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((result & 0x20) > 0) ? true : false); //Copy of bit 5
             SetQ();
 
             return result;
@@ -3267,8 +3377,8 @@ namespace Essenbee.Z80
             SetFlag(Flags.H, false);
 
             // Undocumented Flags
-            SetFlag(Flags.X, (result & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (result & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((result & 0x08) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((result & 0x20) > 0) ? true : false); //Copy of bit 5
             SetQ();
 
             return result;
@@ -3280,11 +3390,11 @@ namespace Essenbee.Z80
             SetFlag(Flags.S, (sbyte)incVal < 0);
             SetFlag(Flags.P, val == 0x7F);
             SetFlag(Flags.Z, incVal == 0);
-            SetFlag(Flags.H, (val & 0x0F) + (0x01 & 0x0F) > 0xF ? true : false);
+            SetFlag(Flags.H, ((val & 0x0F) + (0x01 & 0x0F) > 0xF) ? true : false);
 
             // Undocumented Flags
-            SetFlag(Flags.X, (incVal & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (incVal & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((incVal & 0x08) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((incVal & 0x20) > 0) ? true : false); //Copy of bit 5
             SetQ();
         }
 
@@ -3297,8 +3407,8 @@ namespace Essenbee.Z80
             SetFlag(Flags.H, ((val & 0x0F) < (0x01 & 0x0F)) ? true : false);
 
             // Undocumented Flags
-            SetFlag(Flags.X, (decVal & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (decVal & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((decVal & 0x08) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((decVal & 0x20) > 0) ? true : false); //Copy of bit 5
             SetQ();
         }
 
@@ -3311,8 +3421,8 @@ namespace Essenbee.Z80
             SetFlag(Flags.H, ((A & 0x0F) < (n & 0x0F)) ? true : false);
 
             // Overflow flag
-            if (((A ^ n) & 0x80) != 0              // Different sign
-                && ((n ^ (byte)diff) & 0x80) == 0) // Same sign
+            if ((((A ^ n) & 0x80) != 0)              // Different sign
+                && (((n ^ ((byte)diff)) & 0x80) == 0)) // Same sign
             {
                 SetFlag(Flags.P, true);
             }
@@ -3321,11 +3431,11 @@ namespace Essenbee.Z80
                 SetFlag(Flags.P, false);
             }
 
-            SetFlag(Flags.C, diff < 0 ? true : false); // Set if there is not a borrow from bit 8
+            SetFlag(Flags.C, (diff < 0) ? true : false); // Set if there is not a borrow from bit 8
 
             // Undocumented Flags
-            SetFlag(Flags.X, ((byte)diff & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, ((byte)diff & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((((byte)diff) & 0x08) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((((byte)diff) & 0x20) > 0) ? true : false); //Copy of bit 5
             SetQ();
         }
 
@@ -3338,12 +3448,12 @@ namespace Essenbee.Z80
             SetFlag(Flags.P, Parity(n));
 
             // Undocumented Flags
-            SetFlag(Flags.X, (n & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (n & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((n & 0x08) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((n & 0x20) > 0) ? true : false); //Copy of bit 5
             SetQ();
         }
 
-        private void SetShiftLeftArithmeticFlags(byte n)
+        private void SetShiftArithmeticFlags(byte n)
         {
             SetFlag(Flags.S, n >= 0x80);
             SetFlag(Flags.Z, n == 0);
@@ -3352,8 +3462,8 @@ namespace Essenbee.Z80
             SetFlag(Flags.N, false);
 
             // Undocumented flags
-            SetFlag(Flags.X, (n & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (n & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((n & 0x08) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((n & 0x20) > 0) ? true : false); //Copy of bit 5
 
             SetQ();
         }
@@ -3367,8 +3477,8 @@ namespace Essenbee.Z80
             SetFlag(Flags.N, false);
 
             // Undocumented flags
-            SetFlag(Flags.X, (n & 0x08) > 0 ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, (n & 0x20) > 0 ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((n & 0x08) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((n & 0x20) > 0) ? true : false); //Copy of bit 5
 
             SetQ();
         }
@@ -3379,14 +3489,18 @@ namespace Essenbee.Z80
 
             while (res > 0)
             {
-                if ((res & 0x01) == 1) retVal = !retVal;
+                if ((res & 0x01) == 1)
+                {
+                    retVal = !retVal;
+                }
+
                 res = (byte)(res >> 1);
             }
 
             return retVal;
         }
 
-        private byte ReadFromRegister(int src) => 
+        private byte ReadFromRegister(int src) =>
             src switch
             {
                 0 => B,
@@ -3436,25 +3550,25 @@ namespace Essenbee.Z80
             switch (dest)
             {
                 case 0:
-                    B = (byte)n;
+                    B = n;
                     break;
                 case 1:
-                    C = (byte)n;
+                    C = n;
                     break;
                 case 2:
-                    D = (byte)n;
+                    D = n;
                     break;
                 case 3:
-                    E = (byte)n;
+                    E = n;
                     break;
                 case 4:
-                    H = (byte)n;
+                    H = n;
                     break;
                 case 5:
-                    L = (byte)n;
+                    L = n;
                     break;
                 case 7:
-                    A = (byte)n;
+                    A = n;
                     break;
             }
         }
