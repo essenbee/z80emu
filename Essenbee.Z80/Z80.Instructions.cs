@@ -2367,7 +2367,7 @@ namespace Essenbee.Z80
             AssignToRegister(src, n);
 
             SetFlag(Flags.C, c == 1);
-            SetRotateLeftFlags(n);
+            SetRotateFlags(n);
 
             return 0;
         }
@@ -2391,7 +2391,7 @@ namespace Essenbee.Z80
             WriteToBus(HL, n);
 
             SetFlag(Flags.C, c == 1);
-            SetRotateLeftFlags(n);
+            SetRotateFlags(n);
 
             return 0;
         }
@@ -2419,7 +2419,7 @@ namespace Essenbee.Z80
             WriteToBus(_absoluteAddress, n);
 
             SetFlag(Flags.C, c == 1);
-            SetRotateLeftFlags(n);
+            SetRotateFlags(n);
 
             return 0;
         }
@@ -2447,7 +2447,7 @@ namespace Essenbee.Z80
             WriteToBus(_absoluteAddress, n);
 
             SetFlag(Flags.C, c == 1);
-            SetRotateLeftFlags(n);
+            SetRotateFlags(n);
 
             return 0;
         }
@@ -2470,7 +2470,7 @@ namespace Essenbee.Z80
             SetFlag(Flags.C, newC > 0);
 
             AssignToRegister(src, n);
-            SetRotateLeftFlags(n);
+            SetRotateFlags(n);
 
             return 0;
         }
@@ -2492,7 +2492,7 @@ namespace Essenbee.Z80
             SetFlag(Flags.C, newC > 0);
 
             WriteToBus(HL, n);
-            SetRotateLeftFlags(n);
+            SetRotateFlags(n);
 
             return 0;
         }
@@ -2517,7 +2517,7 @@ namespace Essenbee.Z80
             SetFlag(Flags.C, newC > 0);
 
             WriteToBus(_absoluteAddress, n);
-            SetRotateLeftFlags(n);
+            SetRotateFlags(n);
 
             return 0;
         }
@@ -2542,10 +2542,146 @@ namespace Essenbee.Z80
             SetFlag(Flags.C, newC > 0);
 
             WriteToBus(_absoluteAddress, n);
-            SetRotateLeftFlags(n);
+            SetRotateFlags(n);
 
             return 0;
         }
+
+        // Instruction    : RRC r
+        // Operation      : r is rotated right 1 position, with bit 0 moving to the carry flag and bit 7
+        // Flags Affected : All
+
+        private byte RRCR(byte opCode)
+        {
+            var c = 0;
+            var src = (opCode & 0b00000111);
+            var n = ReadFromRegister(src);
+
+            if ((n & 0b00000001) > 0)
+            {
+                c = 1;
+            }
+
+            n = (byte)(n >> 1);
+            
+            if (c == 1)
+            {
+                n |= 0b10000000;
+            }
+
+            AssignToRegister(src, n);
+
+            SetFlag(Flags.C, c == 1);
+            SetRotateFlags(n);
+
+            return 0;
+        }
+
+        // Instruction    : RRC (HL)
+        // Operation      : (HL) is rotated right 1 position, with bit 0 moving to the carry flag and bit 7
+        // Flags Affected : All
+
+        private byte RRCHL(byte opCode)
+        {
+            var c = 0;
+            var n = Fetch1(CBInstructions);
+
+            if ((n & 0b00000001) > 0)
+            {
+                c = 1;
+            }
+
+            n = (byte)(n >> 1);
+
+            if (c == 1)
+            {
+                n |= 0b10000000;
+            }
+
+            WriteToBus(HL, n);
+
+            SetFlag(Flags.C, c == 1);
+            SetRotateFlags(n);
+
+            return 0;
+        }
+
+        // Instruction    : RRC (IX+d)
+        // Operation      : (IX+d) is rotated right 1 position, with bit 0 moving to the carry flag and bit 70
+        // Flags Affected : All
+
+        private byte RRCIXD(byte opCode)
+        {
+            var c = 0;
+            sbyte d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+
+            _absoluteAddress = (ushort)(IX + d);
+            MEMPTR = _absoluteAddress;
+            var n = Fetch2(DDCBInstructions);
+
+            if ((n & 0b00000001) > 0)
+            {
+                c = 1;
+            }
+
+            n = (byte)(n >> 1);
+
+            if (c == 1)
+            {
+                n |= 0b10000000;
+            }
+
+            WriteToBus(_absoluteAddress, n);
+
+            SetFlag(Flags.C, c == 1);
+            SetRotateFlags(n);
+
+            return 0;
+        }
+
+        // Instruction    : RRC (IY+d)
+        // Operation      : (IY+d) is rotated right 1 position, with bit 0 moving to the carry flag and bit 70
+        // Flags Affected : All
+
+        private byte RRCIYD(byte opCode)
+        {
+            var c = 0;
+            sbyte d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+
+            _absoluteAddress = (ushort)(IY + d);
+            MEMPTR = _absoluteAddress;
+            var n = Fetch2(DDCBInstructions);
+
+            if ((n & 0b00000001) > 0)
+            {
+                c = 1;
+            }
+
+            n = (byte)(n >> 1);
+
+            if (c == 1)
+            {
+                n |= 0b10000000;
+            }
+
+            WriteToBus(_absoluteAddress, n);
+
+            SetFlag(Flags.C, c == 1);
+            SetRotateFlags(n);
+
+            return 0;
+        }
+
+
+
+
+
+
+
+
+
+
+
 
         // Instruction    : SLA r
         // Operation      : r is shifted left 1 position, through the carry flag;
@@ -2997,7 +3133,7 @@ namespace Essenbee.Z80
             SetQ();
         }
 
-        private void SetRotateLeftFlags(byte n)
+        private void SetRotateFlags(byte n)
         {
             SetFlag(Flags.H, false);
             SetFlag(Flags.N, false);

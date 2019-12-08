@@ -501,6 +501,15 @@ namespace Essenbee.Z80
                 { 0x06, new Instruction("RLC (HL)", RGIHL, IMP, RLCHL, new List<int>{ 4, 4, 4, 3 }) },
                 { 0x07, new Instruction("RLC A", IMP, IMP, RLCR, new List<int>{ 4, 4 }) },
 
+                { 0x08, new Instruction("RRC B", IMP, IMP, RRCR, new List<int>{ 4, 4 }) },
+                { 0x09, new Instruction("RRC C", IMP, IMP, RRCR, new List<int>{ 4, 4 }) },
+                { 0x0A, new Instruction("RRC D", IMP, IMP, RRCR, new List<int>{ 4, 4 }) },
+                { 0x0B, new Instruction("RRC E", IMP, IMP, RRCR, new List<int>{ 4, 4 }) },
+                { 0x0C, new Instruction("RRC H", IMP, IMP, RRCR, new List<int>{ 4, 4 }) },
+                { 0x0D, new Instruction("RRC L", IMP, IMP, RRCR, new List<int>{ 4, 4 }) },
+                { 0x0E, new Instruction("RRC (HL)", RGIHL, IMP, RRCHL, new List<int>{ 4, 4 , 4, 3}) },
+                { 0x0F, new Instruction("RRC A", IMP, IMP, RRCR, new List<int>{ 4, 4 }) },
+
                 { 0x10, new Instruction("RL B", IMP, IMP, RLR, new List<int>{ 4, 4 }) },
                 { 0x11, new Instruction("RL C", IMP, IMP, RLR, new List<int>{ 4, 4 }) },
                 { 0x12, new Instruction("RL D", IMP, IMP, RLR, new List<int>{ 4, 4 }) },
@@ -533,6 +542,7 @@ namespace Essenbee.Z80
             DDCBInstructions = new Dictionary<byte, Instruction>
             {
                 { 0x06, new Instruction("RLC (IX+d)", RELS, IDX, RLCIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
+                { 0x0E, new Instruction("RRC (IX+d)", RELS, IDX, RRCIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
                 { 0x16, new Instruction("RL (IX+d)", RELS, IDX, RLIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
             };
 
@@ -540,6 +550,7 @@ namespace Essenbee.Z80
             FDCBInstructions = new Dictionary<byte, Instruction>
             {
                 { 0x06, new Instruction("RLC (IY+d)", RELS, IDX, RLCIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
+                { 0x0E, new Instruction("RRC (IY+d)", RELS, IDX, RRCIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
                 { 0x16, new Instruction("RL (IY+d)", RELS, IDX, RLIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
             };
         }
