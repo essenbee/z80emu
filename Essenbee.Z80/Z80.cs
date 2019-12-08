@@ -519,6 +519,15 @@ namespace Essenbee.Z80
                 { 0x16, new Instruction("RL (HL)", RGIHL, IMP, RLHL, new List<int>{ 4, 4, 4, 3 }) },
                 { 0x17, new Instruction("RL A", IMP, IMP, RLR, new List<int>{ 4, 4 }) },
 
+                { 0x18, new Instruction("RR B", IMP, IMP, RRR, new List<int>{ 4, 4 }) },
+                { 0x19, new Instruction("RR C", IMP, IMP, RRR, new List<int>{ 4, 4 }) },
+                { 0x1A, new Instruction("RR D", IMP, IMP, RRR, new List<int>{ 4, 4 }) },
+                { 0x1B, new Instruction("RR E", IMP, IMP, RRR, new List<int>{ 4, 4 }) },
+                { 0x1C, new Instruction("RR H", IMP, IMP, RRR, new List<int>{ 4, 4 }) },
+                { 0x1D, new Instruction("RR L", IMP, IMP, RRR, new List<int>{ 4, 4 }) },
+                { 0x1E, new Instruction("RR (HL)", RGIHL, IMP, RRHL, new List<int>{ 4, 4, 4, 3 }) },
+                { 0x1F, new Instruction("RR A", IMP, IMP, RRR, new List<int>{ 4, 4 }) },
+
                 { 0x20, new Instruction("SLA B", IMP, IMP, SLAR, new List<int>{ 4, 4 }) },
                 { 0x21, new Instruction("SLA C", IMP, IMP, SLAR, new List<int>{ 4, 4 }) },
                 { 0x22, new Instruction("SLA D", IMP, IMP, SLAR, new List<int>{ 4, 4 }) },
@@ -544,6 +553,8 @@ namespace Essenbee.Z80
                 { 0x06, new Instruction("RLC (IX+d)", RELS, IDX, RLCIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
                 { 0x0E, new Instruction("RRC (IX+d)", RELS, IDX, RRCIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
                 { 0x16, new Instruction("RL (IX+d)", RELS, IDX, RLIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
+                { 0x1E, new Instruction("RR (IX+d)", RELS, IDX, RRIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
+                { 0x26, new Instruction("SLA (IX+d)", RELS, IDX, SLAIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
             };
 
             // Note: FDCB operations are in the form FDCB{displacement}{opCode} - use RELS, IDX addressing mode
@@ -552,6 +563,8 @@ namespace Essenbee.Z80
                 { 0x06, new Instruction("RLC (IY+d)", RELS, IDX, RLCIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
                 { 0x0E, new Instruction("RRC (IY+d)", RELS, IDX, RRCIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
                 { 0x16, new Instruction("RL (IY+d)", RELS, IDX, RLIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
+                { 0x1E, new Instruction("RR (IY+d)", RELS, IDX, RRIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
+                { 0x26, new Instruction("SLA (IY+d)", RELS, IDX, SLAIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
             };
         }
 
