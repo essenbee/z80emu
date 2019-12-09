@@ -587,6 +587,7 @@ namespace Essenbee.Z80
 
         public void Reset(bool hardReset = false)
         {
+            _clockCycles = 0;
             A = A1 = 0xFF;
             F = F1 = (Flags)0b1111_1111;
             I = R = 0x00;
@@ -681,6 +682,8 @@ namespace Essenbee.Z80
                 return false;
             }
 
+            opCode = opCode.ToUpper(c);
+
             return opCode.Length switch
             {
                 2 => RootInstructions.ContainsKey(byte.Parse(opCode, NumberStyles.HexNumber, c)),
@@ -690,6 +693,12 @@ namespace Essenbee.Z80
                     "FD" => FDInstructions.ContainsKey(byte.Parse(opCode[2..], NumberStyles.HexNumber, c)),
                     "ED" => EDInstructions.ContainsKey(byte.Parse(opCode[2..], NumberStyles.HexNumber, c)),
                     "CB" => CBInstructions.ContainsKey(byte.Parse(opCode[2..], NumberStyles.HexNumber, c)),
+                    _ => false,
+                },
+                6 => (opCode[0..4]) switch
+                {
+                    "DDCB" => DDCBInstructions.ContainsKey(byte.Parse(opCode[4..], NumberStyles.HexNumber, c)),
+                    "FDCB" => FDCBInstructions.ContainsKey(byte.Parse(opCode[4..], NumberStyles.HexNumber, c)),
                     _ => false,
                 },
                 8 => (opCode[0..4]) switch

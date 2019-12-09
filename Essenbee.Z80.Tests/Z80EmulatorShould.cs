@@ -1,5 +1,6 @@
 ﻿using Essenbee.Z80.Tests.Classes;
 using FakeItEasy;
+using System;
 using System.Diagnostics;
 using Xunit;
 
@@ -11,6 +12,17 @@ namespace Essenbee.Z80.Tests
 {
     public class Z80EmulatorShould
     {
+        [Fact]
+        private void PassAllValidationTests()
+        {
+            var tester = new FuseTester();
+            var results = tester.RunTests();
+
+            Debug.WriteLine($"Passing tests = {results.Passing.Count}");
+            Debug.WriteLine($"Failing tests = {results.Failing.Count}");
+            Debug.WriteLine($"Opcodes not implemented = {results.NotImpemented.Count}");
+        }
+
         [Fact]
         private void ExecuteArithmeticTestRoutine1Successfully()
         {
