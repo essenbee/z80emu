@@ -1354,7 +1354,7 @@ namespace Essenbee.Z80
         {
             var src = opCode & 0b00000111;
             byte n = ReadFromRegister(src);
-            var diff = A - n;
+            var diff = (A - n);
 
             SetComparisonFlags(n, diff);
 
@@ -1367,7 +1367,7 @@ namespace Essenbee.Z80
         private byte CPN(byte opCode)
         {
             byte n = Fetch1(RootInstructions);
-            var diff = A - n;
+            var diff = (A - n);
 
             SetComparisonFlags(n, diff);
 
@@ -1380,7 +1380,7 @@ namespace Essenbee.Z80
         private byte CPHL(byte opCode)
         {
             var n = Fetch1(RootInstructions);
-            var diff = A - n;
+            var diff = (A - n);
 
             SetComparisonFlags(n, diff); ;
 
@@ -1395,7 +1395,7 @@ namespace Essenbee.Z80
             var d = (sbyte)Fetch1(DDInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IX + d);
             var n = Fetch2(DDInstructions);
-            var diff = A - n;
+            var diff = (A - n);
 
             SetComparisonFlags(n, diff);
             MEMPTR = _absoluteAddress;
@@ -1411,7 +1411,7 @@ namespace Essenbee.Z80
             var d = (sbyte)Fetch1(FDInstructions); // displacement -128 to +127
             _absoluteAddress = (ushort)(IY + d);
             var n = Fetch2(FDInstructions);
-            var diff = A - n;
+            var diff = (A - n);
 
             SetComparisonFlags(n, diff);
             MEMPTR = _absoluteAddress;
@@ -3555,7 +3555,7 @@ namespace Essenbee.Z80
         {
             SetFlag(Flags.N, true);
             SetFlag(Flags.Z, diff == 0);
-            SetFlag(Flags.S, diff < 0);
+            SetFlag(Flags.S, (byte)diff > 0x7f );
 
             SetFlag(Flags.H, ((A & 0x0F) < (n & 0x0F)) ? true : false);
 
@@ -3570,7 +3570,7 @@ namespace Essenbee.Z80
                 SetFlag(Flags.P, false);
             }
 
-            SetFlag(Flags.C, (diff < 0) ? true : false); // Set if there is not a borrow from bit 8
+            SetFlag(Flags.C, (n > A) ? true : false);
 
             // Undocumented Flags
             SetFlag(Flags.X, ((((byte)diff) & 0x08) > 0) ? true : false); //Copy of bit 3
