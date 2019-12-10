@@ -19,13 +19,13 @@ namespace Essenbee.Z80.Tests.Classes
 
         private List<string> _passing = new List<string>();
         private Dictionary<string, List<string>> _failing = new Dictionary<string, List<string>>();
-        private List<string> _notImpemented = new List<string>();
+        private List<string> _notImplemented = new List<string>();
 
         public class Results
         {
             public List<string> Passing = new List<string>();
             public Dictionary<string, List<string>> Failing = new Dictionary<string, List<string>>();
-            public List<string> NotImpemented = new List<string>();
+            public List<string> NotImplemented = new List<string>();
         }
 
         class FuseTest
@@ -53,6 +53,7 @@ namespace Essenbee.Z80.Tests.Classes
             {
                 var testName = test.Key;
                 var opCode = testName.Split('_')[0];
+
                 _cpu.Reset(true);
 
                 if (_cpu.IsOpCodeSupported(opCode))
@@ -66,7 +67,12 @@ namespace Essenbee.Z80.Tests.Classes
                     InitialiseMemory(memory);
                     _cpu.ConnectToBus(_bus);
 
-                    _cpu.Step();
+                    var runToAddress = _expected[testName].Registers[11];
+
+                    do
+                    {
+                        _cpu.Step();
+                    } while (_cpu.PC < runToAddress);
 
                     var (pass, details) = CompareActualWithExpected(_expected[testName]);
 
@@ -81,7 +87,7 @@ namespace Essenbee.Z80.Tests.Classes
                 }
                 else
                 {
-                    _notImpemented.Add(testName);
+                    _notImplemented.Add(testName);
                 }
             }
 
@@ -89,7 +95,7 @@ namespace Essenbee.Z80.Tests.Classes
             {
                 Passing = _passing,
                 Failing = _failing,
-                NotImpemented = _notImpemented,
+                NotImplemented = _notImplemented,
             };
         }
 

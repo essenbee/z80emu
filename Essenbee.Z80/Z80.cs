@@ -607,6 +607,28 @@ namespace Essenbee.Z80
             }
         }
 
+        public void Run()
+        {
+            do
+            {
+                Step();
+                var address = PC;
+                var (_, operation) = PeekNextInstruction(ReadFromBus(address), ref address);
+            } while (true);
+        }
+
+        public void RunTo(byte opCode)
+        {
+            byte code;
+
+            do
+            {
+                Step();
+                var address = PC;
+                (code, _) = PeekNextInstruction(ReadFromBus(address), ref address);
+            } while (code != opCode);
+        }
+
         public void Step()
         {
             var address = PC;
