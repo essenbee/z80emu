@@ -114,7 +114,7 @@ namespace Essenbee.Z80.Tests
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
             Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
             Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
-            Assert.True((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
             Assert.True((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
             Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
@@ -231,7 +231,7 @@ namespace Essenbee.Z80.Tests
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
             Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
             Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
-            Assert.True((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
             Assert.True((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
             Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);
@@ -369,7 +369,7 @@ namespace Essenbee.Z80.Tests
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
             Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
             Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
-            Assert.True((cpu.F & Z80.Flags.H) == Z80.Flags.H);
+            Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
             Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.False((cpu.F & Z80.Flags.Z) == Z80.Flags.Z);
             Assert.False((cpu.F & Z80.Flags.S) == Z80.Flags.S);

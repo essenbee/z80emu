@@ -1911,7 +1911,7 @@ namespace Essenbee.Z80
             var n = ReadFromRegisterPair(src, HL);
             byte c = CheckFlag(Flags.C) ? ((byte)0x01) : ((byte)0x00);
 
-            var sum = Add16(HL, n, c);
+            var sum = Add16WithCarry(HL, n, c);
 
             H = (byte)((sum & 0xFF00) >> 8);
             L = (byte)(sum & 0x00FF);
@@ -1946,6 +1946,8 @@ namespace Essenbee.Z80
             var src = (opCode & 0b00110000) >> 4;
             var n = ReadFromRegisterPair(src, IX);
 
+            MEMPTR = (ushort)(IX + 1);
+
             IX = Add16(IX, n);
 
             return 0;
@@ -1959,6 +1961,8 @@ namespace Essenbee.Z80
         {
             var src = (opCode & 0b00110000) >> 4;
             var n = ReadFromRegisterPair(src, IY);
+
+            MEMPTR = (ushort)(IY + 1);
 
             IY = Add16(IY, n);
 
@@ -1988,6 +1992,7 @@ namespace Essenbee.Z80
         private byte INCIX(byte opCode)
         {
             IX++;
+            MEMPTR = IX;
             return 0;
         }
 
@@ -1998,6 +2003,7 @@ namespace Essenbee.Z80
         private byte INCIY(byte opCode)
         {
             IY++;
+            MEMPTR = IY;
             return 0;
         }
 
@@ -2024,6 +2030,7 @@ namespace Essenbee.Z80
         private byte DECIX(byte opCode)
         {
             IX--;
+            MEMPTR = IX;
             return 0;
         }
 
@@ -2034,6 +2041,7 @@ namespace Essenbee.Z80
         private byte DECIY(byte opCode)
         {
             IY--;
+            MEMPTR = IY;
             return 0;
         }
 
@@ -2687,7 +2695,7 @@ namespace Essenbee.Z80
             var n = ReadFromRegister(src);
 
             var priorC = CheckFlag(Flags.C) ? 1 : 0;
-            var newC = n & 0b10000000;
+            var newC = n & 0b00000001;
 
             n = (byte)(n >> 1);
 
@@ -2714,7 +2722,7 @@ namespace Essenbee.Z80
             var n = Fetch1(CBInstructions);
 
             var priorC = CheckFlag(Flags.C) ? 1 : 0;
-            var newC = n & 0b10000000;
+            var newC = n & 0b00000001;
 
             n = (byte)(n >> 1);
 
@@ -2745,7 +2753,7 @@ namespace Essenbee.Z80
             var n = Fetch2(DDCBInstructions);
 
             var priorC = CheckFlag(Flags.C) ? 1 : 0;
-            var newC = n & 0b10000000;
+            var newC = n & 0b00000001;
 
             n = (byte)(n >> 1);
 
@@ -2775,7 +2783,7 @@ namespace Essenbee.Z80
             var n = Fetch2(FDCBInstructions);
 
             var priorC = CheckFlag(Flags.C) ? 1 : 0;
-            var newC = n & 0b10000000;
+            var newC = n & 0b00000001;
 
             n = (byte)(n >> 1);
 
@@ -3392,9 +3400,58 @@ namespace Essenbee.Z80
             var sum = a + b + c;
 
             SetFlag(Flags.N, false);
-            // SetFlag(Flags.Z, (ushort)sum == 0 ? true : false);
-            SetFlag(Flags.H, ((a & 0xFF) + (b & 0xFF) > 0xFF) ? true : false);
+            //SetFlag(Flags.Z, (ushort)sum == 0 ? true : false);
+
+            var loA = (byte)(a & 0xFF);
+            var loB = (byte)(b & 0xFF);
+            var hiA = (byte)((a & 0xFF00) >> 8);
+            var hiB = (byte)((b & 0xFF00) >> 8);
+
+            if ((loA + loB + c) > 0xFF) hiB++;
+
+            SetFlag(Flags.H, ((hiA & 0x0F) + (hiB & 0x0F) > 0xF) ? true : false);
             SetFlag(Flags.C, (sum > 0xFFFF) ? true : false); // Set if there is a carry into bit 15
+
+            // Undocumented Flags - from high byte
+            SetFlag(Flags.X, ((sum & 0x0800) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((sum & 0x2000) > 0) ? true : false); //Copy of bit 5
+
+            SetQ();
+
+            return (ushort)sum;
+        }
+
+        private ushort Add16WithCarry(ushort a, ushort b, byte c = 0)
+        {
+            var sum = a + b + c;
+
+            SetFlag(Flags.N, false);
+            SetFlag(Flags.Z, (ushort)sum == 0 ? true : false);
+            SetFlag(Flags.S, (ushort)(sum & 0b1000_0000_0000_0000) > 0);
+
+            //Overflow flag is wrong!
+            //SetFlag(Flags.P, (ushort)sum > 0xFFFF);
+
+            var loA = (byte)(a & 0xFF);
+            var loB = (byte)(b & 0xFF);
+            var hiA = (byte)((a & 0xFF00) >> 8);
+            var hiB = (byte)((b & 0xFF00) >> 8);
+
+            if ((loA + loB + c) > 0xFF) hiB++;
+
+            SetFlag(Flags.H, ((hiA & 0x0F) + (hiB & 0x0F) > 0xF) ? true : false);
+            SetFlag(Flags.C, (sum > 0xFFFF) ? true : false); // Set if there is a carry into bit 15
+
+            // Overflow flag
+            if (((hiA ^ hiB) & 0x80) == 0 // Same sign
+                && (((hiA ^ (hiA + hiB)) & 0x80) != 0)) // Different sign
+            {
+                SetFlag(Flags.P, true);
+            }
+            else
+            {
+                SetFlag(Flags.P, false);
+            }
 
             // Undocumented Flags - from high byte
             SetFlag(Flags.X, ((sum & 0x0800) > 0) ? true : false); //Copy of bit 3
@@ -3442,10 +3499,11 @@ namespace Essenbee.Z80
             SetFlag(Flags.N, true);
             SetFlag(Flags.Z, ((ushort)diff == 0) ? true : false);
             SetFlag(Flags.S, ((((ushort)diff) & 0x8000) > 0) ? true : false);
+
             SetFlag(Flags.H, ((a & 0xFF) < ((b + c) & 0xFF)) ? true : false);
 
             // Overflow flag
-            if ((((a ^ (b + c)) & 0x8000) != 0)                // Different sign
+            if ((((a ^ (b + c)) & 0x8000) != 0)                  // Different sign
                 && ((((b + c) ^ ((ushort)diff)) & 0x8000) == 0)) // Same sign
             {
                 SetFlag(Flags.P, true);
