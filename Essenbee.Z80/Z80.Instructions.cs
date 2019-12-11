@@ -3429,9 +3429,6 @@ namespace Essenbee.Z80
             SetFlag(Flags.Z, (ushort)sum == 0 ? true : false);
             SetFlag(Flags.S, (ushort)(sum & 0b1000_0000_0000_0000) > 0);
 
-            //Overflow flag is wrong!
-            //SetFlag(Flags.P, (ushort)sum > 0xFFFF);
-
             var loA = (byte)(a & 0xFF);
             var loB = (byte)(b & 0xFF);
             var hiA = (byte)((a & 0xFF00) >> 8);
@@ -3500,7 +3497,15 @@ namespace Essenbee.Z80
             SetFlag(Flags.Z, ((ushort)diff == 0) ? true : false);
             SetFlag(Flags.S, ((((ushort)diff) & 0x8000) > 0) ? true : false);
 
-            SetFlag(Flags.H, ((a & 0xFF) < ((b + c) & 0xFF)) ? true : false);
+            // Half-carry
+            if ((a & 0xFFF) < (b & 0xFFF) + c)
+            {
+                SetFlag(Flags.H, true);
+            }
+            else
+            {
+                SetFlag(Flags.H, false);
+            }
 
             // Overflow flag
             if ((((a ^ (b + c)) & 0x8000) != 0)                  // Different sign
