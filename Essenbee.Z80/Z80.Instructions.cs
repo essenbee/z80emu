@@ -3573,8 +3573,8 @@ namespace Essenbee.Z80
             SetFlag(Flags.C, (n > A) ? true : false);
 
             // Undocumented Flags
-            SetFlag(Flags.X, ((((byte)diff) & 0x08) > 0) ? true : false); //Copy of bit 3
-            SetFlag(Flags.U, ((((byte)diff) & 0x20) > 0) ? true : false); //Copy of bit 5
+            SetFlag(Flags.X, ((((byte)n) & 0x08) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((((byte)n) & 0x20) > 0) ? true : false); //Copy of bit 5
             SetQ();
         }
 

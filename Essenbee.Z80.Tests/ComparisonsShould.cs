@@ -38,8 +38,8 @@ namespace Essenbee.Z80.Tests
             Assert.True((cpu.F & Z80.Flags.H) == Z80.Flags.H);
             Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
             Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
-            Assert.True((cpu.F & Z80.Flags.U) == Z80.Flags.U);
-            Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
+            Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
+            Assert.True((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
 
         [Fact]
@@ -72,7 +72,7 @@ namespace Essenbee.Z80.Tests
             Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
             Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
             Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
-            Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
+            Assert.True((cpu.F & Z80.Flags.U) == Z80.Flags.U);
             Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
 
@@ -177,8 +177,8 @@ namespace Essenbee.Z80.Tests
             Assert.True((cpu.F & Z80.Flags.H) == Z80.Flags.H); // Borrow from bit 4
             Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
             Assert.True((cpu.F & Z80.Flags.C) == Z80.Flags.C); // Borrow from "bit 8"
-            Assert.True((cpu.F & Z80.Flags.U) == Z80.Flags.U);
-            Assert.True((cpu.F & Z80.Flags.X) == Z80.Flags.X);
+            Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
+            Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
 
         [Fact]
@@ -279,8 +279,8 @@ namespace Essenbee.Z80.Tests
             Assert.True((cpu.F & Z80.Flags.H) == Z80.Flags.H); // Borrow from bit 4
             Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
             Assert.True((cpu.F & Z80.Flags.C) == Z80.Flags.C); // Borrow from "bit 8"
-            Assert.True((cpu.F & Z80.Flags.U) == Z80.Flags.U);
-            Assert.True((cpu.F & Z80.Flags.X) == Z80.Flags.X);
+            Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
+            Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
 
         [Fact]
@@ -423,8 +423,8 @@ namespace Essenbee.Z80.Tests
             Assert.True((cpu.F & Z80.Flags.H) == Z80.Flags.H); // Borrow from bit 4
             Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
             Assert.True((cpu.F & Z80.Flags.C) == Z80.Flags.C); // Borrow from "bit 8"
-            Assert.True((cpu.F & Z80.Flags.U) == Z80.Flags.U);
-            Assert.True((cpu.F & Z80.Flags.X) == Z80.Flags.X);
+            Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
+            Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
 
         [Fact]
@@ -567,8 +567,8 @@ namespace Essenbee.Z80.Tests
             Assert.True((cpu.F & Z80.Flags.H) == Z80.Flags.H); // Borrow from bit 4
             Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
             Assert.True((cpu.F & Z80.Flags.C) == Z80.Flags.C); // Borrow from "bit 8"
-            Assert.True((cpu.F & Z80.Flags.U) == Z80.Flags.U);
-            Assert.True((cpu.F & Z80.Flags.X) == Z80.Flags.X);
+            Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
+            Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
 
         [Fact]
@@ -711,8 +711,8 @@ namespace Essenbee.Z80.Tests
             Assert.True((cpu.F & Z80.Flags.H) == Z80.Flags.H); // Borrow from bit 4
             Assert.False((cpu.F & Z80.Flags.P) == Z80.Flags.P);
             Assert.True((cpu.F & Z80.Flags.C) == Z80.Flags.C); // Borrow from "bit 8"
-            Assert.True((cpu.F & Z80.Flags.U) == Z80.Flags.U);
-            Assert.True((cpu.F & Z80.Flags.X) == Z80.Flags.X);
+            Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
+            Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
     }
 }
