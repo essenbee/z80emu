@@ -3677,6 +3677,7 @@ namespace Essenbee.Z80
             SetFlag(Flags.Z, false);
             SetFlag(Flags.H, false);
             SetFlag(Flags.N, false);
+            SetFlag(Flags.S, false);
 
             // Undocumented flags
             SetFlag(Flags.X, ((n & 0x08) > 0) ? true : false); //Copy of bit 3
