@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -20,13 +19,6 @@ namespace Essenbee.Z80.Tests.Classes
         private List<string> _passing = new List<string>();
         private Dictionary<string, List<string>> _failing = new Dictionary<string, List<string>>();
         private List<string> _notImplemented = new List<string>();
-
-        public class Results
-        {
-            public List<string> Passing = new List<string>();
-            public Dictionary<string, List<string>> Failing = new Dictionary<string, List<string>>();
-            public List<string> NotImplemented = new List<string>();
-        }
 
         class FuseTest
         {
@@ -91,12 +83,7 @@ namespace Essenbee.Z80.Tests.Classes
                 }
             }
 
-            return new Results
-            {
-                Passing = _passing,
-                Failing = _failing,
-                NotImplemented = _notImplemented,
-            };
+            return new Results (_passing, _failing, _notImplemented);
         }
 
         private void InitialiseRegisters(List<ushort> registers)
