@@ -303,6 +303,10 @@ namespace Essenbee.Z80
             SetFlag(Flags.H, false);
             SetFlag(Flags.N, false);
 
+            // Undocumented Flags
+            SetFlag(Flags.X, ((A & 0x08) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((A & 0x20) > 0) ? true : false); //Copy of bit 5
+
             // ToDo: if an interrupt occurs during this instruction, reset P/V
             SetFlag(Flags.P, IFF2);
             SetQ();
@@ -323,6 +327,10 @@ namespace Essenbee.Z80
             SetFlag(Flags.Z, R == 0);
             SetFlag(Flags.H, false);
             SetFlag(Flags.N, false);
+
+            // Undocumented Flags
+            SetFlag(Flags.X, ((A & 0x08) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((A & 0x20) > 0) ? true : false); //Copy of bit 5
 
             // ToDo: if an interrupt occurs during this instruction, reset P/V
             SetFlag(Flags.P, IFF2);

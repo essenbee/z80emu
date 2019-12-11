@@ -492,9 +492,9 @@ namespace Essenbee.Z80
                 { 0x7A, new Instruction("ADC HL,SP", IMP, IMP, ADCHLSS, new List<int>{ 4, 4, 4, 3 }) },
                 { 0x7B, new Instruction("LD SP,(nn)", IMX, IDX, LDSPFNN, new List<int>{ 4, 4, 3, 3, 3, 3 }) },
 
-                { 0x57, new Instruction("ADD A,I", REG, REG, LDAI, new List<int>{ 4, 5 }) },
-                { 0x4F, new Instruction("ADD R,A", REG, REG, LDRA, new List<int>{ 4, 5 }) },
-                { 0x5F, new Instruction("ADD A,R", REG, REG, LDAR, new List<int>{ 4, 5 }) },
+                { 0x57, new Instruction("LD A,I", REG, REG, LDAI, new List<int>{ 4, 5 }) },
+                { 0x4F, new Instruction("LD R,A", REG, REG, LDRA, new List<int>{ 4, 5 }) },
+                { 0x5F, new Instruction("LD A,R", REG, REG, LDAR, new List<int>{ 4, 5 }) },
             };
 
             CBInstructions = new Dictionary<byte, Instruction>

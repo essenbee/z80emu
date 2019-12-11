@@ -54,9 +54,11 @@ namespace Essenbee.Z80.Tests.Classes
                     var testToRun = test.Value;
                     var registers = testToRun.Registers;
                     var memory = testToRun.Memory;
+                    var states = testToRun.States;
 
                     InitialiseRegisters(registers);
                     InitialiseMemory(memory);
+                    InitialiseStates(states);
                     _cpu.ConnectToBus(_bus);
 
                     var runToAddress = _expected[testName].Registers[11];
@@ -125,6 +127,13 @@ namespace Essenbee.Z80.Tests.Classes
                     address++;
                 }
             }
+        }
+        private void InitialiseStates(List<int> states)
+        {
+            _cpu.I = (byte)states[0];
+            _cpu.R = (byte)states[1];
+            _cpu.IFF1 = states[2] == 1 ? true : false;
+            _cpu.IFF2 = states[3] == 1 ? true : false;
         }
 
         public void ReadFuseTestsFile()
@@ -300,6 +309,8 @@ namespace Essenbee.Z80.Tests.Classes
             //    details.Add($"MEMPTR expected {expectedRegisters[12]} got {_cpu.MEMPTR}");
             //    retVal = false;
             //}
+
+            //States
 
             return (retVal, details);
         }

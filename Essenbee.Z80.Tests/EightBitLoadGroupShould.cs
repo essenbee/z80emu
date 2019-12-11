@@ -1257,8 +1257,8 @@ namespace Essenbee.Z80.Tests
             Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
             Assert.True((cpu.F & Z80.Flags.P) == Z80.Flags.P);
             Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
-            Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
-            Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
+            Assert.True((cpu.F & Z80.Flags.U) == Z80.Flags.U);
+            Assert.True((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
 
         [Fact]
@@ -1362,8 +1362,8 @@ namespace Essenbee.Z80.Tests
             Assert.False((cpu.F & Z80.Flags.H) == Z80.Flags.H);
             Assert.True((cpu.F & Z80.Flags.P) == Z80.Flags.P);
             Assert.False((cpu.F & Z80.Flags.C) == Z80.Flags.C);
-            Assert.False((cpu.F & Z80.Flags.U) == Z80.Flags.U);
-            Assert.False((cpu.F & Z80.Flags.X) == Z80.Flags.X);
+            Assert.True((cpu.F & Z80.Flags.U) == Z80.Flags.U);
+            Assert.True((cpu.F & Z80.Flags.X) == Z80.Flags.X);
         }
 
         [Fact]
