@@ -305,11 +305,11 @@ namespace Essenbee.Z80.Tests.Classes
                 retVal = false;
             }
 
-            //if (!ptrCompare)
-            //{
-            //    details.Add($"MEMPTR expected {expectedRegisters[12]} got {_cpu.MEMPTR}");
-            //    retVal = false;
-            //}
+            if (!ptrCompare)
+            {
+                details.Add($"MEMPTR expected {expectedRegisters[12]} got {_cpu.MEMPTR}");
+                retVal = false;
+            }
 
             //States
             var rCompare = _cpu.R == expectedStates[1];

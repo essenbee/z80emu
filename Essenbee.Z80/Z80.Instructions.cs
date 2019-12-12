@@ -470,7 +470,7 @@ namespace Essenbee.Z80
             H = Fetch2(RootInstructions);
 
             ResetQ();
-            // ToDo: MEMPTR
+            MEMPTR = (ushort)((hiByte << 8) + loByte + 1);
 
             return 0;
         }
@@ -491,7 +491,7 @@ namespace Essenbee.Z80
             B = Fetch2(EDInstructions);
 
             ResetQ();
-            // ToDo: MEMPTR
+            MEMPTR = (ushort)((hiByte << 8) + loByte + 1);
 
             return 0;
         }
@@ -512,7 +512,7 @@ namespace Essenbee.Z80
             D = Fetch2(EDInstructions);
 
             ResetQ();
-            // ToDo: MEMPTR
+            MEMPTR = (ushort)((hiByte << 8) + loByte + 1);
 
             return 0;
         }
@@ -533,7 +533,7 @@ namespace Essenbee.Z80
             H = Fetch2(EDInstructions);
 
             ResetQ();
-            // ToDo: MEMPTR
+            MEMPTR = (ushort)((hiByte << 8) + loByte + 1);
 
             return 0;
         }
@@ -557,7 +557,7 @@ namespace Essenbee.Z80
             SP = operand;
 
             ResetQ();
-            // ToDo: MEMPTR
+            MEMPTR = (ushort)((hiByte << 8) + loByte + 1);
 
             return 0;
         }
@@ -582,6 +582,7 @@ namespace Essenbee.Z80
             IX = operand;
 
             ResetQ();
+            MEMPTR = (ushort)((hiByte << 8) + loByte + 1);
 
             return 0;
         }
@@ -605,6 +606,7 @@ namespace Essenbee.Z80
 
             IY = operand;
             ResetQ();
+            MEMPTR = (ushort)((hiByte << 8) + loByte + 1);
 
             return 0;
         }
@@ -623,7 +625,7 @@ namespace Essenbee.Z80
             WriteToBus(hiAddr, H);
 
             ResetQ();
-            // ToDo: MEMPTR
+            MEMPTR = (ushort)((hiByte << 8) + loByte + 1);
 
             return 0;
         }
@@ -642,7 +644,7 @@ namespace Essenbee.Z80
             WriteToBus(hiAddr, B);
 
             ResetQ();
-            // ToDo: MEMPTR
+            MEMPTR = (ushort)((hiByte << 8) + loByte + 1);
 
             return 0;
         }
@@ -661,7 +663,7 @@ namespace Essenbee.Z80
             WriteToBus(hiAddr, D);
 
             ResetQ();
-            // ToDo: MEMPTR
+            MEMPTR = (ushort)((hiByte << 8) + loByte + 1);
 
             return 0;
         }
@@ -680,7 +682,7 @@ namespace Essenbee.Z80
             WriteToBus(hiAddr, H);
 
             ResetQ();
-            // ToDo: MEMPTR
+            MEMPTR = (ushort)((hiByte << 8) + loByte + 1);
 
             return 0;
         }
@@ -699,7 +701,7 @@ namespace Essenbee.Z80
             WriteToBus(hiAddr, (byte)((SP >> 8) & 0xff)); // S
 
             ResetQ();
-            // ToDo: MEMPTR
+            MEMPTR = (ushort)((hiByte << 8) + loByte + 1);
 
             return 0;
         }
@@ -717,6 +719,7 @@ namespace Essenbee.Z80
             WriteToBus(loAddr, (byte)(IX & 0xff)); // X
             WriteToBus(hiAddr, (byte)((IX >> 8) & 0xff)); // I
             ResetQ();
+            MEMPTR = (ushort)((hiByte << 8) + loByte + 1);
 
             return 0;
         }
@@ -734,6 +737,7 @@ namespace Essenbee.Z80
             WriteToBus(loAddr, (byte)(IY & 0xff)); // Y
             WriteToBus(hiAddr, (byte)((IY >> 8) & 0xff)); // I
             ResetQ();
+            MEMPTR = (ushort)((hiByte << 8) + loByte + 1);
 
             return 0;
         }
@@ -2000,7 +2004,6 @@ namespace Essenbee.Z80
         private byte INCIX(byte opCode)
         {
             IX++;
-            MEMPTR = IX;
             return 0;
         }
 
@@ -2011,7 +2014,6 @@ namespace Essenbee.Z80
         private byte INCIY(byte opCode)
         {
             IY++;
-            MEMPTR = IY;
             return 0;
         }
 
@@ -2038,7 +2040,6 @@ namespace Essenbee.Z80
         private byte DECIX(byte opCode)
         {
             IX--;
-            MEMPTR = IX;
             return 0;
         }
 
@@ -2049,7 +2050,6 @@ namespace Essenbee.Z80
         private byte DECIY(byte opCode)
         {
             IY--;
-            MEMPTR = IY;
             return 0;
         }
 
@@ -2090,8 +2090,9 @@ namespace Essenbee.Z80
             if (EvaluateCC(cc))
             {
                 PC = addr;
-                MEMPTR = addr;
             }
+
+            MEMPTR = addr;
 
             ResetQ();
             return 0;
@@ -2200,7 +2201,6 @@ namespace Essenbee.Z80
         private byte JPHL(byte opCode)
         {
             PC = HL;
-            MEMPTR = PC;
 
             ResetQ();
             return 0;
@@ -2213,7 +2213,6 @@ namespace Essenbee.Z80
         private byte JPIX(byte opCode)
         {
             PC = IX;
-            MEMPTR = PC;
 
             ResetQ();
             return 0;
@@ -2226,7 +2225,6 @@ namespace Essenbee.Z80
         private byte JPIY(byte opCode)
         {
             PC = IY;
-            MEMPTR = PC;
 
             ResetQ();
             return 0;
@@ -3128,6 +3126,7 @@ namespace Essenbee.Z80
             SetFlag(Flags.X, ((A & 0x08) > 0) ? true : false); //Copy of bit 3
             SetFlag(Flags.U, ((A & 0x20) > 0) ? true : false); //Copy of bit 5
             SetQ();
+            MEMPTR = (ushort)(HL + 1);
 
             return 0;
         }
@@ -3162,6 +3161,8 @@ namespace Essenbee.Z80
             SetFlag(Flags.X, ((A & 0x08) > 0) ? true : false); //Copy of bit 3
             SetFlag(Flags.U, ((A & 0x20) > 0) ? true : false); //Copy of bit 5
             SetQ();
+
+            MEMPTR = (ushort)(HL + 1);
 
             return 0;
         }
@@ -3199,16 +3200,16 @@ namespace Essenbee.Z80
             var hiByte = Fetch1(RootInstructions);
 
             var cc = (opCode & 0b00111000) >> 3;
+            var addr = (ushort)((hiByte << 8) + loByte);
 
             if (EvaluateCC(cc))
             {
                 PushProgramCounter();
-                var addr = (ushort)((hiByte << 8) + loByte);
                 PC = addr;
-                MEMPTR = addr;
                 additionalTStates = 7;
             }
 
+            MEMPTR = addr;
             ResetQ();
 
             return additionalTStates;
@@ -3424,6 +3425,8 @@ namespace Essenbee.Z80
             SetFlag(Flags.X, ((sum & 0x0800) > 0) ? true : false); //Copy of bit 3
             SetFlag(Flags.U, ((sum & 0x2000) > 0) ? true : false); //Copy of bit 5
 
+            MEMPTR = (ushort)(a + 1);
+
             SetQ();
 
             return (ushort)sum;
@@ -3461,6 +3464,8 @@ namespace Essenbee.Z80
             // Undocumented Flags - from high byte
             SetFlag(Flags.X, ((sum & 0x0800) > 0) ? true : false); //Copy of bit 3
             SetFlag(Flags.U, ((sum & 0x2000) > 0) ? true : false); //Copy of bit 5
+
+            MEMPTR = (ushort)(a + 1);
 
             SetQ();
 
@@ -3531,6 +3536,8 @@ namespace Essenbee.Z80
             // Undocumented Flags - from high byte
             SetFlag(Flags.X, ((diff & 0x0800) > 0) ? true : false); //Copy of bit 3
             SetFlag(Flags.U, ((diff & 0x2000) > 0) ? true : false); //Copy of bit 5
+
+            MEMPTR = (ushort)(a + 1);
 
             SetQ();
 
