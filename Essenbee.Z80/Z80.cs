@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 
 namespace Essenbee.Z80
 {
@@ -358,6 +359,10 @@ namespace Essenbee.Z80
                 { 0xFC, new Instruction("CALL M,nn", IMX, IMP, CALLCC, new List<int>{ 4, 3, 3 }) },
                 { 0xFE, new Instruction("CP n", IMM, IMP, CPN, new List<int>{ 4, 3 }) },
                 { 0xFF, new Instruction("RST &38", IMP, IMP, RST, new List<int>{ 5, 3, 3 }) },
+
+                // In case of stray values in memory...
+                { 0xDD, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4 }) },
+                { 0xFD, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4 }) },
             };
 
             DDInstructions = new Dictionary<byte, Instruction>
@@ -612,8 +617,6 @@ namespace Essenbee.Z80
             do
             {
                 Step();
-                var address = PC;
-                var (_, operation) = PeekNextInstruction(ReadFromBus(address), ref address);
             } while (true);
         }
 
@@ -625,14 +628,14 @@ namespace Essenbee.Z80
             {
                 Step();
                 var address = PC;
-                (code, _) = PeekNextInstruction(ReadFromBus(address), ref address);
+                (code, _, _) = PeekNextInstruction(ReadFromBus(address), ref address);
             } while (code != opCode);
         }
 
         public void Step()
         {
             var address = PC;
-            var (_, operation) = PeekNextInstruction(ReadFromBus(address), ref address);
+            var (_, operation, _) = PeekNextInstruction(ReadFromBus(address), ref address);
             var tStates = operation.TStates;
 
             for (int i = 0; i < tStates; i++)
@@ -740,10 +743,11 @@ namespace Essenbee.Z80
             {
                 var address = PC;
                 _currentOpCode = ReadFromBus(address);
-                var (opCode, operation) = FetchNextInstruction(_currentOpCode, ref address);
+                var (opCode, operation, refresh) = FetchNextInstruction(_currentOpCode, ref address);
                 PC = address;
                 _currentOpCode = opCode;
                 _clockCycles = operation.TStates;
+                IncrementRefreshRegister(refresh);
                 var additionalTStates = operation.Op(_currentOpCode);
                 _clockCycles += additionalTStates;
             }
@@ -802,10 +806,10 @@ namespace Essenbee.Z80
             return 0x00;
         }
 
-        private (byte opCode, Instruction operation) PeekNextInstruction(byte code, ref ushort address) => 
+        private (byte opCode, Instruction operation, int refresh) PeekNextInstruction(byte code, ref ushort address) => 
             FetchNextInstruction(code, ref address);
 
-        private (byte opCode, Instruction operation) FetchNextInstruction(byte code, ref ushort address)
+        private (byte opCode, Instruction operation, int refresh) FetchNextInstruction(byte code, ref ushort address)
         {
             if (code != 0x76)
             {
@@ -816,7 +820,7 @@ namespace Essenbee.Z80
                 // Do not increment PC
                 // Execute NOP
                 IsHalted = true;
-                return (0x00, new Instruction("NOP", IMP, IMP, NOP, new List<int> { 4 }));
+                return (0x00, new Instruction("NOP", IMP, IMP, NOP, new List<int> { 4 }), 1);
             }
 
             return GetInstruction(code, ref address);
@@ -841,7 +845,7 @@ namespace Essenbee.Z80
             var aByte = ReadFromBus(address++);
             Instruction operation;
 
-            (_, operation) = GetInstruction(aByte, ref address);
+            (_, operation, _) = GetInstruction(aByte, ref address);
 
             var opCode = $"{operation.Mnemonic}";
 
@@ -877,7 +881,7 @@ namespace Essenbee.Z80
             return (opAddress, opCode, address);
         }
 
-        private (byte opCode, Instruction operation) GetInstruction(byte code, ref ushort address)
+        private (byte opCode, Instruction operation, int refresh) GetInstruction(byte code, ref ushort address)
         {
             // Note:
             // DDCB operations are in the form DDCB{displacement}{opCode}
@@ -887,7 +891,7 @@ namespace Essenbee.Z80
                 case 0xCB:
                     var opCB = ReadFromBus(address);
                     address++;
-                    return (opCB, CBInstructions[opCB]);
+                    return (opCB, CBInstructions[opCB], 2);
                 case 0xDD:
                     var opDD = ReadFromBus(address);
                     address++;
@@ -897,14 +901,14 @@ namespace Essenbee.Z80
                         address++; // Skip over displacement operand d
                         var opDDCB = ReadFromBus(address);
                         address++;
-                        return (opDDCB, DDCBInstructions[opDDCB]);
+                        return (opDDCB, DDCBInstructions[opDDCB], 2);
                     }
 
-                    return (opDD, DDInstructions[opDD]);
+                    return (opDD, DDInstructions[opDD], 2);
                 case 0xED:
                     var opED = ReadFromBus(address);
                     address++;
-                    return (opED, EDInstructions[opED]);
+                    return (opED, EDInstructions[opED], 2);
                 case 0xFD:
                     var opFD = ReadFromBus(address);
                     address++;
@@ -914,12 +918,12 @@ namespace Essenbee.Z80
                         address++; // Skip over displacement operand d
                         var opFDCB = ReadFromBus(address);
                         address++;
-                        return (opFDCB, FDCBInstructions[opFDCB]);
+                        return (opFDCB, FDCBInstructions[opFDCB], 2);
                     }
 
-                    return (opFD, FDInstructions[opFD]);
+                    return (opFD, FDInstructions[opFD], 2);
                 default:
-                    return (code, RootInstructions[code]);
+                    return (code, RootInstructions[code], 1);
             }
         }
 
@@ -944,6 +948,24 @@ namespace Essenbee.Z80
 
             PC = (ushort)((hiByte << 8) + loByte);
             ResetQ();
+        }
+
+        private void IncrementRefreshRegister(int steps)
+        {
+            var refresh = (byte)(R & 0b011111111);  // Only use bits 0-6
+            var msbSet = (R & 0b10000000) > 0;
+            refresh = (byte)(refresh + steps);
+            R = refresh;
+
+            if (msbSet)
+            {
+                R |= 0b10000000;
+            }
+            else
+            {
+                R &= 0b011111111;
+            }
+
         }
     }
 }

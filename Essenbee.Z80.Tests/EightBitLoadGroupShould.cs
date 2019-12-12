@@ -1353,7 +1353,7 @@ namespace Essenbee.Z80.Tests
             cpu.ConnectToBus(fakeBus);
             cpu.Step();
 
-            Assert.Equal(0xFA, cpu.R);
+            Assert.Equal(0xFC, cpu.R);
             Assert.Equal(cpu.A, cpu.R);
 
             Assert.False((cpu.F & Z80.Flags.N) == Z80.Flags.N);
