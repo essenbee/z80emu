@@ -217,6 +217,7 @@ namespace Essenbee.Z80.Tests.Classes
             var details = new List<string>();
             var expectedRegisters = expected.Registers;
             var expectedMemory = expected.Memory;
+            var expectedStates = expected.States;
 
             // Registers
             var afCompare = _cpu.AF == expectedRegisters[0];
@@ -311,6 +312,13 @@ namespace Essenbee.Z80.Tests.Classes
             //}
 
             //States
+            var rCompare = _cpu.R == expectedStates[1];
+
+            if (!rCompare)
+            {
+                details.Add($"R expected {expectedStates[1]} got {_cpu.R}");
+                retVal = false;
+            }
 
             return (retVal, details);
         }

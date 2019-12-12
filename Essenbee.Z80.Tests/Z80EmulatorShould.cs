@@ -21,6 +21,8 @@ namespace Essenbee.Z80.Tests
             Debug.WriteLine($"Passing tests = {results.Passing.Count}");
             Debug.WriteLine($"Failing tests = {results.Failing.Count}");
             Debug.WriteLine($"Opcodes not implemented = {results.NotImplemented.Count}");
+
+            Assert.Empty(results.Failing);
         }
 
         [Fact]
