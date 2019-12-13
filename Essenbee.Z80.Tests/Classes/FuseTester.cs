@@ -341,6 +341,26 @@ namespace Essenbee.Z80.Tests.Classes
                 retVal = false;
             }
 
+            // Memory
+            foreach (var memBlock in expectedMemory)
+            {
+                var address = (ushort)memBlock[0];
+                var data = memBlock.ToArray()[1..];
+
+                foreach (byte expectedByte in data)
+                {
+                    var actualByte = _bus.Read(address);
+
+                    if (expectedByte != actualByte)
+                    {
+                        details.Add($"@Address {address} expected {expectedByte} got {actualByte}");
+                        retVal = false;
+                    }
+
+                    address++;
+                }
+            }
+
             return (retVal, details);
         }
 
