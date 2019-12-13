@@ -312,7 +312,14 @@ namespace Essenbee.Z80.Tests.Classes
             }
 
             //States
+            var iCompare = _cpu.I == expectedStates[0];
             var rCompare = _cpu.R == expectedStates[1];
+
+            if (!iCompare)
+            {
+                details.Add($"I expected {expectedStates[0]} got {_cpu.I}");
+                retVal = false;
+            }
 
             if (!rCompare)
             {
