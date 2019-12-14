@@ -2893,6 +2893,47 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction    : SLL r
+        // Operation      : r is shifted left 1 position, through the carry flag;
+        //                : a 1 is shifted into bit 0
+        // Flags Affected : All
+
+        private byte SLLR(byte opCode)
+        {
+            var src = opCode & 0b00000111;
+            var n = ReadFromRegister(src);
+
+            var newCarry = n & 0b10000000;
+
+            n = (byte)(n << 1);
+            n |= 0b00000001; //Set bit 0
+            AssignToRegister(src, n);
+
+            SetFlag(Flags.C, newCarry > 0);
+            SetShiftArithmeticFlags(n);
+
+            return 0;
+        }
+
+        // Instruction    : SLL (HL)
+        // Operation      : (HL) is shifted left 1 position, through the carry flag;
+        //                : a 1 is shifted into bit 0
+        // Flags Affected : All
+
+        private byte SLLHL(byte opCode)
+        {
+            var n = Fetch1(CBInstructions);
+            var newCarry = n & 0b10000000;
+            n = (byte)(n << 1);
+            n |= 0b00000001; //Set bit 0
+            WriteToBus(HL, n);
+
+            SetFlag(Flags.C, newCarry > 0);
+            SetShiftArithmeticFlags(n);
+
+            return 0;
+        }
+
         // Instruction    : SRL r
         // Operation      : r is shifted right 1 position, through the carry flag;
         //                : a 0 is shifted into bit 7
