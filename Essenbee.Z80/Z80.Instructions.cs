@@ -2414,40 +2414,11 @@ namespace Essenbee.Z80
             return 0;
         }
 
-        // Instruction    : RLC (IX+d)
-        // Operation      : (IX+d) is rotated left 1 position, with bit 7 moving to the carry flag and bit 0
+        // Instruction    : RLC (IX+d),r
+        // Operation      : (IX+d) is rotated left 1 position, with bit 7 moving to the carry flag and bit 0.
         // Flags Affected : All
 
         private byte RLCIXD(byte opCode)
-        {
-            var c = 0;
-            var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
-
-            _absoluteAddress = (ushort)(IX + d);
-            MEMPTR = _absoluteAddress;
-            var n = Fetch2(DDCBInstructions);
-
-            if ((n & 0b10000000) > 0)
-            {
-                c = 1;
-            }
-
-            n = (byte)((n << 1) + c);
-
-            WriteToBus(_absoluteAddress, n);
-
-            SetFlag(Flags.C, c == 1);
-            SetRotateFlags(n);
-
-            return 0;
-        }
-
-        // Instruction    : RLC (IX+d),r
-        // Operation      : (IX+d) is rotated left 1 position, with bit 7 moving to the carry flag and bit 0.
-        //                : Additionally, the result is stored in register r
-        // Flags Affected : All
-
-        private byte RLCIXD2(byte opCode)
         {
             var c = 0;
             var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
@@ -2466,7 +2437,11 @@ namespace Essenbee.Z80
             n = (byte)((n << 1) + c);
 
             WriteToBus(_absoluteAddress, n);
-            AssignToRegister(dest, n);
+
+            if (dest != 6)
+            {
+                AssignToRegister(dest, n);
+            }
 
             SetFlag(Flags.C, c == 1);
             SetRotateFlags(n);
@@ -2483,6 +2458,7 @@ namespace Essenbee.Z80
             var c = 0;
 
             var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+            var dest = opCode & 0b00000111;
             _absoluteAddress = (ushort)(IY + d);
             MEMPTR = _absoluteAddress;
             var n = Fetch2(FDCBInstructions);
@@ -2495,6 +2471,11 @@ namespace Essenbee.Z80
             n = (byte)((n << 1) + c);
 
             WriteToBus(_absoluteAddress, n);
+
+            if (dest != 6)
+            {
+                AssignToRegister(dest, n);
+            }
 
             SetFlag(Flags.C, c == 1);
             SetRotateFlags(n);
@@ -2547,37 +2528,12 @@ namespace Essenbee.Z80
             return 0;
         }
 
-        // Instruction    : RL (IX+d)
-        // Operation      : (IX+d) is rotated left 1 position, through the carry flag;
-        //                : with the previous content of the carry flag copied to bit 0
-        // Flags Affected : All
-
-        private byte RLIXD(byte opCode)
-        {
-            var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
-            _absoluteAddress = (ushort)(IX + d);
-            MEMPTR = _absoluteAddress;
-            var n = Fetch2(DDCBInstructions);
-
-            var priorC = CheckFlag(Flags.C) ? 1 : 0;
-            var newC = n & 0b10000000;
-
-            n = (byte)((n << 1) + priorC);
-
-            SetFlag(Flags.C, newC > 0);
-
-            WriteToBus(_absoluteAddress, n);
-            SetRotateFlags(n);
-
-            return 0;
-        }
-
         // Instruction    : RL (IX+d),r
         // Operation      : (IX+d) is rotated left 1 position, through the carry flag;
         //                : with the previous content of the carry flag copied to bit 0
         // Flags Affected : All
 
-        private byte RLIXD2(byte opCode)
+        private byte RLIXD(byte opCode)
         {
             var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
             _absoluteAddress = (ushort)(IX + d);
@@ -2594,7 +2550,11 @@ namespace Essenbee.Z80
             SetFlag(Flags.C, newC > 0);
 
             WriteToBus(_absoluteAddress, n);
-            AssignToRegister(dest, n);
+
+            if (dest != 6)
+            {
+                AssignToRegister(dest, n);
+            }
 
             SetRotateFlags(n);
 
@@ -2609,6 +2569,7 @@ namespace Essenbee.Z80
         private byte RLIYD(byte opCode)
         {
             var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+            var dest = opCode & 0b00000111;
             _absoluteAddress = (ushort)(IY + d);
             MEMPTR = _absoluteAddress;
             var n = Fetch2(FDCBInstructions);
@@ -2621,6 +2582,12 @@ namespace Essenbee.Z80
             SetFlag(Flags.C, newC > 0);
 
             WriteToBus(_absoluteAddress, n);
+
+            if (dest != 6)
+            {
+                AssignToRegister(dest, n);
+            }
+
             SetRotateFlags(n);
 
             return 0;
@@ -2685,44 +2652,11 @@ namespace Essenbee.Z80
             return 0;
         }
 
-        // Instruction    : RRC (IX+d)
-        // Operation      : (IX+d) is rotated right 1 position, with bit 0 moving to the carry flag and bit 70
-        // Flags Affected : All
-
-        private byte RRCIXD(byte opCode)
-        {
-            var c = 0;
-            var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
-
-            _absoluteAddress = (ushort)(IX + d);
-            MEMPTR = _absoluteAddress;
-            var n = Fetch2(DDCBInstructions);
-
-            if ((n & 0b00000001) > 0)
-            {
-                c = 1;
-            }
-
-            n = (byte)(n >> 1);
-
-            if (c == 1)
-            {
-                n |= 0b10000000;
-            }
-
-            WriteToBus(_absoluteAddress, n);
-
-            SetFlag(Flags.C, c == 1);
-            SetRotateFlags(n);
-
-            return 0;
-        }
-
         // Instruction    : RRC (IX+d),r
         // Operation      : (IX+d) is rotated right 1 position, with bit 0 moving to the carry flag and bit 70
         // Flags Affected : All
 
-        private byte RRCIXD2(byte opCode)
+        private byte RRCIXD(byte opCode)
         {
             var c = 0;
             var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
@@ -2745,7 +2679,11 @@ namespace Essenbee.Z80
             }
 
             WriteToBus(_absoluteAddress, n);
-            AssignToRegister(dest, n);
+
+            if (dest != 6)
+            {
+                AssignToRegister(dest, n);
+            }
 
             SetFlag(Flags.C, c == 1);
             SetRotateFlags(n);
@@ -2761,7 +2699,7 @@ namespace Essenbee.Z80
         {
             var c = 0;
             var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
-
+            var dest = opCode & 0b00000111;
             _absoluteAddress = (ushort)(IY + d);
             MEMPTR = _absoluteAddress;
             var n = Fetch2(FDCBInstructions);
@@ -2779,6 +2717,11 @@ namespace Essenbee.Z80
             }
 
             WriteToBus(_absoluteAddress, n);
+
+            if (dest != 6)
+            {
+                AssignToRegister(dest, n);
+            }
 
             SetFlag(Flags.C, c == 1);
             SetRotateFlags(n);
@@ -2841,42 +2784,12 @@ namespace Essenbee.Z80
             return 0;
         }
 
-        // Instruction    : RR (IX+d)
-        // Operation      : (IX+d) is rotated right 1 position, through the carry flag;
-        //                : with the previous content of the carry flag copied to bit 7
-        // Flags Affected : All
-
-        private byte RRIXD(byte opCode)
-        {
-            var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
-
-            _absoluteAddress = (ushort)(IX + d);
-            MEMPTR = _absoluteAddress;
-            var n = Fetch2(DDCBInstructions);
-
-            var priorC = CheckFlag(Flags.C) ? 1 : 0;
-            var newC = n & 0b00000001;
-
-            n = (byte)(n >> 1);
-
-            if (priorC == 1)
-            {
-                n |= 0b10000000;
-            }
-
-            SetFlag(Flags.C, newC > 0);
-            WriteToBus(_absoluteAddress, n);
-            SetRotateFlags(n);
-
-            return 0;
-        }
-
         // Instruction    : RR (IX+d),r
         // Operation      : (IX+d) is rotated right 1 position, through the carry flag;
         //                : with the previous content of the carry flag copied to bit 7
         // Flags Affected : All
 
-        private byte RRIXD2(byte opCode)
+        private byte RRIXD(byte opCode)
         {
             var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
 
@@ -2898,7 +2811,11 @@ namespace Essenbee.Z80
 
             SetFlag(Flags.C, newC > 0);
             WriteToBus(_absoluteAddress, n);
-            AssignToRegister(dest, n);
+
+            if (dest != 6)
+            {
+                AssignToRegister(dest, n);
+            }
 
             SetRotateFlags(n);
 
@@ -2913,7 +2830,7 @@ namespace Essenbee.Z80
         private byte RRIYD(byte opCode)
         {
             var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
-
+            var dest = opCode & 0b00000111;
             _absoluteAddress = (ushort)(IY + d);
             MEMPTR = _absoluteAddress;
             var n = Fetch2(FDCBInstructions);
@@ -2930,6 +2847,12 @@ namespace Essenbee.Z80
 
             SetFlag(Flags.C, newC > 0);
             WriteToBus(_absoluteAddress, n);
+
+            if (dest != 6)
+            {
+                AssignToRegister(dest, n);
+            }
+
             SetRotateFlags(n);
 
             return 0;
@@ -2975,36 +2898,12 @@ namespace Essenbee.Z80
             return 0;
         }
 
-        // Instruction    : SLA (IX+d)
-        // Operation      : (IX+d) is shifted left 1 position, through the carry flag;
-        //                : a 0 is shifted into bit 0
-        // Flags Affected : All
-
-        private byte SLAIXD(byte opCode)
-        {
-            var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
-
-            _absoluteAddress = (ushort)(IX + d);
-            MEMPTR = _absoluteAddress;
-            var n = Fetch2(DDCBInstructions);
-
-            var newCarry = n & 0b10000000;
-            n = (byte)(n << 1);
-
-            WriteToBus(_absoluteAddress, n);
-
-            SetFlag(Flags.C, newCarry > 0);
-            SetShiftArithmeticFlags(n);
-
-            return 0;
-        }
-
         // Instruction    : SLA (IX+d),r
         // Operation      : (IX+d) is shifted left 1 position, through the carry flag;
         //                : a 0 is shifted into bit 0
         // Flags Affected : All
 
-        private byte SLAIXD2(byte opCode)
+        private byte SLAIXD(byte opCode)
         {
             var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
 
@@ -3018,7 +2917,11 @@ namespace Essenbee.Z80
             n = (byte)(n << 1);
 
             WriteToBus(_absoluteAddress, n);
-            AssignToRegister(dest, n);
+
+            if (dest != 6)
+            {
+                AssignToRegister(dest, n);
+            }
 
             SetFlag(Flags.C, newCarry > 0);
             SetShiftArithmeticFlags(n);
@@ -3034,7 +2937,7 @@ namespace Essenbee.Z80
         private byte SLAIYD(byte opCode)
         {
             var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
-
+            var dest = opCode & 0b00000111;
             _absoluteAddress = (ushort)(IY + d);
             MEMPTR = _absoluteAddress;
             var n = Fetch2(FDCBInstructions);
@@ -3043,6 +2946,11 @@ namespace Essenbee.Z80
             n = (byte)(n << 1);
 
             WriteToBus(_absoluteAddress, n);
+
+            if (dest != 6)
+            {
+                AssignToRegister(dest, n);
+            }
 
             SetFlag(Flags.C, newCarry > 0);
             SetShiftArithmeticFlags(n);
@@ -3142,6 +3050,7 @@ namespace Essenbee.Z80
             var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
 
             _absoluteAddress = (ushort)(IX + d);
+            var dest = opCode & 0b00000111;
             MEMPTR = _absoluteAddress;
             var n = Fetch2(DDCBInstructions);
 
@@ -3149,6 +3058,11 @@ namespace Essenbee.Z80
 
             n = (byte)(n >> 1);
             WriteToBus(_absoluteAddress, n);
+
+            if (dest != 6)
+            {
+                AssignToRegister(dest, n);
+            }
 
             SetFlag(Flags.C, newCarry > 0);
             SetShiftRightLogicalFlags(n);
@@ -3164,7 +3078,7 @@ namespace Essenbee.Z80
         private byte SRLIYD(byte opCode)
         {
             var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
-
+            var dest = opCode & 0b00000111;
             _absoluteAddress = (ushort)(IY + d);
             MEMPTR = _absoluteAddress;
             var n = Fetch2(FDCBInstructions);
@@ -3173,6 +3087,11 @@ namespace Essenbee.Z80
 
             n = (byte)(n >> 1);
             WriteToBus(_absoluteAddress, n);
+
+            if (dest != 6)
+            {
+                AssignToRegister(dest, n);
+            }
 
             SetFlag(Flags.C, newCarry > 0);
             SetShiftRightLogicalFlags(n);
@@ -3243,6 +3162,7 @@ namespace Essenbee.Z80
             var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
 
             _absoluteAddress = (ushort)(IX + d);
+            var dest = opCode & 0b00000111;
             MEMPTR = _absoluteAddress;
             var n = Fetch2(DDCBInstructions);
 
@@ -3258,6 +3178,11 @@ namespace Essenbee.Z80
 
             WriteToBus(_absoluteAddress, n);
 
+            if (dest != 6)
+            {
+                AssignToRegister(dest, n);
+            }
+
             SetFlag(Flags.C, newCarry > 0);
             SetShiftArithmeticFlags(n); ;
 
@@ -3271,7 +3196,7 @@ namespace Essenbee.Z80
         private byte SRAIYD(byte opCode)
         {
             var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
-
+            var dest = opCode & 0b00000111;
             _absoluteAddress = (ushort)(IY + d);
             MEMPTR = _absoluteAddress;
             var n = Fetch2(FDCBInstructions);
@@ -3287,6 +3212,11 @@ namespace Essenbee.Z80
             }
 
             WriteToBus(_absoluteAddress, n);
+
+            if (dest != 6)
+            {
+                AssignToRegister(dest, n);
+            }
 
             SetFlag(Flags.C, newCarry > 0);
             SetShiftArithmeticFlags(n); ;
