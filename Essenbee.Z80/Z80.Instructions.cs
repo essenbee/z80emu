@@ -2958,12 +2958,12 @@ namespace Essenbee.Z80
             return 0;
         }
 
-        // Instruction    : SLL r
+        // Instruction    : SLS r
         // Operation      : r is shifted left 1 position, through the carry flag;
         //                : a 1 is shifted into bit 0
         // Flags Affected : All
 
-        private byte SLLR(byte opCode)
+        private byte SLSR(byte opCode)
         {
             var src = opCode & 0b00000111;
             var n = ReadFromRegister(src);
@@ -2980,18 +2980,80 @@ namespace Essenbee.Z80
             return 0;
         }
 
-        // Instruction    : SLL (HL)
+        // Instruction    : SLS (HL)
         // Operation      : (HL) is shifted left 1 position, through the carry flag;
         //                : a 1 is shifted into bit 0
         // Flags Affected : All
 
-        private byte SLLHL(byte opCode)
+        private byte SLSHL(byte opCode)
         {
             var n = Fetch1(CBInstructions);
             var newCarry = n & 0b10000000;
             n = (byte)(n << 1);
             n |= 0b00000001; //Set bit 0
             WriteToBus(HL, n);
+
+            SetFlag(Flags.C, newCarry > 0);
+            SetShiftArithmeticFlags(n);
+
+            return 0;
+        }
+
+        // Instruction    : SLS (IX+d),r
+        // Operation      : (IX+d) is shifted left 1 position, through the carry flag;
+        //                : a 1 is shifted into bit 0
+        // Flags Affected : All
+
+        private byte SLSIXD(byte opCode)
+        {
+            var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+
+            _absoluteAddress = (ushort)(IX + d);
+            var dest = opCode & 0b00000111;
+
+            MEMPTR = _absoluteAddress;
+            var n = Fetch2(DDCBInstructions);
+
+            var newCarry = n & 0b10000000;
+            n = (byte)(n << 1);
+            n |= 0b00000001; //Set bit 0
+
+            WriteToBus(_absoluteAddress, n);
+
+            if (dest != 6)
+            {
+                AssignToRegister(dest, n);
+            }
+
+            SetFlag(Flags.C, newCarry > 0);
+            SetShiftArithmeticFlags(n);
+
+            return 0;
+        }
+
+        // Instruction    : SLS (IY+d)
+        // Operation      : (IY+d) is shifted left 1 position, through the carry flag;
+        //                : a 1 is shifted into bit 0
+        // Flags Affected : All
+
+        private byte SLSIYD(byte opCode)
+        {
+            var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+            var dest = opCode & 0b00000111;
+            _absoluteAddress = (ushort)(IY + d);
+            MEMPTR = _absoluteAddress;
+            var n = Fetch2(FDCBInstructions);
+
+            var newCarry = n & 0b10000000;
+            n = (byte)(n << 1);
+            n |= 0b00000001; //Set bit 0
+
+            WriteToBus(_absoluteAddress, n);
+
+            if (dest != 6)
+            {
+                AssignToRegister(dest, n);
+            }
 
             SetFlag(Flags.C, newCarry > 0);
             SetShiftArithmeticFlags(n);
