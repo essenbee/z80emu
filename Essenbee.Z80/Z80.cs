@@ -528,6 +528,12 @@ namespace Essenbee.Z80
                 { 0x7D, new Instruction("RETN", IMP, IMP, RETN, new List<int>{ 4, 4, 3, 3 }) },
                 { 0x7E, new Instruction("IM 2", IMP, IMP, IM2, new List<int>{ 4, 4 }) },
                 { 0x7F, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4 }) },
+
+                { 0xA0, new Instruction("LDI", IMP, IMP, LDI, new List<int>{ 4, 4, 3, 5 }) },
+                { 0xA8, new Instruction("LDD", IMP, IMP, LDD, new List<int>{ 4, 4, 3, 5 }) },
+
+                { 0xB0, new Instruction("LDIR", IMP, IMP, LDIR, new List<int>{ 4, 4, 3, 5 }) },
+                { 0xB8, new Instruction("LDDR", IMP, IMP, LDDR, new List<int>{ 4, 4, 3, 5 }) },
             };
 
             CBInstructions = new Dictionary<byte, Instruction>
@@ -816,6 +822,11 @@ namespace Essenbee.Z80
                         // ToDo: form vector table address
                         // ToDo: Get starting address from vector table
                         // ToDo: Jump to that location
+
+                        // A call is made to the address read from memory. Which address is
+                        // read is calculated as follows: (I register) * 256 + (value on bus).
+                        // Of course a word (two bytes) is read, comprising an address where the
+                        // call is made. In this way, you can have a vector table for interrupts.
 
                         break;
                 }
