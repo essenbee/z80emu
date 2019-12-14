@@ -409,10 +409,14 @@ namespace Essenbee.Z80
 
                 { 0xBE, new Instruction("CP (IX+d)", REL, IDX, CPIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
 
+                { 0xDD, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4, 4 }) },
+
                 { 0xE1, new Instruction("POP IX", IMP, IMP, POPIX, new List<int>{ 4, 3, 3, 3 }) },
                 { 0xE5, new Instruction("PUSH IX", IMP, IMP, PUSHIX, new List<int>{ 4, 5, 3, 3 }) },
                 { 0xE9, new Instruction("JP (IX)", IMP, IMP, JPIX, new List<int>{ 4, 4 }) },
                 { 0xF9, new Instruction("LD SP,IX", IMP, IMP, LDSPIX, new List<int>{ 4, 6 }) },
+
+                { 0xFD, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4, 4 }) },
             };
 
             FDInstructions = new Dictionary<byte, Instruction>
@@ -459,10 +463,14 @@ namespace Essenbee.Z80
 
                 { 0xBE, new Instruction("CP (IY+d)", REL, IDX, CPIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
 
+                { 0xDD, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4, 4 }) },
+
                 { 0xE1, new Instruction("POP IY", IMP, IMP, POPIY, new List<int>{ 4, 3, 3, 3 }) },
                 { 0xE5, new Instruction("PUSH IY", IMP, IMP, PUSHIY, new List<int>{ 4, 5, 3, 3 }) },
                 { 0xE9, new Instruction("JP (IY)", IMP, IMP, JPIY, new List<int>{ 4, 4 }) },
                 { 0xF9, new Instruction("LD SP,IY", IMP, IMP, LDSPIY, new List<int>{ 4, 6 }) },
+
+                { 0xFD, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4, 4 }) },
             };
 
             EDInstructions = new Dictionary<byte, Instruction>
