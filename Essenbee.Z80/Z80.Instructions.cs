@@ -1078,6 +1078,29 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction    : IN r,(C)
+        // Operation      : r <- (C)
+        // Flags Affected : None
+        private byte INR(byte opCode)
+        {
+            var n = ReadFromBusPort(BC);
+            MEMPTR = (ushort)(BC + 1);
+            var dest = (opCode & 0b00111000) >> 3;
+            AssignToRegister(dest, n);
+
+            SetFlag(Flags.N, false);
+            SetFlag(Flags.H, false);
+            SetFlag(Flags.P, Parity(n));
+            SetFlag(Flags.Z, n == 0);
+            SetFlag(Flags.S, n > 0x7F);
+
+            // Undocumented Flags
+            SetFlag(Flags.X, ((n & 0x08) > 0) ? true : false); //Copy of bit 3
+            SetFlag(Flags.U, ((n & 0x20) > 0) ? true : false); //Copy of bit 5
+
+            return 0;
+        }
+
 
 
 

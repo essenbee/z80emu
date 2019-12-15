@@ -421,6 +421,9 @@
                 case 5:
                     L = n;
                     break;
+                case 6:
+                    F = (Flags)n;
+                    break;
                 case 7:
                     A = n;
                     break;
