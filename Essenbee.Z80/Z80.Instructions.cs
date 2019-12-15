@@ -686,8 +686,69 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction    : EXSPHL
+        // Operation      : H <--> (SP+1), L <--> (SP)
+        // Flags Affected : None
 
+        private byte EXSPHL(byte opCode)
+        {
+            var tempLo = ReadFromBus(SP);
+            var tempHi = ReadFromBus((ushort)(SP + 1));
 
+            WriteToBus(SP, L);
+            WriteToBus((ushort)(SP + 1), H);
+
+            H = tempHi;
+            L = tempLo;
+
+            MEMPTR = HL;
+
+            return 0;
+        }
+
+        // Instruction    : EXSPIX
+        // Operation      : IXh <--> (SP+1), IXl <--> (SP)
+        // Flags Affected : None
+
+        private byte EXSPIX(byte opCode)
+        {
+            var tempLo = ReadFromBus(SP);
+            var tempHi = ReadFromBus((ushort)(SP + 1));
+
+            var ixL = (byte)(IX & 0x00FF);
+            var ixH = (byte)((IX & 0xFF00) >> 8);
+
+            WriteToBus(SP, ixL);
+            WriteToBus((ushort)(SP + 1), ixH);
+
+            IX = (ushort)((tempHi << 8) + tempLo);
+
+            MEMPTR = IX;
+
+            return 0;
+        }
+
+        // Instruction    : EXSPIY
+        // Operation      : IYh <--> (SP+1), IYl <--> (SP)
+        // Flags Affected : None
+
+        private byte EXSPIY(byte opCode)
+        {
+            var tempLo = ReadFromBus(SP);
+            var tempHi = ReadFromBus((ushort)(SP + 1));
+
+            var iyL = (byte)(IY & 0x00FF);
+            var iyH = (byte)((IY & 0xFF00) >> 8);
+
+            WriteToBus(SP, iyL);
+            WriteToBus((ushort)(SP + 1), iyH);
+
+            IY = (ushort)((tempHi << 8) + tempLo);
+
+            MEMPTR = IY;
+
+            return 0;
+        }
 
         // Instruction    : LDI
         // Operation      : (DE) <- (HL); DE++; HL++; BC--

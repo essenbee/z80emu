@@ -109,5 +109,137 @@ namespace Essenbee.Z80.Tests
 
             FlagsUnchanged(cpu);
         }
+
+        [Fact]
+        private void SwapLocationPointedToBySPwithHLforEXSPHL()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xE3 }, // EX (SP),HL
+                { 0x0081, 0x00 },
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+
+                // Data
+                { 0x8855, 0x00 },
+                { 0x8856, 0x11 },
+                { 0x8857, 0x22 },
+                { 0x8858, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+            A.CallTo(() => fakeBus.Write(A<ushort>._, A<byte>._))
+                .Invokes((ushort addr, byte data) => UpdateMemory(addr, data));
+
+            var cpu = new Z80() { H = 0x70, L = 0x12, SP = 0x8856, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+
+            cpu.Step();
+
+            Assert.Equal(0x2211, cpu.HL);
+            Assert.Equal(0x12, program[0x8856]);
+            Assert.Equal(0x70, program[0x8857]);
+            Assert.Equal(0x8856, cpu.SP);
+
+            FlagsUnchanged(cpu);
+
+            void UpdateMemory(ushort addr, byte data)
+            {
+                program[addr] = data;
+            }
+        }
+
+        [Fact]
+        private void SwapLocationPointedToBySPwithIXforEXSPIX()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xDD }, // EX (SP),IX
+                { 0x0081, 0xE3 },
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+
+                // Data
+                { 0x8855, 0x00 },
+                { 0x8856, 0x11 },
+                { 0x8857, 0x22 },
+                { 0x8858, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+            A.CallTo(() => fakeBus.Write(A<ushort>._, A<byte>._))
+                .Invokes((ushort addr, byte data) => UpdateMemory(addr, data));
+
+            var cpu = new Z80() { IX = 0x7012, SP = 0x8856, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+
+            cpu.Step();
+
+            Assert.Equal(0x2211, cpu.IX);
+            Assert.Equal(0x12, program[0x8856]);
+            Assert.Equal(0x70, program[0x8857]);
+            Assert.Equal(0x8856, cpu.SP);
+
+            FlagsUnchanged(cpu);
+
+            void UpdateMemory(ushort addr, byte data)
+            {
+                program[addr] = data;
+            }
+        }
+
+        [Fact]
+        private void SwapLocationPointedToBySPwithIYforEXSPIY()
+        {
+            var fakeBus = A.Fake<IBus>();
+
+            var program = new Dictionary<ushort, byte>
+            {
+                // Program Code
+                { 0x0080, 0xFD }, // EX (SP),IY
+                { 0x0081, 0xE3 },
+                { 0x0082, 0x00 },
+                { 0x0083, 0x00 },
+                { 0x0084, 0x00 },
+
+                // Data
+                { 0x8855, 0x00 },
+                { 0x8856, 0x11 },
+                { 0x8857, 0x22 },
+                { 0x8858, 0x00 },
+            };
+
+            A.CallTo(() => fakeBus.Read(A<ushort>._, A<bool>._))
+                .ReturnsLazily((ushort addr, bool ro) => program[addr]);
+            A.CallTo(() => fakeBus.Write(A<ushort>._, A<byte>._))
+                .Invokes((ushort addr, byte data) => UpdateMemory(addr, data));
+
+            var cpu = new Z80() { IY = 0x7012, SP = 0x8856, PC = 0x0080 };
+            cpu.ConnectToBus(fakeBus);
+
+            cpu.Step();
+
+            Assert.Equal(0x2211, cpu.IY);
+            Assert.Equal(0x12, program[0x8856]);
+            Assert.Equal(0x70, program[0x8857]);
+            Assert.Equal(0x8856, cpu.SP);
+
+            FlagsUnchanged(cpu);
+
+            void UpdateMemory(ushort addr, byte data)
+            {
+                program[addr] = data;
+            }
+        }
     }
 }
