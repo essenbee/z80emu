@@ -326,6 +326,7 @@ namespace Essenbee.Z80
                 { 0xD8, new Instruction("RET Z", IMP, IMP, RETCC, new List<int>{ 5 }) },
                 { 0xD9, new Instruction("EXX", IMP, IMP, EXX, new List<int>{ 4 }) },
                 { 0xDA, new Instruction("JP C,nn", IMX, IMP, JPCCNN, new List<int>{ 4, 3, 3 }) },
+                { 0xDB, new Instruction("IN A,(n)", IMM, IMP, INA, new List<int>{ 4, 3, 4 }) },
                 { 0xDC, new Instruction("CALL C,nn", IMX, IMP, CALLCC, new List<int>{ 4, 3, 3 }) },
                 { 0xDE, new Instruction("SBC A,n", IMM, IMP, SBCAN, new List<int>{ 4, 3 }) },
                 { 0xDF, new Instruction("RST &18", IMP, IMP, RST, new List<int>{ 5, 3, 3 }) },
@@ -923,8 +924,8 @@ namespace Essenbee.Z80
 
         private byte ReadFromBus(ushort addr) => _bus.Read(addr, false);
         private void WriteToBus(ushort addr, byte data) => _bus.Write(addr, data);
-        private byte ReadFromBusPort(byte port) => _bus.ReadPeripheral(port);
-        private void WriteToBusPort(byte port, byte data) => _bus.WritePeripheral(port, data);
+        private byte ReadFromBusPort(ushort port) => _bus.ReadPeripheral(port);
+        private void WriteToBusPort(ushort port, byte data) => _bus.WritePeripheral(port, data);
 
         private bool CheckFlag(Flags flag)
         {

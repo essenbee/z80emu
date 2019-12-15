@@ -26,9 +26,11 @@ namespace Essenbee.Z80.Tests.Classes
             return _memory[addr];
         }
 
-        public byte ReadPeripheral(byte port)
+        public byte ReadPeripheral(ushort port)
         {
-            throw new NotImplementedException();
+            // Testing code only
+            var r = (byte)(port >> 8);
+            return r;
         }
 
         public void Write(ushort addr, byte data)
@@ -36,7 +38,7 @@ namespace Essenbee.Z80.Tests.Classes
             _memory[addr] = data;
         }
 
-        public void WritePeripheral(byte port, byte data)
+        public void WritePeripheral(ushort port, byte data)
         {
             throw new NotImplementedException();
         }

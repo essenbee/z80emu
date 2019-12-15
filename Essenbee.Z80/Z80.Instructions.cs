@@ -1056,5 +1056,30 @@ namespace Essenbee.Z80
             return extraTStates;
         }
 
+
+        // ========================================
+        // Input/Output Group
+        // ========================================
+
+        // Instruction    : IN A,(n)
+        // Operation      : A <- (n)
+        // Flags Affected : None
+        private byte INA(byte opCode)
+        {
+            byte port = Fetch1(RootInstructions);
+
+            var addr = (ushort)((A << 8) + port);
+            var n = ReadFromBusPort(addr);
+
+            MEMPTR = (ushort)(addr + 1);
+
+            A = n;
+
+            return 0;
+        }
+
+
+
+
     }
 }

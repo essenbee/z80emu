@@ -26,7 +26,7 @@ namespace Essenbee.Z80.Debugger
             return _memory[addr];
         }
 
-        public byte ReadPeripheral(byte port)
+        public byte ReadPeripheral(ushort port)
         {
             throw new NotImplementedException();
         }
@@ -36,7 +36,7 @@ namespace Essenbee.Z80.Debugger
             _memory[addr] = data;
         }
 
-        public void WritePeripheral(byte port, byte data)
+        public void WritePeripheral(ushort port, byte data)
         {
             throw new NotImplementedException();
         }
