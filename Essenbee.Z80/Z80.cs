@@ -532,10 +532,14 @@ namespace Essenbee.Z80
                 { 0x7F, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4 }) },
 
                 { 0xA0, new Instruction("LDI", IMP, IMP, LDI, new List<int>{ 4, 4, 3, 5 }) },
+                { 0xA1, new Instruction("CPI", IMP, IMP, CPI, new List<int>{ 4, 4, 3, 5 }) },
                 { 0xA8, new Instruction("LDD", IMP, IMP, LDD, new List<int>{ 4, 4, 3, 5 }) },
+                { 0xA9, new Instruction("CPD", IMP, IMP, CPD, new List<int>{ 4, 4, 3, 5 }) },
 
                 { 0xB0, new Instruction("LDIR", IMP, IMP, LDIR, new List<int>{ 4, 4, 3, 5 }) },
+                { 0xB1, new Instruction("CPIR", IMP, IMP, CPIR, new List<int>{ 4, 4, 3, 5 }) },
                 { 0xB8, new Instruction("LDDR", IMP, IMP, LDDR, new List<int>{ 4, 4, 3, 5 }) },
+                { 0xB9, new Instruction("CPDR", IMP, IMP, CPDR, new List<int>{ 4, 4, 3, 5 }) },
             };
 
             CBInstructions = new Dictionary<byte, Instruction>

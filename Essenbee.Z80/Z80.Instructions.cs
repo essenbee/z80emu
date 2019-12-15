@@ -884,9 +884,177 @@ namespace Essenbee.Z80
             return extraTStates;
         }
 
+        // Instruction    : CPI
+        // Operation      : A - (HL); HL++; BC--
+        // Flags Affected : H,P,N,U,X
 
+        private byte CPI(byte opCode)
+        {
+            var n = ReadFromBus(HL);
+            var diff = (sbyte)(A - n);
 
+            IncRegisterPair(HL, 2);
+            IncRegisterPair(BC, 0, -1);
 
+            var carryFlag = CheckFlag(Flags.C);
+
+            // Make use of helper method 
+            SetComparisonFlags(n, diff);
+
+            // Carry flag is not changed by CPI...
+            SetFlag(Flags.C, carryFlag);
+
+            SetFlag(Flags.N, true);
+            SetFlag(Flags.P, BC != 0);
+            SetFlag(Flags.Z, diff == 0);
+                       
+            var temp = A - n - (CheckFlag(Flags.H) ? 1 : 0);
+
+            // Undocumented Flags
+            SetFlag(Flags.U, ((temp & 0x02) > 0) ? true : false); //Copy of bit 1 of temp
+            SetFlag(Flags.X, ((temp & 0x08) > 0) ? true : false); //Copy of bit 3 of temp
+
+            MEMPTR++;
+
+            SetQ();
+
+            return 0;
+        }
+
+        // Instruction    : CPIR
+        // Operation      : A - (HL); HL++; BC--
+        // Flags Affected : H,P,N,U,X
+        private byte CPIR(byte opCode)
+        {
+            var n = ReadFromBus(HL);
+            var diff = (sbyte)(A - n);
+
+            IncRegisterPair(HL, 2);
+            IncRegisterPair(BC, 0, -1);
+
+            var carryFlag = CheckFlag(Flags.C);
+
+            // Make use of helper method 
+            SetComparisonFlags(n, diff);
+
+            // Carry flag is not changed by CPI...
+            SetFlag(Flags.C, carryFlag);
+
+            SetFlag(Flags.N, true);
+            SetFlag(Flags.P, BC != 0);
+            SetFlag(Flags.Z, diff == 0);
+
+            var temp = A - n - (CheckFlag(Flags.H) ? 1 : 0);
+
+            // Undocumented Flags
+            SetFlag(Flags.U, ((temp & 0x02) > 0) ? true : false); //Copy of bit 1 of temp
+            SetFlag(Flags.X, ((temp & 0x08) > 0) ? true : false); //Copy of bit 3 of temp
+
+            SetQ();
+
+            byte extraTStates = 0;
+
+            if (BC != 0 && diff != 0)
+            {
+                PC--;
+                PC--;
+
+                extraTStates = 5;
+                MEMPTR = (ushort)(PC + 1);
+            }
+            else
+            {
+                MEMPTR++;
+            }
+
+            return extraTStates;
+        }
+
+        // Instruction    : CPD
+        // Operation      : A - (HL); HL--; BC--
+        // Flags Affected : H,P,N,U,X
+
+        private byte CPD(byte opCode)
+        {
+            var n = ReadFromBus(HL);
+            var diff = (sbyte)(A - n);
+
+            IncRegisterPair(HL, 2, -1);
+            IncRegisterPair(BC, 0, -1);
+
+            var carryFlag = CheckFlag(Flags.C);
+
+            // Make use of helper method 
+            SetComparisonFlags(n, diff);
+
+            // Carry flag is not changed by CPI...
+            SetFlag(Flags.C, carryFlag);
+
+            SetFlag(Flags.N, true);
+            SetFlag(Flags.P, BC != 0);
+            SetFlag(Flags.Z, diff == 0);
+
+            var temp = A - n - (CheckFlag(Flags.H) ? 1 : 0);
+
+            // Undocumented Flags
+            SetFlag(Flags.U, ((temp & 0x02) > 0) ? true : false); //Copy of bit 1 of temp
+            SetFlag(Flags.X, ((temp & 0x08) > 0) ? true : false); //Copy of bit 3 of temp
+
+            MEMPTR--;
+
+            SetQ();
+
+            return 0;
+        }
+
+        // Instruction    : CPDR
+        // Operation      : A - (HL); HL--; BC--
+        // Flags Affected : H,P,N,U,X
+        private byte CPDR(byte opCode)
+        {
+            var n = ReadFromBus(HL);
+            var diff = (sbyte)(A - n);
+
+            IncRegisterPair(HL, 2, -1);
+            IncRegisterPair(BC, 0, -1);
+
+            var carryFlag = CheckFlag(Flags.C);
+
+            // Make use of helper method 
+            SetComparisonFlags(n, diff);
+
+            // Carry flag is not changed by CPI...
+            SetFlag(Flags.C, carryFlag);
+
+            SetFlag(Flags.N, true);
+            SetFlag(Flags.P, BC != 0);
+            SetFlag(Flags.Z, diff == 0);
+
+            var temp = A - n - (CheckFlag(Flags.H) ? 1 : 0);
+
+            // Undocumented Flags
+            SetFlag(Flags.U, ((temp & 0x02) > 0) ? true : false); //Copy of bit 1 of temp
+            SetFlag(Flags.X, ((temp & 0x08) > 0) ? true : false); //Copy of bit 3 of temp
+
+            SetQ();
+
+            byte extraTStates = 0;
+
+            if (BC != 0 && diff != 0)
+            {
+                PC--;
+                PC--;
+
+                extraTStates = 5;
+                MEMPTR = (ushort)(PC + 1);
+            }
+            else
+            {
+                MEMPTR--;
+            }
+
+            return extraTStates;
+        }
 
     }
 }
