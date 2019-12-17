@@ -90,6 +90,8 @@ namespace Essenbee.Z80
         public ushort MEMPTR { get; set; } = 0x0000; // aka WZ
         public Flags Q { get; set; } = 0x00; // See https://www.worldofspectrum.org/forums/discussion/41704/redirect/p1
 
+        public long TotalTStates { get; set; }
+
         private IBus _bus = null!;
 
         public Dictionary<byte, Instruction> RootInstructions { get; } = new Dictionary<byte, Instruction>();
@@ -412,7 +414,7 @@ namespace Essenbee.Z80
 
                 { 0xDD, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4, 4 }) },
 
-                { 0xE1, new Instruction("POP IX", IMP, IMP, POPIX, new List<int>{ 4, 3, 3, 3 }) },
+                { 0xE1, new Instruction("POP IX", IMP, IMP, POPIX, new List<int>{ 4, 4, 3, 3 }) },
                 { 0xE3, new Instruction("EX (SP),IX", IMP, IMP, EXSPIX, new List<int>{ 4, 4, 3, 4, 3, 5 }) },
                 { 0xE5, new Instruction("PUSH IX", IMP, IMP, PUSHIX, new List<int>{ 4, 5, 3, 3 }) },
                 { 0xE9, new Instruction("JP (IX)", IMP, IMP, JPIX, new List<int>{ 4, 4 }) },
@@ -467,7 +469,7 @@ namespace Essenbee.Z80
 
                 { 0xDD, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4, 4 }) },
 
-                { 0xE1, new Instruction("POP IY", IMP, IMP, POPIY, new List<int>{ 4, 3, 3, 3 }) },
+                { 0xE1, new Instruction("POP IY", IMP, IMP, POPIY, new List<int>{ 4, 4, 3, 3 }) },
                 { 0xE3, new Instruction("EX (SP),IY", IMP, IMP, EXSPIY, new List<int>{ 4, 4, 3, 4, 3, 5 }) },
                 { 0xE5, new Instruction("PUSH IY", IMP, IMP, PUSHIY, new List<int>{ 4, 5, 3, 3 }) },
                 { 0xE9, new Instruction("JP (IY)", IMP, IMP, JPIY, new List<int>{ 4, 4 }) },
@@ -781,6 +783,7 @@ namespace Essenbee.Z80
                 B1 = C1 = D1 = E1 = H1 = L1 = 0x00;
                 IX = IY = 0x00;
                 MEMPTR = 0x0000;
+                TotalTStates = 0;
             }
         }
 
@@ -809,6 +812,7 @@ namespace Essenbee.Z80
             var address = PC;
             var (_, operation, _) = PeekNextInstruction(ReadFromBus(address), ref address);
             var tStates = operation.TStates;
+            TotalTStates = TotalTStates + tStates;
 
             for (int i = 0; i < tStates; i++)
             {
@@ -927,6 +931,7 @@ namespace Essenbee.Z80
                 IncrementRefreshRegister(refresh);
                 var additionalTStates = operation.Op(_currentOpCode);
                 _clockCycles += additionalTStates;
+                TotalTStates += additionalTStates;
             }
 
             _clockCycles--;

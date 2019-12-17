@@ -316,6 +316,7 @@ namespace Essenbee.Z80.Tests.Classes
             var rCompare = _cpu.R == expectedStates[1];
             var iff1 = expectedStates[2] == 1;
             var iff2 = expectedStates[3] == 1;
+            var tStates = expectedStates[6];
 
             if (!iCompare)
             {
@@ -340,6 +341,12 @@ namespace Essenbee.Z80.Tests.Classes
                 details.Add($"IFF2 expected {iff2} got {_cpu.IFF2}");
                 retVal = false;
             }
+
+            //if (tStates != _cpu.TotalTStates)
+            //{
+            //    details.Add($"Timing expected {tStates} got {_cpu.TotalTStates}");
+            //    retVal = false;
+            //}
 
             // Memory
             foreach (var memBlock in expectedMemory)
@@ -433,6 +440,7 @@ namespace Essenbee.Z80.Tests.Classes
                     var states = line.Split(' ').ToList();
                     states.RemoveAll(x => string.IsNullOrEmpty(x));
                     var statesHex = states.Select(hex => Convert.ToInt32(hex, 16)).ToList();
+                    statesHex[6] = int.Parse(states[6], System.Globalization.NumberStyles.Integer);
                     anExpected.States = statesHex;
                     lineType++;
                     continue;

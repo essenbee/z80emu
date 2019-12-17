@@ -194,7 +194,7 @@ namespace Essenbee.Z80
             IFF2 = false;
             ResetQ();
 
-            return opCode;
+            return 0;
         }
 
         // Instruction    : EI
@@ -209,7 +209,7 @@ namespace Essenbee.Z80
             IFF2 = true;
             ResetQ();
 
-            return opCode;
+            return 0;
         }
 
 
@@ -237,7 +237,7 @@ namespace Essenbee.Z80
             InterruptMode = InterruptMode.Mode0;
             ResetQ();
 
-            return opCode;
+            return 0;
         }
 
         // Instruction    : IM1
@@ -255,7 +255,7 @@ namespace Essenbee.Z80
             InterruptMode = InterruptMode.Mode1;
             ResetQ();
 
-            return opCode;
+            return 0;
         }
 
         // Instruction    : IM2
@@ -280,7 +280,7 @@ namespace Essenbee.Z80
             InterruptMode = InterruptMode.Mode2;
             ResetQ();
 
-            return opCode;
+            return 0;
         }
 
         // ========================================
