@@ -812,7 +812,6 @@ namespace Essenbee.Z80
             var address = PC;
             var (_, operation, _) = PeekNextInstruction(ReadFromBus(address), ref address);
             var tStates = operation.TStates;
-            TotalTStates = TotalTStates + tStates;
 
             for (int i = 0; i < tStates; i++)
             {
@@ -931,7 +930,7 @@ namespace Essenbee.Z80
                 IncrementRefreshRegister(refresh);
                 var additionalTStates = operation.Op(_currentOpCode);
                 _clockCycles += additionalTStates;
-                TotalTStates += additionalTStates;
+                TotalTStates = TotalTStates + operation.TStates + additionalTStates;
             }
 
             _clockCycles--;

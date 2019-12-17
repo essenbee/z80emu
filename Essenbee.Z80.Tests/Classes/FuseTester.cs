@@ -134,6 +134,7 @@ namespace Essenbee.Z80.Tests.Classes
             _cpu.R = (byte)states[1];
             _cpu.IFF1 = states[2] == 1 ? true : false;
             _cpu.IFF2 = states[3] == 1 ? true : false;
+            _cpu.TotalTStates = 0;
         }
 
         public void ReadFuseTestsFile()
@@ -342,11 +343,11 @@ namespace Essenbee.Z80.Tests.Classes
                 retVal = false;
             }
 
-            //if (tStates != _cpu.TotalTStates)
-            //{
-            //    details.Add($"Timing expected {tStates} got {_cpu.TotalTStates}");
-            //    retVal = false;
-            //}
+            if (tStates != _cpu.TotalTStates)
+            {
+                details.Add($"Timing expected {tStates} got {_cpu.TotalTStates}");
+                retVal = false;
+            }
 
             // Memory
             foreach (var memBlock in expectedMemory)
