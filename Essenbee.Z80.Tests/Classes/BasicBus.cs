@@ -40,7 +40,8 @@ namespace Essenbee.Z80.Tests.Classes
 
         public void WritePeripheral(ushort port, byte data)
         {
-            throw new NotImplementedException();
+            // Testing code only
+            _memory[port] = data;
         }
     }
 }

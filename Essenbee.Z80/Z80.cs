@@ -320,7 +320,7 @@ namespace Essenbee.Z80
                 { 0xD0, new Instruction("RET NC", IMP, IMP, RETCC, new List<int>{ 5 }) },
                 { 0xD1, new Instruction("POP DE", IMP, IMP, POPDE, new List<int>{ 4, 3, 3 }) },
                 { 0xD2, new Instruction("JP NC,nn", IMX, IMP, JPCCNN, new List<int>{ 4, 3, 3 }) },
-                
+                { 0xD3, new Instruction("OUT (n),A", IMM, IMP, OUTA, new List<int>{ 4, 3, 4 }) },
                 { 0xD4, new Instruction("CALL NC,nn", IMX, IMP, CALLCC, new List<int>{ 4, 3, 3 }) },
                 { 0xD5, new Instruction("PUSH DE", IMP, IMP, PUSHDE, new List<int>{ 5, 3, 3 }) },
                 { 0xD6, new Instruction("SUB A,n", IMM, IMP, SUBAN, new List<int>{ 4, 3 }) },

@@ -1078,6 +1078,22 @@ namespace Essenbee.Z80
             return 0;
         }
 
+        // Instruction    : OUT (n),A
+        // Operation      : (n) <- A
+        // Flags Affected : None
+        private byte OUTA(byte opCode)
+        {
+            byte port = Fetch1(RootInstructions);
+
+            var addr = (ushort)((A << 8) + port);
+            WriteToBusPort(addr, A);
+
+            // MEMPTR_low = (port + 1) & #FF,  MEMPTR_hi = A
+            MEMPTR = (ushort)((A << 8) + ((port + 1) & 0xFF));
+
+            return 0;
+        }
+
         // Instruction    : IN r,(C)
         // Operation      : r <- (C)
         // Flags Affected : None
