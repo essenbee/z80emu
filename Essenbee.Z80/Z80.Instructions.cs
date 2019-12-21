@@ -1072,7 +1072,7 @@ namespace Essenbee.Z80
             var n = ReadFromBusPort(addr);
 
             MEMPTR = (ushort)(addr + 1);
-
+            ResetQ();
             A = n;
 
             return 0;
@@ -1090,6 +1090,7 @@ namespace Essenbee.Z80
 
             // MEMPTR_low = (port + 1) & #FF,  MEMPTR_hi = A
             MEMPTR = (ushort)((A << 8) + ((port + 1) & 0xFF));
+            ResetQ();
 
             return 0;
         }
@@ -1113,6 +1114,8 @@ namespace Essenbee.Z80
             // Undocumented Flags
             SetFlag(Flags.X, ((n & 0x08) > 0) ? true : false); //Copy of bit 3
             SetFlag(Flags.U, ((n & 0x20) > 0) ? true : false); //Copy of bit 5
+
+            SetQ();
 
             return 0;
         }
