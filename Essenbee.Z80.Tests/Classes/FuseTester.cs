@@ -111,6 +111,7 @@ namespace Essenbee.Z80.Tests.Classes
             _cpu.IY = registers[9];
             _cpu.SP = registers[10];
             _cpu.PC = registers[11];
+            _cpu.MEMPTR = registers[12];
         }
         private void InitialiseMemory(List<List<int>> memory)
         {
