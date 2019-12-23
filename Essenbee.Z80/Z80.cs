@@ -997,6 +997,8 @@ namespace Essenbee.Z80
             do
             {
                 Step();
+                HandleInterrupts();
+
             } while (true);
         }
 
@@ -1007,6 +1009,7 @@ namespace Essenbee.Z80
             do
             {
                 Step();
+                HandleInterrupts();
                 var address = PC;
                 (code, _, _) = PeekNextInstruction(ReadFromBus(address), ref address);
             } while (code != opCode);
@@ -1021,6 +1024,21 @@ namespace Essenbee.Z80
             for (int i = 0; i < tStates; i++)
             {
                 Tick();
+            }
+
+            HandleInterrupts();
+        }
+
+        private void HandleInterrupts()
+        {
+            if (_bus.NonMaskableInterrupt)
+            {
+                NonMaskableInterrupt();
+            }
+
+            if (_bus.Interrupt)
+            {
+                Interrupt();
             }
         }
 
