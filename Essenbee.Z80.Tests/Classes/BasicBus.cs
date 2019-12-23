@@ -1,10 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Essenbee.Z80.Tests.Classes
 {
     public class BasicBus : IBus
     {
+        public bool Interrupt { get; set; }
+        public bool NonMaskableInterrupt { get; set; }
+        public IEnumerable<byte> Data { get; set; } = new List<byte>();
+
         private byte[] _memory;
         public BasicBus(int RAMSize)
         {

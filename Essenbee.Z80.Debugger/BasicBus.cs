@@ -5,6 +5,10 @@ namespace Essenbee.Z80.Debugger
 {
     public class BasicBus : IBus
     {
+        public bool Interrupt { get; set; }
+        public bool NonMaskableInterrupt { get; set; }
+        public IEnumerable<byte> Data { get; set; } = new List<byte>();
+
         private byte[] _memory;
         public BasicBus(int RAMSize)
         {
