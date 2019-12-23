@@ -32,7 +32,10 @@ namespace Essenbee.Z80.Debugger
 
         public byte ReadPeripheral(ushort port)
         {
-            throw new NotImplementedException();
+
+            Console.WriteLine($"IN 0x{port:X4}");
+
+            return 0;
         }
 
         public void Write(ushort addr, byte data)
@@ -42,7 +45,7 @@ namespace Essenbee.Z80.Debugger
 
         public void WritePeripheral(ushort port, byte data)
         {
-            throw new NotImplementedException();
+            Console.WriteLine($"OUT 0x{port:X4}, 0x{data:X2}");
         }
     }
 }
