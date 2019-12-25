@@ -26,18 +26,15 @@ namespace Essenbee.Z80.Sample
 
             Console.Clear();
 
-            while (true)
+            try
             {
-                try
-                {
-                    _cpu.Run();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    Console.WriteLine(ex.StackTrace);
-                    Console.ReadLine();
-                }
+                _cpu.Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+                Console.ReadLine();
             }
         }
     }
