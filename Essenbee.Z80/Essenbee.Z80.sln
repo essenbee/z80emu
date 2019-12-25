@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Essenbee.Z80", "Essenbee.Z8
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Essenbee.Z80.Tests", "..\Essenbee.Z80.Tests\Essenbee.Z80.Tests.csproj", "{A6771D5B-325D-4051-AE66-9C2F1DBE92E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Essenbee.Z80.Debugger", "..\Essenbee.Z80.Debugger\Essenbee.Z80.Debugger.csproj", "{2D7F4613-E4A0-4CFB-9560-8171170EC739}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Essenbee.Z80.Debugger", "..\Essenbee.Z80.Debugger\Essenbee.Z80.Debugger.csproj", "{2D7F4613-E4A0-4CFB-9560-8171170EC739}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Essenbee.Z80.Sample", "..\Essenbee.Z80.Sample\Essenbee.Z80.Sample.csproj", "{34DB618F-D002-4D32-A15D-59A9539E030C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{2D7F4613-E4A0-4CFB-9560-8171170EC739}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D7F4613-E4A0-4CFB-9560-8171170EC739}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D7F4613-E4A0-4CFB-9560-8171170EC739}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34DB618F-D002-4D32-A15D-59A9539E030C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34DB618F-D002-4D32-A15D-59A9539E030C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34DB618F-D002-4D32-A15D-59A9539E030C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34DB618F-D002-4D32-A15D-59A9539E030C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
