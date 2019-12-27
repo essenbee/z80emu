@@ -203,5 +203,92 @@
 
             return 0;
         }
+
+        // Instruction    : SET b,r
+        // Operation      : 
+        // Flags Affected : None
+
+        private byte SETBR(byte opCode)
+        {
+            var src = opCode & 0b00000111;
+            byte n = ReadFromRegister(src);
+
+            var bit = (opCode & 0b00111000) >> 3;
+            n |= (byte)(1 << bit);
+            AssignToRegister(src, n);
+
+            ResetQ();
+
+            return 0;
+        }
+
+        // Instruction    : SET b,(HL)
+        // Operation      : 
+        // Flags Affected : None
+
+        private byte SETHL(byte opCode)
+        {
+            byte n = Fetch1(CBInstructions);
+
+            var bit = (opCode & 0b00111000) >> 3;
+            n |= (byte)(1 << bit);
+            WriteToBus(HL, n);
+
+            ResetQ();
+
+            return 0;
+        }
+
+        // Instruction    : SET b,(IX+d)
+        // Operation      : 
+        // Flags Affected : None
+
+        private byte SETIXD(byte opCode)
+        {
+            var src = opCode & 0b00000111;
+            var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IX + d);
+            MEMPTR = (ushort)(IX + d);
+            var n = Fetch2(DDCBInstructions);
+
+            var bit = (opCode & 0b00111000) >> 3;
+            n |= (byte)(1 << bit);
+            WriteToBus((ushort)(IX + d), n);
+
+            if (src != 6)
+            {
+                AssignToRegister(src, n);
+            }
+
+            ResetQ();
+
+            return 0;
+        }
+
+        // Instruction    : SET b,(IY+d)
+        // Operation      : 
+        // Flags Affected : None
+
+        private byte SETIYD(byte opCode)
+        {
+            var src = opCode & 0b00000111;
+            var d = (sbyte)ReadFromBus((ushort)(PC - 2)); // displacement -128 to +127
+            _absoluteAddress = (ushort)(IY + d);
+            MEMPTR = (ushort)(IY + d);
+            var n = Fetch2(FDCBInstructions);
+
+            var bit = (opCode & 0b00111000) >> 3;
+            n |= (byte)(1 << bit);
+            WriteToBus((ushort)(IY + d), n);
+
+            if (src != 6)
+            {
+                AssignToRegister(src, n);
+            }
+
+            ResetQ();
+
+            return 0;
+        }
     }
 }
