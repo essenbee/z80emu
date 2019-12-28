@@ -1465,7 +1465,7 @@ namespace Essenbee.Z80
 
             while (address <= end)
             {
-                if (data != null)
+                if (data != null && data.Count > 0)
                 {
                     if (data.Exists(d => d.From == address))
                     {

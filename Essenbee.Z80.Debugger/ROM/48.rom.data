@@ -1,0 +1,17 @@
+﻿0205,028D,Key Tables
+048E,04A5,Semi-tone Table
+0A11,0A22,Control Character Table
+0FA0,0FA8,Editing Keys Table
+15AF,15C3,Initial Channel Info
+15C6,15D3,Initial Stream Data
+162D,1633,Channel Code Lookup
+1716,171A,Close Streams Lookup
+177A,1780,Open Streams Lookup
+1A48,1B16,Syntax Tables
+1C01,1C0C,Command Class Table
+2596,25AE,Scanning Function Table
+2795,27AF,Operators
+27B0,27BC,Priorities
+3265,32D2,Constants
+32D7,335A,Addresses
+3D00,3FFF,Character Set

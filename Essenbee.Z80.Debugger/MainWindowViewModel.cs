@@ -240,9 +240,22 @@ namespace Essenbee.Z80.Debugger
                 var RAM = new byte[65536];
                 Array.Clear(RAM, 0, RAM.Length);
                 var fileName = openFileDialog.FileName;
-                var romData = File.ReadAllBytes(fileName);
-                var endAddr = (ushort)romData.Length;
-                Array.Copy(romData, RAM, romData.Length);
+                var rom = File.ReadAllBytes(fileName);
+                var dataBlocks = new List<(ushort, ushort)>(); 
+
+                if (File.Exists($"{fileName}.data"))
+                {
+                    var romData = File.ReadAllLines($"{fileName}.data");
+
+                    foreach (var line in romData)
+                    {
+                        var address = line.Split(',');
+                        dataBlocks.Add((Convert.ToUInt16(address[0], 16), Convert.ToUInt16(address[1], 16)));
+                    }
+                }
+
+                var endAddr = (ushort)rom.Length;
+                Array.Copy(rom, RAM, rom.Length);
 
                 _basicBus = new BasicBus(RAM);
                 _cpu.ConnectToBus(_basicBus);
@@ -250,11 +263,9 @@ namespace Essenbee.Z80.Debugger
                 _cpu.PC = startAddr;
                 ProgramCounter = _cpu.PC.ToString("X4");
 
-                // ToDo: Get the data area definitions for the ROM file...
-                //MemoryMapRow = GetMemoryMapRow(startAddr);
-                //var disassembly = _cpu.Disassemble(startAddr, 0x046D, 
-                //            new List<(ushort, ushort)> { (0x0205, 0x028D) } );
-                //DisAsm = GetDisassembedProgram(disassembly);
+                MemoryMapRow = GetMemoryMapRow(startAddr);
+                var disassembly = _cpu.Disassemble(startAddr, endAddr, dataBlocks);
+                DisAsm = GetDisassembedProgram(disassembly);
 
                 SelectedRow = startAddr.ToString("X4");
             }
