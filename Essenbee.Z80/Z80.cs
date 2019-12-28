@@ -1457,7 +1457,7 @@ namespace Essenbee.Z80
             PC = 0x0066; // There must be a handling routine here!
         }
 
-        public Dictionary<ushort,string> Disassemble(ushort start, ushort end)
+        public Dictionary<ushort, string> Disassemble(ushort start, ushort end, List<(ushort From, ushort To)>? data = null)
         {
             var address = start;
             var retVal = new Dictionary<ushort, string>();
@@ -1465,6 +1465,23 @@ namespace Essenbee.Z80
 
             while (address <= end)
             {
+                if (data != null)
+                {
+                    if (data.Exists(d => d.From == address))
+                    {
+                        var (From, To) = data.Find(d => d.From == address);
+                        address = (ushort)(To + 1);
+
+                        for (ushort dataAddr = From; dataAddr < address; dataAddr++)
+                        {
+                            var dataByte = ReadFromBus(dataAddr);
+                            var dataChar = (char)dataByte;
+                            var display = $"{dataByte.ToString("X2", culture)}     {dataChar}";
+                            retVal.Add(dataAddr, display);
+                        }
+                    }
+                }
+
                 var (addr, op, nextAddr) = DisassembleInstruction(address, culture);
                 address = nextAddr;
                 retVal.Add(addr, op);

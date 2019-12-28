@@ -250,9 +250,10 @@ namespace Essenbee.Z80.Debugger
                 _cpu.PC = startAddr;
                 ProgramCounter = _cpu.PC.ToString("X4");
 
-                // ToDo: Allow defining data areas for the Disassembler...
+                // ToDo: Get the data area definitions for the ROM file...
                 //MemoryMapRow = GetMemoryMapRow(startAddr);
-                //var disassembly = _cpu.Disassemble(startAddr, endAddr);
+                //var disassembly = _cpu.Disassemble(startAddr, 0x046D, 
+                //            new List<(ushort, ushort)> { (0x0205, 0x028D) } );
                 //DisAsm = GetDisassembedProgram(disassembly);
 
                 SelectedRow = startAddr.ToString("X4");
