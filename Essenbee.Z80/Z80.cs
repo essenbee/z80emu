@@ -1741,7 +1741,6 @@ namespace Essenbee.Z80
             {
                 R &= 0b011111111;
             }
-
         }
     }
 }

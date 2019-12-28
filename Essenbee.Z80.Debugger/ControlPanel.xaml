@@ -22,23 +22,13 @@
                         Margin="5" 
                         FontWeight="Bold"
                         Command="{Binding LoadCommand}" />
-            <Button x:Name="Disassm" 
-                        Content="Disassemble" 
+            <Button x:Name="Rom" 
+                        Content="Load ROM" 
                         Width="75" 
                         Height="25" 
                         Margin="5" 
                         FontWeight="Bold"
-                        Command="{Binding DisassembleCommand}" />
-            <Label Content="From:" Margin="2,18"/>
-            <TextBox Width="50"
-                         TextAlignment="Center"
-                         VerticalAlignment="Center"
-                         Text="{Binding DisassmFrom}"/>
-            <Label Content="To:" Margin="2,18"/>
-            <TextBox Width="50"
-                         TextAlignment="Center"
-                         VerticalAlignment="Center"
-                         Text="{Binding DisassmTo}"/>
+                        Command="{Binding LoadRomCommand}" />
         </StackPanel>
     </Grid>
 </UserControl>

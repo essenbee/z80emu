@@ -39,8 +39,6 @@ using System.Windows.Threading;
         P ( "Dictionary<string,string>", "Memory"    ),
         P ( "int", "MemoryMapRow"                    ),
         P ( "Dictionary<string,string>", "DisAsm"    ),
-        P ( "string", "DisassmFrom"                  ),
-        P ( "string", "DisassmTo"                    ),
         P ( "string", "SelectedRow"                  ),
     };
 
@@ -48,7 +46,7 @@ using System.Windows.Threading;
     {
       C ( "StepCommand"         ),
       C ( "LoadCommand"         ),
-      C ( "DisassembleCommand"  ),
+      C ( "LoadRomCommand"  ),
     };
 
 #>

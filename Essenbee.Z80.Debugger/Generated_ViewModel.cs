@@ -998,76 +998,6 @@ namespace Essenbee.Z80.Debugger
         // --------------------------------------------------------------------
 
         // --------------------------------------------------------------------
-        // BEGIN_PROPERTY: DisassmFrom (string)
-        // --------------------------------------------------------------------
-        string _DisassmFrom = default;
-
-        void Raise_DisassmFrom ()
-        {
-          OnPropertyChanged ("DisassmFrom");
-        }
-
-        public string DisassmFrom
-        {
-            get { return _DisassmFrom; }
-            set
-            {
-                if (_DisassmFrom == value)
-                {
-                    return;
-                }
-
-                var prev = _DisassmFrom;
-
-                _DisassmFrom = value;
-
-                Changed_DisassmFrom (prev, _DisassmFrom);
-
-                Raise_DisassmFrom ();
-            }
-        }
-        // --------------------------------------------------------------------
-        partial void Changed_DisassmFrom (string prev, string current);
-        // --------------------------------------------------------------------
-        // END_PROPERTY: DisassmFrom (string)
-        // --------------------------------------------------------------------
-
-        // --------------------------------------------------------------------
-        // BEGIN_PROPERTY: DisassmTo (string)
-        // --------------------------------------------------------------------
-        string _DisassmTo = default;
-
-        void Raise_DisassmTo ()
-        {
-          OnPropertyChanged ("DisassmTo");
-        }
-
-        public string DisassmTo
-        {
-            get { return _DisassmTo; }
-            set
-            {
-                if (_DisassmTo == value)
-                {
-                    return;
-                }
-
-                var prev = _DisassmTo;
-
-                _DisassmTo = value;
-
-                Changed_DisassmTo (prev, _DisassmTo);
-
-                Raise_DisassmTo ();
-            }
-        }
-        // --------------------------------------------------------------------
-        partial void Changed_DisassmTo (string prev, string current);
-        // --------------------------------------------------------------------
-        // END_PROPERTY: DisassmTo (string)
-        // --------------------------------------------------------------------
-
-        // --------------------------------------------------------------------
         // BEGIN_PROPERTY: SelectedRow (string)
         // --------------------------------------------------------------------
         string _SelectedRow = default;
@@ -1156,29 +1086,29 @@ namespace Essenbee.Z80.Debugger
         // --------------------------------------------------------------------
 
         // --------------------------------------------------------------------
-        // BEGIN_COMMAND: DisassembleCommand
+        // BEGIN_COMMAND: LoadRomCommand
         // --------------------------------------------------------------------
-        readonly UserCommand _DisassembleCommand;
+        readonly UserCommand _LoadRomCommand;
 
-        bool CanExecuteDisassembleCommand ()
+        bool CanExecuteLoadRomCommand ()
         {
           bool result = false;
-          CanExecute_DisassembleCommand (ref result);
+          CanExecute_LoadRomCommand (ref result);
 
           return result;
         }
 
-        void ExecuteDisassembleCommand ()
+        void ExecuteLoadRomCommand ()
         {
-          Execute_DisassembleCommand ();
+          Execute_LoadRomCommand ();
         }
 
-        public ICommand DisassembleCommand { get { return _DisassembleCommand;} }
+        public ICommand LoadRomCommand { get { return _LoadRomCommand;} }
         // --------------------------------------------------------------------
-        partial void CanExecute_DisassembleCommand (ref bool result);
-        partial void Execute_DisassembleCommand ();
+        partial void CanExecute_LoadRomCommand (ref bool result);
+        partial void Execute_LoadRomCommand ();
         // --------------------------------------------------------------------
-        // END_COMMAND: DisassembleCommand
+        // END_COMMAND: LoadRomCommand
         // --------------------------------------------------------------------
 
 
@@ -1189,7 +1119,7 @@ namespace Essenbee.Z80.Debugger
           _dispatcher = dispatcher;
           _StepCommand = new UserCommand (CanExecuteStepCommand, ExecuteStepCommand);
           _LoadCommand = new UserCommand (CanExecuteLoadCommand, ExecuteLoadCommand);
-          _DisassembleCommand = new UserCommand (CanExecuteDisassembleCommand, ExecuteDisassembleCommand);
+          _LoadRomCommand = new UserCommand (CanExecuteLoadRomCommand, ExecuteLoadRomCommand);
 
           Constructed ();
         }
@@ -1198,7 +1128,7 @@ namespace Essenbee.Z80.Debugger
         {
           _StepCommand.RefreshCanExecute ();
           _LoadCommand.RefreshCanExecute ();
-          _DisassembleCommand.RefreshCanExecute ();
+          _LoadRomCommand.RefreshCanExecute ();
         }
 
         void Dispatch(Action action)

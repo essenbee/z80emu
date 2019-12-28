@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using static Essenbee.Z80.Z80;
 
@@ -33,10 +34,6 @@ namespace Essenbee.Z80.Debugger
 
             Memory = BuildMemoryMap();
             MemoryMapRow = GetMemoryMapRow(_cpu.PC);
-            _disassembleFrom = 0x8000;
-            _disassembleTo = 0x9000;
-            DisassmFrom = _disassembleFrom.ToString("X4");
-            DisassmTo = _disassembleTo.ToString("X4");
         }
 
         // ================== Property Events ==================
@@ -167,16 +164,6 @@ namespace Essenbee.Z80.Debugger
             SetFlag(Flags.C, current);
         }
 
-        partial void Changed_DisassmFrom(string prev, string current)
-        {
-            _disassembleFrom = ushort.Parse(current, System.Globalization.NumberStyles.HexNumber);
-        }
-
-        partial void Changed_DisassmTo(string prev, string current)
-        {
-            _disassembleTo = ushort.Parse(current, System.Globalization.NumberStyles.HexNumber);
-        }
-
         // ================== Command Events ==================
         partial void CanExecute_StepCommand(ref bool result)
         {
@@ -232,17 +219,44 @@ namespace Essenbee.Z80.Debugger
             }
         }
 
-        partial void CanExecute_DisassembleCommand(ref bool result)
+        partial void CanExecute_LoadRomCommand(ref bool result)
         {
             result = _cpu != null;
         }
 
-        partial void Execute_DisassembleCommand()
+        partial void Execute_LoadRomCommand()
         {
-            var from = ushort.Parse(DisassmFrom, System.Globalization.NumberStyles.HexNumber);
-            var to = ushort.Parse(DisassmTo, System.Globalization.NumberStyles.HexNumber);
-            var disassembly = _cpu.Disassemble(from, to);
-            DisAsm = GetDisassembedProgram(disassembly);
+            ushort startAddr = 0x000;
+            
+            var openFileDialog = new Microsoft.Win32.OpenFileDialog()
+            {
+                Filter = "ROM file (*.rom)|*.rom"
+            };
+
+            var result = openFileDialog.ShowDialog();
+
+            if (result ?? false)
+            {
+                var RAM = new byte[65536];
+                Array.Clear(RAM, 0, RAM.Length);
+                var fileName = openFileDialog.FileName;
+                var romData = File.ReadAllBytes(fileName);
+                var endAddr = (ushort)romData.Length;
+                Array.Copy(romData, RAM, romData.Length);
+
+                _basicBus = new BasicBus(RAM);
+                _cpu.ConnectToBus(_basicBus);
+                Memory = BuildMemoryMap();
+                _cpu.PC = startAddr;
+                ProgramCounter = _cpu.PC.ToString("X4");
+
+                // ToDo: Allow defining data areas for the Disassembler...
+                //MemoryMapRow = GetMemoryMapRow(startAddr);
+                //var disassembly = _cpu.Disassemble(startAddr, endAddr);
+                //DisAsm = GetDisassembedProgram(disassembly);
+
+                SelectedRow = startAddr.ToString("X4");
+            }
         }
 
         private Dictionary<string, string> GetDisassembedProgram(Dictionary<ushort, string> disassembly)
