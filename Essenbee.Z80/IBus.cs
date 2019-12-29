@@ -6,7 +6,7 @@ namespace Essenbee.Z80
     {
         bool Interrupt { get; set; }
         bool NonMaskableInterrupt { get; set; }
-        IEnumerable<byte> Data { get; set; }
+        IList<byte> Data { get; set; }
         IReadOnlyCollection<byte> RAM { get; }
         byte Read(ushort addr, bool ro = false);
         void Write(ushort addr, byte data);

@@ -1416,7 +1416,7 @@ namespace Essenbee.Z80
 
         public void Interrupt()
         {
-            if (IFF1 && IFF2)
+            if (IFF1)
             {
                 IFF1 = IFF2 = false;
                 UnhaltIfHalted();
@@ -1424,24 +1424,63 @@ namespace Essenbee.Z80
                 switch (InterruptMode)
                 {
                     case InterruptMode.Mode0:
-                        // ToDo: Read instruction from interrupting device (address bus)
-                        // ToDo: If its CALL or RST, push the PC onto the stack
-                        // ToDo: Execute the instruction
+                        // Read instruction from interrupting device
+                        var instruction = _bus.Data;
+
+                        if (instruction.Count > 0)
+                        {
+                            // If RST, push the PC onto the stack
+                            if (RootInstructions[instruction[0]].Mnemonic
+                                .StartsWith("RST", StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                PushProgramCounter();
+                                var addr = (ushort)(instruction[0] * 0x38);
+                                PC = addr;
+                                MEMPTR = addr;
+                                ResetQ();
+
+                                // ToDo: wait 13 T-states
+                            }
+                            else if (RootInstructions[instruction[0]].Mnemonic
+                                     .StartsWith("CALL", StringComparison.InvariantCultureIgnoreCase) &&
+                                     instruction.Count == 3)
+                            {
+                                PushProgramCounter();
+                                // Little-endian
+                                var addr = (ushort)((instruction[2] << 8) + instruction[1]);
+                                PC = addr;
+                                MEMPTR = addr;
+                                ResetQ();
+
+                                // ToDo: wait 13 T-states
+                            }
+                            else
+                            {
+                                // ToDo: Currently only RST and CALL supported
+                            }
+                        }
                         break;
                     case InterruptMode.Mode1:
                         PushProgramCounter();
                         PC = 0x0038; // There must be a handling routine here!
+
+                        // ToDo: wait 13 T-states
                         break;
                     case InterruptMode.Mode2:
-                        PushProgramCounter();
-                        // ToDo: form vector table address
-                        // ToDo: Get starting address from vector table
-                        // ToDo: Jump to that location
+                        if (_bus.Data != null && _bus.Data.Count == 1)
+                        {
+                            PushProgramCounter();
+                            var vector = _bus.Data[0];
+                            PushProgramCounter();
+                            var addr = (ushort)((I << 8) + vector);
 
-                        // A call is made to the address read from memory. Which address is
-                        // read is calculated as follows: (I register) * 256 + (value on bus).
-                        // Of course a word (two bytes) is read, comprising an address where the
-                        // call is made. In this way, you can have a vector table for interrupts.
+                            //Get starting address from vector table (little-endian)
+                            var loByte = ReadFromBus(addr++);
+                            var hiByte = ReadFromBus(addr);
+                            PC = (ushort)((hiByte << 8) + loByte);
+                        }
+
+                        // ToDo: wait 19 T-states
 
                         break;
                 }
@@ -1455,6 +1494,8 @@ namespace Essenbee.Z80
             IFF2 = IFF1;
             IFF1 = false;
             PC = 0x0066; // There must be a handling routine here!
+
+            // ToDo: wait 17 T-states
         }
 
         public Dictionary<ushort, string> Disassemble(ushort start, ushort end, List<(ushort From, ushort To)>? data = null)
