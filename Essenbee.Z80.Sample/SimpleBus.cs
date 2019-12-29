@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Essenbee.Z80.Sample
 {
@@ -29,7 +28,7 @@ namespace Essenbee.Z80.Sample
 
         public byte ReadPeripheral(ushort port)
         {
-
+            Console.WriteLine();
             Console.WriteLine($"IN 0x{port:X4}");
 
             return 0;
@@ -42,6 +41,7 @@ namespace Essenbee.Z80.Sample
 
         public void WritePeripheral(ushort port, byte data)
         {
+            Console.WriteLine();
             Console.WriteLine($"OUT 0x{port:X4}, 0x{data:X2}");
         }
     }

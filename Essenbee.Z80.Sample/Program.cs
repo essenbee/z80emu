@@ -26,15 +26,40 @@ namespace Essenbee.Z80.Sample
 
             Console.Clear();
 
-            try
+            while (!(Console.KeyAvailable && (Console.ReadKey(true).Key == ConsoleKey.Escape)))
             {
-                _cpu.Run();
+                try
+                {
+                    _cpu.Step();
+                    Console.Write($"\rPC: {_cpu.PC.ToString("X4")}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Console.WriteLine(ex.StackTrace);
+                    Console.ReadLine();
+                }
             }
-            catch (Exception ex)
+
+            Console.WriteLine();
+            Console.WriteLine();
+
+            for (var i = 0x4000; i < 0x5800; i++)
             {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine(ex.StackTrace);
-                Console.ReadLine();
+                if (i % 16 == 0) Console.Write("{0:X4} | ", i);
+                {
+                    Console.Write("{0:x2} ", ram[i]);
+                }
+
+                if (i % 8 == 7)
+                {
+                    Console.Write("  ");
+                }
+
+                if (i % 16 == 15)
+                {
+                    Console.WriteLine();
+                }
             }
         }
     }
