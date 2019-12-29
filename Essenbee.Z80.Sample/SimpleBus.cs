@@ -7,7 +7,7 @@ namespace Essenbee.Z80.Sample
     {
         public bool Interrupt { get; set; }
         public bool NonMaskableInterrupt { get; set; }
-        public IEnumerable<byte> Data { get; set; } = new List<byte>();
+        public IList<byte> Data { get; set; } = new List<byte>();
 
         private byte[] _memory;
 
