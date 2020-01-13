@@ -547,6 +547,7 @@ namespace Essenbee.Z80
 
                 { 0xA0, new Instruction("LDI", IMP, IMP, LDI, new List<int>{ 4, 4, 3, 5 }) },
                 { 0xA1, new Instruction("CPI", IMP, IMP, CPI, new List<int>{ 4, 4, 3, 5 }) },
+                { 0xA2, new Instruction("INII", IMP, IMP, INI, new List<int>{ 4, 5, 3, 4 }) },
                 { 0xA8, new Instruction("LDD", IMP, IMP, LDD, new List<int>{ 4, 4, 3, 5 }) },
                 { 0xA9, new Instruction("CPD", IMP, IMP, CPD, new List<int>{ 4, 4, 3, 5 }) },
 

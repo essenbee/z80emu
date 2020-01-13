@@ -80,5 +80,34 @@
 
             return 0;
         }
+
+        // Instruction    : INI
+        // Operation      : (HL) <- (C), B <- B - 1, HL <- HL + 1
+        // Flags Affected : All
+        private byte INI(byte opCode)
+        {
+            var n = ReadFromBusPort(BC);
+            MEMPTR = (ushort)(BC + 1);
+            WriteToBus(HL, n);
+
+            IncRegisterPair(HL, 2);
+            var val = B;
+            B = (byte)(B - 1);
+            var decVal = B;
+
+            SetDecFlags(val, decVal);
+
+            var k = n + ((C + 1) & 255);
+            SetFlag(Flags.H, k > 0xFF);
+            SetFlag(Flags.C, k > 0xFF);
+
+            var x =(ushort)((k & 7) ^ decVal);
+            SetFlag(Flags.P, Parity(x));
+            SetFlag(Flags.N, ((n & 0x80) > 0) ? true : false); //Copy of bit 7
+
+            SetQ();
+
+            return 0;
+        }
     }
 }
