@@ -1370,7 +1370,6 @@ namespace Essenbee.Z80
             do
             {
                 Step();
-                HandleInterrupts();
 
             } while (true);
         }
@@ -1382,7 +1381,6 @@ namespace Essenbee.Z80
             do
             {
                 Step();
-                HandleInterrupts();
                 var address = PC;
                 (code, _, _) = PeekNextInstruction(ReadFromBus(address), ref address);
             } while (code != opCode);
