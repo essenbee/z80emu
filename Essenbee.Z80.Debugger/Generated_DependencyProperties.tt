@@ -1,0 +1,21 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+<#
+  Namespace   = "Essenbee.Z80.Debugger";
+  Model       = new []
+  {
+    new ClassDefinition ("MsxScreen")
+    {
+      P ("int"                        , "Screen"    , defaultValue:"0x4000" , metaDataOptions: "FrameworkPropertyMetadataOptions.AffectsRender"),
+      P ("IReadOnlyCollection<byte>"  , "RawMemory" , defaultValue:"null"   , metaDataOptions: "FrameworkPropertyMetadataOptions.AffectsRender"),
+    },
+  };
+
+#>
+
+
+<#@ include     file        ="DependencyProperties.ttinclude"     #>

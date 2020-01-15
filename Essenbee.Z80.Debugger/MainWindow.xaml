@@ -7,7 +7,8 @@
         mc:Ignorable="d"
         Background="LightGray"
         MinHeight="650"
-        MinWidth="1000"
+        MinWidth="1200
+        "
         Title="Essenbee Z80 Emulator - Debugger" 
         Height="650" 
         Width="1000">
@@ -15,6 +16,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="75*" />
             <ColumnDefinition Width="25*" />
+            <ColumnDefinition Width="256" />
         </Grid.ColumnDefinitions>
 
         <!-- Left-hand side -->
@@ -39,7 +41,7 @@
 
         </Grid>
 
-        <!-- Right-hand side -->
+        <!-- Mid side -->
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height="60*" />
@@ -57,6 +59,10 @@
                       Grid.Row="1">
                 <controls:StackDisplay Grid.Row="1" />
             </GroupBox>
+        </Grid>
+        <!-- Right-hand side -->
+        <Grid Grid.Column="2">
+          <controls:MsxScreen RawMemory="{Binding RawMemory}"/>
         </Grid>
     </Grid>
     

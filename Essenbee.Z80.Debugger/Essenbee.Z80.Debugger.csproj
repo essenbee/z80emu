@@ -11,6 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Generated_DependencyProperties.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Generated_DependencyProperties.cs</LastGenOutput>
+    </None>
     <None Update="Generated_ViewModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Generated_ViewModel.cs</LastGenOutput>
@@ -22,6 +26,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Generated_DependencyProperties.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Generated_DependencyProperties.tt</DependentUpon>
+    </Compile>
     <Compile Update="Generated_ViewModel.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>

@@ -1032,6 +1032,41 @@ namespace Essenbee.Z80.Debugger
         // END_PROPERTY: SelectedRow (string)
         // --------------------------------------------------------------------
 
+        // --------------------------------------------------------------------
+        // BEGIN_PROPERTY: RawMemory (IReadOnlyCollection<byte>)
+        // --------------------------------------------------------------------
+        IReadOnlyCollection<byte> _RawMemory = default;
+
+        void Raise_RawMemory ()
+        {
+          OnPropertyChanged ("RawMemory");
+        }
+
+        public IReadOnlyCollection<byte> RawMemory
+        {
+            get { return _RawMemory; }
+            set
+            {
+                if (_RawMemory == value)
+                {
+                    return;
+                }
+
+                var prev = _RawMemory;
+
+                _RawMemory = value;
+
+                Changed_RawMemory (prev, _RawMemory);
+
+                Raise_RawMemory ();
+            }
+        }
+        // --------------------------------------------------------------------
+        partial void Changed_RawMemory (IReadOnlyCollection<byte> prev, IReadOnlyCollection<byte> current);
+        // --------------------------------------------------------------------
+        // END_PROPERTY: RawMemory (IReadOnlyCollection<byte>)
+        // --------------------------------------------------------------------
+
 
         // --------------------------------------------------------------------
         // BEGIN_COMMAND: StepCommand
