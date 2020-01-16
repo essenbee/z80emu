@@ -18,6 +18,7 @@ namespace Essenbee.Z80.Debugger
         partial void Constructed()
         {
             _basicBus = new BasicBus(64);
+            RawMemory = _basicBus.RAM;
             _cpu = new Z80 { PC = 0x8000 }; //Default start location
             _cpu.ConnectToBus(_basicBus);
             ProgramCounter = _cpu.PC.ToString("X4");
@@ -208,6 +209,7 @@ namespace Essenbee.Z80.Debugger
                 var fileName = openFileDialog.FileName;
                 var (RAM, startAddr, endAddr) = HexFileLoader.Read(fileName, new byte[64 * 1024]);
                 _basicBus = new BasicBus(RAM);
+                RawMemory = _basicBus.RAM;
                 _cpu.ConnectToBus(_basicBus);
                 Memory = BuildMemoryMap();
                 _cpu.PC = startAddr;
@@ -258,6 +260,7 @@ namespace Essenbee.Z80.Debugger
                 Array.Copy(rom, RAM, rom.Length);
 
                 _basicBus = new BasicBus(RAM);
+                RawMemory = _basicBus.RAM;
                 _cpu.ConnectToBus(_basicBus);
                 Memory = BuildMemoryMap();
                 _cpu.PC = startAddr;
