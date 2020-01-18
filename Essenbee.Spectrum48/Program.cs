@@ -2,6 +2,14 @@
 using System;
 using System.IO;
 
+// **======================================================**
+// * This project used the OLC Pixel Game Engine             *
+// *    *Copyright 2018 OneLoneCoder.com*                      *
+// *    (https://github.com/OneLoneCoder/olcPixelGameEngine) *
+// * C# port of the Pixel Game Engine by DevChrome           *
+// *    (https://github.com/DevChrome/Pixel-Engine)          *
+// **======================================================**
+
 namespace Essenbee.Z80.Spectrum48
 {
     class Program : Game
@@ -12,7 +20,7 @@ namespace Essenbee.Z80.Spectrum48
         private Point _origin = new Point(0, 0);
         private byte[] _ram;
 
-        public Program() => AppName = $"Essenbee.Spectrum48";
+        public Program() => AppName = $"Essenbee.Spectrum48 (OLC Pixel Game Engine)";
 
         public override void OnCreate()
         {
