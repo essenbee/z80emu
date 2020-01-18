@@ -348,29 +348,33 @@
             return retVal;
         }
 
-        private byte ReadFromRegister(int src) =>
-            src switch
+        private byte ReadFromRegister(int src)
+        {
+            switch (src)
             {
-                0 => B,
-                1 => C,
-                2 => D,
-                3 => E,
-                4 => H,
-                5 => L,
-                6 => (byte)F,
-                7 => A,
-                _ => 0x00
+                case 0: return B;
+                case 1: return C;
+                case 2: return D;
+                case 3: return E;
+                case 4: return H;
+                case 5: return L;
+                case 6: return (byte)F;
+                case 7: return A;
+                default: return 0x00;
             };
+        }
 
-        private ushort ReadFromRegisterPair(int src, ushort self) =>
-            src switch
+        private ushort ReadFromRegisterPair(int src, ushort self)
+        {
+            switch (src)
             {
-                0 => BC,
-                1 => DE,
-                2 => self,
-                3 => SP,
-                _ => 0x0000
-            };
+                case 0: return BC;
+                case 1: return DE;
+                case 2: return self;
+                case 3: return SP;
+                default: return 0x0000;
+            }
+        }
 
         private void WriteToRegisterPair(int dest, ushort n)
         {
@@ -431,32 +435,45 @@
             }
         }
 
-        private bool EvaluateCC(int cc) =>
-            cc switch
+        private bool EvaluateCC(int cc)
+        {
+            switch (cc)
             {
-                0 => !CheckFlag(Flags.Z),
-                1 => CheckFlag(Flags.Z),
-                2 => !CheckFlag(Flags.C),
-                3 => CheckFlag(Flags.C),
-                4 => !CheckFlag(Flags.P),
-                5 => CheckFlag(Flags.P),
-                6 => !CheckFlag(Flags.S),
-                7 => CheckFlag(Flags.S),
-                _ => false
+                case 0: return !CheckFlag(Flags.Z);
+                case 1: return CheckFlag(Flags.Z);
+                case 2: return !CheckFlag(Flags.C);
+                case 3: return CheckFlag(Flags.C);
+                case 4: return !CheckFlag(Flags.P);
+                case 5: return CheckFlag(Flags.P);
+                case 6: return !CheckFlag(Flags.S);
+                case 7: return CheckFlag(Flags.S);
+                default: return false;
             };
+        }
 
-        private ushort GetPageZeroAddress(byte value) =>
-            value switch
+        private ushort GetPageZeroAddress(byte value)
+        {
+            switch (value)
             {
-                0 => 0x0000,
-                1 => 0x0008,
-                2 => 0x0010,
-                3 => 0x0018,
-                4 => 0x0020,
-                5 => 0x0028,
-                6 => 0x0030,
-                7 => 0x0038,
-                _ => 0x0000
-            };
+                case 0:
+                    return 0x0000;
+                case 1:
+                    return 0x0008;
+                case 2:
+                    return 0x0010;
+                case 3:
+                    return 0x0018;
+                case 4:
+                    return 0x0020;
+                case 5:
+                    return 0x0028;
+                case 6:
+                    return 0x0030;
+                case 7:
+                    return 0x0038;
+                default:
+                    return 0x0000;
+            }
+        }
     }
 }

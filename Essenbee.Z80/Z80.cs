@@ -92,7 +92,7 @@ namespace Essenbee.Z80
 
         public long TotalTStates { get; set; }
 
-        private IBus _bus = null!;
+        private IBus _bus = null;
 
         public Dictionary<byte, Instruction> RootInstructions { get; } = new Dictionary<byte, Instruction>();
         public Dictionary<byte, Instruction> CBInstructions { get; } = new Dictionary<byte, Instruction>();
@@ -1497,7 +1497,7 @@ namespace Essenbee.Z80
             // ToDo: wait 17 T-states
         }
 
-        public Dictionary<ushort, string> Disassemble(ushort start, ushort end, List<(ushort From, ushort To)>? data = null)
+        public Dictionary<ushort, string> Disassemble(ushort start, ushort end, List<(ushort From, ushort To)> data = null)
         {
             var address = start;
             var retVal = new Dictionary<ushort, string>();
@@ -1541,31 +1541,47 @@ namespace Essenbee.Z80
 
             opCode = opCode.ToUpper(c);
 
-            return opCode.Length switch
+            switch (opCode.Length)
             {
-                2 => RootInstructions.ContainsKey(byte.Parse(opCode, NumberStyles.HexNumber, c)),
-                4 => (opCode[0..2]) switch
-                {
-                    "DD" => DDInstructions.ContainsKey(byte.Parse(opCode[2..], NumberStyles.HexNumber, c)),
-                    "FD" => FDInstructions.ContainsKey(byte.Parse(opCode[2..], NumberStyles.HexNumber, c)),
-                    "ED" => EDInstructions.ContainsKey(byte.Parse(opCode[2..], NumberStyles.HexNumber, c)),
-                    "CB" => CBInstructions.ContainsKey(byte.Parse(opCode[2..], NumberStyles.HexNumber, c)),
-                    _ => false,
-                },
-                6 => (opCode[0..4]) switch
-                {
-                    "DDCB" => DDCBInstructions.ContainsKey(byte.Parse(opCode[4..], NumberStyles.HexNumber, c)),
-                    "FDCB" => FDCBInstructions.ContainsKey(byte.Parse(opCode[4..], NumberStyles.HexNumber, c)),
-                    _ => false,
-                },
-                8 => (opCode[0..4]) switch
-                {
-                    "DDCB" => DDCBInstructions.ContainsKey(byte.Parse(opCode[6..], NumberStyles.HexNumber, c)),
-                    "FDCB" => FDCBInstructions.ContainsKey(byte.Parse(opCode[6..], NumberStyles.HexNumber, c)),
-                    _ => false,
-                },
+                case 2: return RootInstructions.ContainsKey(byte.Parse(opCode, NumberStyles.HexNumber, c));
+                case 4: return TwoByteOpCode(opCode, c);
+                case 6:
+                    return ThreeByteOpCode(opCode, c);
+                case 8:
+                    return FourByteOpCode(opCode, c);
+                default: return false;
+            };
+        }
 
-                _ => false,
+        private bool FourByteOpCode(string opCode, CultureInfo c)
+        {
+            switch (opCode.Substring(0, 4))
+            {
+                case "DDCB": return DDCBInstructions.ContainsKey(byte.Parse(opCode.Substring(6), NumberStyles.HexNumber, c));
+                case "FDCB": return FDCBInstructions.ContainsKey(byte.Parse(opCode.Substring(6), NumberStyles.HexNumber, c));
+                default: return false;
+            };
+        }
+
+        private bool ThreeByteOpCode(string opCode, CultureInfo c)
+        {
+            switch (opCode.Substring(0, 4))
+            {
+                case "DDCB": return DDCBInstructions.ContainsKey(byte.Parse(opCode.Substring(4), NumberStyles.HexNumber, c));
+                case "FDCB": return FDCBInstructions.ContainsKey(byte.Parse(opCode.Substring(4), NumberStyles.HexNumber, c));
+                default: return false;
+            };
+        }
+
+        private bool TwoByteOpCode(string opCode, CultureInfo c)
+        {
+            switch (opCode.Substring(0, 2))
+            {
+                case "DD": return DDInstructions.ContainsKey(byte.Parse(opCode.Substring(2), NumberStyles.HexNumber, c));
+                case "FD": return FDInstructions.ContainsKey(byte.Parse(opCode.Substring(2), NumberStyles.HexNumber, c));
+                case "ED": return EDInstructions.ContainsKey(byte.Parse(opCode.Substring(2), NumberStyles.HexNumber, c));
+                case "CB": return CBInstructions.ContainsKey(byte.Parse(opCode.Substring(2), NumberStyles.HexNumber, c));
+                default: return false;
             };
         }
 
@@ -1686,21 +1702,21 @@ namespace Essenbee.Z80
             if (operation.AddressingMode1 == IMM)
             {
                 var n = ReadFromBus(address++).ToString("X2", c);
-                opCode = opCode.Replace("n", $"&{n}", StringComparison.InvariantCulture);
+                opCode = opCode.Replace("n", $"&{n}");
             }
             else if (operation.AddressingMode1 == REL)
             {
                 var d = (sbyte)ReadFromBus(address++);
                 var e = d > 0 ? d + 2 : d - 2;
 
-                opCode = opCode.Replace("+d", $"{d.ToString("+0;-#", c)}", StringComparison.InvariantCulture);
-                opCode = opCode.Replace("e", $"${e.ToString("+0;-#", c)}", StringComparison.InvariantCulture);
+                opCode = opCode.Replace("+d", $"{d.ToString("+0;-#", c)}");
+                opCode = opCode.Replace("e", $"${e.ToString("+0;-#", c)}");
             }
             else if (operation.AddressingMode1 == RELS)
             {
                 // Displacement sbyte is at address - 2, due to format of the instruction
                 var d = (sbyte)ReadFromBus((ushort)(address-2));
-                opCode = opCode.Replace("+d", $"{d.ToString("+0;-#", c)}", StringComparison.InvariantCulture);
+                opCode = opCode.Replace("+d", $"{d.ToString("+0;-#", c)}");
             }
             else if (operation.AddressingMode1 == IMX)
             {
@@ -1708,7 +1724,7 @@ namespace Essenbee.Z80
                 var hiByte = (ushort)ReadFromBus(address++);
                 var val = (ushort)((hiByte << 8) + loByte);
                 var nn = val.ToString("X4", c);
-                opCode = opCode.Replace("nn", $"&{nn}", StringComparison.InvariantCulture);
+                opCode = opCode.Replace("nn", $"&{nn}");
             }
 
             return (opAddress, opCode, address);
