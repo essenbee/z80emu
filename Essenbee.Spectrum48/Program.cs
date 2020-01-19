@@ -3,7 +3,7 @@ using System;
 using System.IO;
 
 // **======================================================**
-// * This project used the OLC Pixel Game Engine             *
+// * This project uses the OLC Pixel Game Engine             *
 // *    *Copyright 2018 OneLoneCoder.com*                      *
 // *    (https://github.com/OneLoneCoder/olcPixelGameEngine) *
 // * C# port of the Pixel Game Engine by DevChrome           *
@@ -17,7 +17,7 @@ namespace Essenbee.Z80.Spectrum48
         private static Z80 _cpu;
         private static string _rom = @"..\..\ROM\48.rom";
         private SimpleBus _simpleBus = null;
-        private Point _origin = new Point(0, 0);
+        private Point _origin = new Point(47, 47);
         private byte[] _ram;
 
         public Program() => AppName = $"Essenbee.Spectrum48 (OLC Pixel Game Engine)";
@@ -41,7 +41,7 @@ namespace Essenbee.Z80.Spectrum48
 
         public override void OnUpdate(float elapsed)
         {
-            Clear(Pixel.Presets.Blue);
+            Clear(_simpleBus.BorderColour);
 
             if (Focus)
             {
@@ -64,7 +64,7 @@ namespace Essenbee.Z80.Spectrum48
         static void Main(string[] args)
         {
             var spectrum48 = new Program();
-            spectrum48.Construct(32 * 8, 24 * 8, 3, 3);
+            spectrum48.Construct((32 * 8) + 96, (24 * 8) + 104, 2, 2);
             spectrum48.Start();
         }
     }
