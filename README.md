@@ -5,7 +5,7 @@
 ![Twitch](https://img.shields.io/twitch/status/codebasealpha)
 ![Twitter](https://img.shields.io/twitter/follow/codebasealpha?label=Follow&style=social)
 
-Building a Z80 emulator in C# 7.3 as a .NET Standard 2.0 Class Library using the Test Driven Development (TDD) mindset. The aim is to create an accurate emulation of the Z80 CPU as a nuget package for general use. We will then go on to use the emulated CPU in a larger project to emulate a particular machine, maybe an Amstrad CPC or similar (not decided yet). Development will happen both on and off my Twitch live-coding stream, https://twitch.tv/codebasealpha.
+Building a Z80 emulator in C# 7.3 as a .NET Standard 2.0 Class Library using the Test Driven Development (TDD) mindset. The aim is to create an accurate emulation of the Z80 CPU as a nuget package for general use. We will then go on to use the emulated CPU in a larger project to emulate a particular machine, maybe a ZX Spectrum or an Amstrad CPC or similar (not decided yet). Development will happen both on and off my Twitch live-coding stream, https://twitch.tv/codebasealpha.
 
 Known as Project Z, coverage of this project begins from Episode 66. Use the link above to follow me on Twitch and be notifed when I am streaming (normally twice a week on Mondays and Wednesdays, but I sometimes run unscheduled pop-up streams).
 
