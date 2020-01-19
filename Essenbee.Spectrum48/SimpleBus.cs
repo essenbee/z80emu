@@ -73,21 +73,7 @@ namespace Essenbee.Z80.Spectrum48
 
                 if (_lineRendered % 8 == 0)
                 {
-                    var attrib0 = _memory[_attributeStart + (_lineRendered / 8) + c];
-                    var attrib1 = _memory[_attributeStart + ((_lineRendered + 64) / 8) + c];
-                    var attrib2 = _memory[_attributeStart + ((_lineRendered + 128) / 8) + c];
-
-                    _pen0 = attrib0 & 0b00000111;
-                    _paper0 = (attrib0 & 0b00111000) >> 3;
-                    _bright0 = (attrib0 & 0b01000000) >> 6;
-
-                    _pen1 = attrib1 & 0b00000111;
-                    _paper1 = (attrib1 & 0b00111000) >> 3;
-                    _bright1 = (attrib1 & 0b01000000) >> 6;
-
-                    _pen2 = attrib2 & 0b00000111;
-                    _paper2 = (attrib2 & 0b00111000) >> 3;
-                    _bright2 = (attrib2 & 0b01000000) >> 6;
+                    ReadAttributesForCharacter(c);
                 }
 
                 // Decode bits
@@ -129,6 +115,25 @@ namespace Essenbee.Z80.Spectrum48
                 _lineRendered = 0;
                 ScreenReady = true;
             }
+        }
+
+        private void ReadAttributesForCharacter(int c)
+        {
+            var attrib0 = _memory[_attributeStart + (_lineRendered / 8) + c];
+            var attrib1 = _memory[_attributeStart + ((_lineRendered + 64) / 8) + c];
+            var attrib2 = _memory[_attributeStart + ((_lineRendered + 128) / 8) + c];
+
+            _pen0 = attrib0 & 0b00000111;
+            _paper0 = (attrib0 & 0b00111000) >> 3;
+            _bright0 = (attrib0 & 0b01000000) >> 6;
+
+            _pen1 = attrib1 & 0b00000111;
+            _paper1 = (attrib1 & 0b00111000) >> 3;
+            _bright1 = (attrib1 & 0b01000000) >> 6;
+
+            _pen2 = attrib2 & 0b00000111;
+            _paper2 = (attrib2 & 0b00111000) >> 3;
+            _bright2 = (attrib2 & 0b01000000) >> 6;
         }
 
         private Pixel GetColouredPixel(int colour, int brightness)
