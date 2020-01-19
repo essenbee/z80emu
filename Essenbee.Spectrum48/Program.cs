@@ -53,7 +53,12 @@ namespace Essenbee.Z80.Spectrum48
 
             while (!_simpleBus.ScreenReady)
             {
-                _cpu.Step();
+                // ToDo: figure out the correct timing to run the rendering...
+                for (int i = 0; i < 50; i++)
+                {
+                    _cpu.Step();
+                }
+                
                 _simpleBus.RunRenderer();
             }
 
