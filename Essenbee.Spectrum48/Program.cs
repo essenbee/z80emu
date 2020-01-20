@@ -39,7 +39,6 @@ namespace Essenbee.Z80.Spectrum48
             _cpu = new Z80() 
             { 
                 Z80ClockSpeed = 3_500_000.0f, /* 3.5 MHz*/
-                InterruptMode = InterruptMode.Mode1,
             };
             _simpleBus = new SimpleBus(_ram);
             _cpu.ConnectToBus(_simpleBus);
