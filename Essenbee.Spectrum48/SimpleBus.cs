@@ -35,7 +35,15 @@ namespace Essenbee.Z80.Spectrum48
 
         public byte Read(ushort addr, bool ro = false) => _memory[addr];
 
-        public byte ReadPeripheral(ushort port) => 0;
+        public byte ReadPeripheral(ushort port)
+        {
+            Console.WriteLine();
+            Console.WriteLine($"IN 0x{port:X4}");
+
+            // ToDo: Keyboard handling here...
+
+            return 0;
+        }
 
         public void Write(ushort addr, byte data) => _memory[addr] = data;
 
@@ -53,6 +61,11 @@ namespace Essenbee.Z80.Spectrum48
         public void RunRenderer()
         {
             StepRenderer();
+
+            if (ScreenReady)
+            {
+                Interrupt = true; // 50 Hz maskable interrupt
+            }
         }
 
         private void StepRenderer()

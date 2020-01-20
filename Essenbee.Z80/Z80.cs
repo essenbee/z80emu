@@ -1445,6 +1445,7 @@ namespace Essenbee.Z80
 
             if (_bus.Interrupt)
             {
+                IFF1 = true;
                 Interrupt();
             }
         }
@@ -1469,12 +1470,12 @@ namespace Essenbee.Z80
                                 .StartsWith("RST", StringComparison.InvariantCultureIgnoreCase))
                             {
                                 PushProgramCounter();
-                                var addr = (ushort)(instruction[0] * 0x38);
+                                var addr = (ushort)(instruction[0] & 0x38);
                                 PC = addr;
                                 MEMPTR = addr;
                                 ResetQ();
 
-                                // ToDo: wait 13 T-states
+                                Wait(13);
                             }
                             else if (RootInstructions[instruction[0]].Mnemonic
                                      .StartsWith("CALL", StringComparison.InvariantCultureIgnoreCase) &&

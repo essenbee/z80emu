@@ -38,7 +38,8 @@ namespace Essenbee.Z80.Spectrum48
             Array.Copy(romData, _ram, 16384);
             _cpu = new Z80() 
             { 
-                Z80ClockSpeed = 3_500_000.0f /* 3.5 MHz*/
+                Z80ClockSpeed = 3_500_000.0f, /* 3.5 MHz*/
+                InterruptMode = InterruptMode.Mode1,
             };
             _simpleBus = new SimpleBus(_ram);
             _cpu.ConnectToBus(_simpleBus);
@@ -65,6 +66,7 @@ namespace Essenbee.Z80.Spectrum48
                 while (sw.ElapsedTicks < _renderTicks && !_simpleBus.ScreenReady)
                 {
                     _cpu.Step();
+                    _simpleBus.Interrupt = false;
                 }
             }
 
