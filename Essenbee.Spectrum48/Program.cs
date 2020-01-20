@@ -1,5 +1,6 @@
 ﻿using PixelEngine;
 using System;
+using System.Diagnostics;
 using System.IO;
 
 // **======================================================**
@@ -19,6 +20,7 @@ namespace Essenbee.Z80.Spectrum48
         private SimpleBus _simpleBus = null;
         private Point _origin = new Point(47, 47);
         private byte[] _ram;
+        private int _renderTicks = 0;
 
         public Program() => AppName = $"Essenbee.Spectrum48 (OLC Pixel Game Engine)";
 
@@ -37,6 +39,7 @@ namespace Essenbee.Z80.Spectrum48
             _cpu = new Z80();
             _simpleBus = new SimpleBus(_ram);
             _cpu.ConnectToBus(_simpleBus);
+            _renderTicks = (int)((1.0f / 4000.0f) * Stopwatch.Frequency); // Tune this value
         }
 
         public override void OnUpdate(float elapsed)
@@ -53,13 +56,13 @@ namespace Essenbee.Z80.Spectrum48
 
             while (!_simpleBus.ScreenReady)
             {
-                // ToDo: figure out the correct timing to run the rendering...
-                for (int i = 0; i < 50; i++)
+                var sw = Stopwatch.StartNew();
+                _simpleBus.RunRenderer();
+
+                while (sw.ElapsedTicks < _renderTicks && !_simpleBus.ScreenReady)
                 {
                     _cpu.Step();
                 }
-                
-                _simpleBus.RunRenderer();
             }
 
             _simpleBus.ScreenReady = false;
