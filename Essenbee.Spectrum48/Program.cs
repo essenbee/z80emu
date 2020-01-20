@@ -76,7 +76,7 @@ namespace Essenbee.Z80.Spectrum48
         static void Main(string[] args)
         {
             var spectrum48 = new Program();
-            spectrum48.Construct((32 * 8) + 96, (24 * 8) + 104, 2, 2);
+            spectrum48.Construct((32 * 8) + 96, (24 * 8) + 104, 3, 3);
             spectrum48.Start();
         }
     }

@@ -109,5 +109,168 @@
 
             return 0;
         }
+
+        // Instruction    : INIR
+        // Operation      : (HL) <- (C), B <- B - 1, HL <- HL + 1
+        // Flags Affected : All
+        private byte INIR(byte opCode)
+        {
+            INI(opCode);
+            byte additionalTStates = 0;
+
+            if (B != 0)
+            {
+                PC -= 2;
+                additionalTStates = 5;
+            }
+
+            SetQ();
+
+            return additionalTStates;
+        }
+
+        // Instruction    : IND
+        // Operation      : (HL) <- (C), B <- B - 1, HL <- HL - 1
+        // Flags Affected : All
+        private byte IND(byte opCode)
+        {
+            var n = ReadFromBusPort(BC);
+            MEMPTR = (ushort)(BC - 1);
+            WriteToBus(HL, n);
+
+            IncRegisterPair(HL, 2, -1);
+            var val = B;
+            B = (byte)(B - 1);
+            var decVal = B;
+
+            SetDecFlags(val, decVal);
+
+            var k = n + ((C - 1) & 255);
+            SetFlag(Flags.H, k > 0xFF);
+            SetFlag(Flags.C, k > 0xFF);
+
+            var x = (ushort)((k & 7) ^ decVal);
+            SetFlag(Flags.P, Parity(x));
+            SetFlag(Flags.N, ((n & 0x80) > 0) ? true : false); //Copy of bit 7
+
+            SetQ();
+
+            return 0;
+        }
+
+        // Instruction    : INDR
+        // Operation      : (HL) <- (C), B <- B - 1, HL <- HL - 1
+        // Flags Affected : All
+        private byte INDR(byte opCode)
+        {
+            IND(opCode);
+            byte additionalTStates = 0;
+
+            if (B != 0)
+            {
+                PC -= 2;
+                additionalTStates = 5;
+            }
+
+            SetQ();
+
+            return additionalTStates;
+        }
+
+        // Instruction    : OUTI
+        // Operation      : (C) <- (HL), B <- B - 1, HL <- HL + 1
+        // Flags Affected : All
+        private byte OUTI(byte opCode)
+        {
+            var n = ReadFromBus(HL);
+            WriteToBusPort(BC, n);
+
+            IncRegisterPair(HL, 2);
+            var val = B;
+            B = (byte)(B - 1);
+            var decVal = B;
+
+            MEMPTR = (ushort)(BC + 1);
+            SetDecFlags(val, decVal);
+
+            var k = n + L;
+            SetFlag(Flags.H, k > 0xFF);
+            SetFlag(Flags.C, k > 0xFF);
+
+            var x = (ushort)((k & 7) ^ decVal);
+            SetFlag(Flags.P, Parity(x));
+            SetFlag(Flags.N, ((n & 0x80) > 0) ? true : false); //Copy of bit 7
+
+            SetQ();
+
+            return 0;
+        }
+
+        // Instruction    : OTIR
+        // Operation      : (C) <- (HL), B <- B - 1, HL <- HL + 1
+        // Flags Affected : All
+        private byte OTIR(byte opCode)
+        {
+            OUTI(opCode);
+            byte additionalTStates = 0;
+
+            if (B != 0)
+            {
+                PC -= 2;
+                additionalTStates = 5;
+            }
+
+            SetQ();
+
+            return additionalTStates;
+        }
+
+        // Instruction    : OUTD
+        // Operation      : (C) <- (HL), B <- B - 1, HL <- HL - 1
+        // Flags Affected : All
+        private byte OUTD(byte opCode)
+        {
+            var n = ReadFromBus(HL);
+            WriteToBusPort(BC, n);
+
+            IncRegisterPair(HL, 2, -1);
+            var val = B;
+            B = (byte)(B - 1);
+            var decVal = B;
+
+            MEMPTR = (ushort)(BC - 1);
+            SetDecFlags(val, decVal);
+
+            var k = n + L;
+            SetFlag(Flags.H, k > 0xFF);
+            SetFlag(Flags.C, k > 0xFF);
+
+            var x = (ushort)((k & 7) ^ decVal);
+            SetFlag(Flags.P, Parity(x));
+            SetFlag(Flags.N, ((n & 0x80) > 0) ? true : false); //Copy of bit 7
+
+            SetQ();
+
+            return 0;
+        }
+
+        // Instruction    : OTDR
+        // Operation      : (C) <- (HL), B <- B - 1, HL <- HL - 1
+        // Flags Affected : All
+        private byte OTDR(byte opCode)
+        {
+            OUTD(opCode);
+            byte additionalTStates = 0;
+
+            if (B != 0)
+            {
+                PC -= 2;
+                additionalTStates = 5;
+            }
+
+            SetQ();
+
+            return additionalTStates;
+        }
     }
 }

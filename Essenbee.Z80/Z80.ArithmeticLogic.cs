@@ -787,6 +787,44 @@
             return 0;
         }
 
+        // Instruction    : INC IXh
+        // Operation      : IX <- IXh + 1
+        // Flags Affected : None
+
+        private byte INCIXH(byte opCode)
+        {
+            var hiByte = (byte)(IX >> 8);
+            var loByte = IX & 0x00FF;
+            var incVal = (byte)(hiByte + 1);
+            IX = (ushort)((incVal << 8) + loByte);
+
+            SetIncFlags(hiByte, incVal);
+
+            return 0;
+        }
+
+        // Instruction    : INC IXl
+        // Operation      : IX <- IXl + 1
+        // Flags Affected : None
+
+        private byte INCIXL(byte opCode)
+        {
+            var hiByte = (byte)(IX >> 8);
+            var loByte = (byte)(IX & 0x00FF);
+            var incVal = (byte)(loByte + 1);
+
+            if (incVal == 0)
+            {
+                hiByte++;
+            }
+
+            IX = (ushort)((hiByte << 8) + incVal);
+
+            SetIncFlags(loByte, incVal);
+
+            return 0;
+        }
+
         // Instruction    : INC IY
         // Operation      : IY <- IY + 1
         // Flags Affected : None
@@ -794,6 +832,44 @@
         private byte INCIY(byte opCode)
         {
             IY++;
+            return 0;
+        }
+
+        // Instruction    : INC IYh
+        // Operation      : IY <- IYh + 1
+        // Flags Affected : None
+
+        private byte INCIYH(byte opCode)
+        {
+            var hiByte = (byte)(IY >> 8);
+            var loByte = IY & 0x00FF;
+            var incVal = (byte)(hiByte + 1);
+            IY = (ushort)((incVal << 8) + loByte);
+
+            SetIncFlags(hiByte, incVal);
+
+            return 0;
+        }
+
+        // Instruction    : INC IYl
+        // Operation      : IY <- IYl + 1
+        // Flags Affected : None
+
+        private byte INCIYL(byte opCode)
+        {
+            var hiByte = (byte)(IY >> 8);
+            var loByte = (byte)(IY & 0x00FF);
+            var incVal = (byte)(loByte + 1);
+
+            if (incVal == 0)
+            {
+                hiByte++;
+            }
+
+            IY = (ushort)((hiByte << 8) + incVal);
+
+            SetIncFlags(loByte, incVal);
+
             return 0;
         }
 
