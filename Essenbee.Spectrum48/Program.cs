@@ -63,6 +63,7 @@ namespace Essenbee.Z80.Spectrum48
             }
 
             _simpleBus.ScreenReady = false;
+            AppName = $"Essenbee.Spectrum48 (OLC Pixel Game Engine) rendering @{1.0f / elapsed} FPS";
             DrawSprite(_origin, _simpleBus.GetScreen()); // Get buffered sprite representing the screen
         }
 
