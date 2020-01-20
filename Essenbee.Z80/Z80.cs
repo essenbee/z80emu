@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Text;
 
@@ -102,9 +103,23 @@ namespace Essenbee.Z80
         public Dictionary<byte, Instruction> FDInstructions { get; } = new Dictionary<byte, Instruction>();
         public Dictionary<byte, Instruction> FDCBInstructions { get; } = new Dictionary<byte, Instruction>();
 
+        private float z80ClockSpeed;
+        public float Z80ClockSpeed
+        {
+            get
+            {
+                return z80ClockSpeed;
+            }
+            set
+            {
+                z80ClockSpeed = value;
+                _tState = (1.0f / value) * Stopwatch.Frequency; // micro seconds
+            }
+        }
         private ushort _absoluteAddress = 0x0000;
         private byte _currentOpCode = 0x00;
         private int _clockCycles = 0;
+        private float _tState; // Number of microseconds per T-State
 
         public Z80()
         {
@@ -1338,6 +1353,8 @@ namespace Essenbee.Z80
                 { 0xFE, new Instruction("SET 7,(IY+d)", RELS, IDX, SETIYD, new List<int>{ 4, 4, 3,5,4,3 }) },
                 { 0xFF, new Instruction("SET 7,(IY+d),A", RELS, IDX, SETIYD, new List<int>{ 4, 4, 3,5,4,3 }) },
             };
+
+            Z80ClockSpeed = 4_000_000.0f; // 4 MHz
         }
 
         public void ConnectToBus(IBus bus) => _bus = bus;
@@ -1451,7 +1468,7 @@ namespace Essenbee.Z80
                                 MEMPTR = addr;
                                 ResetQ();
 
-                                // ToDo: wait 13 T-states
+                                Wait(13);
                             }
                             else
                             {
@@ -1463,7 +1480,7 @@ namespace Essenbee.Z80
                         PushProgramCounter();
                         PC = 0x0038; // There must be a handling routine here!
 
-                        // ToDo: wait 13 T-states
+                        Wait(13);
                         break;
                     case InterruptMode.Mode2:
                         if (_bus.Data != null && _bus.Data.Count == 1)
@@ -1479,8 +1496,7 @@ namespace Essenbee.Z80
                             PC = (ushort)((hiByte << 8) + loByte);
                         }
 
-                        // ToDo: wait 19 T-states
-
+                        Wait(19);
                         break;
                 }
             }
@@ -1494,7 +1510,7 @@ namespace Essenbee.Z80
             IFF1 = false;
             PC = 0x0066; // There must be a handling routine here!
 
-            // ToDo: wait 17 T-states
+            Wait(17);
         }
 
         public Dictionary<ushort, string> Disassemble(ushort start, ushort end, List<(ushort From, ushort To)> data = null)
@@ -1601,7 +1617,17 @@ namespace Essenbee.Z80
                 TotalTStates = TotalTStates + operation.TStates + additionalTStates;
             }
 
+            Wait(1);
             _clockCycles--;
+        }
+
+        private void Wait(int noOfTStates)
+        {
+            var sw = Stopwatch.StartNew();
+            while (sw.ElapsedTicks < noOfTStates * _tState)
+            {
+                // do nothing
+            }
         }
 
         private byte ReadFromBus(ushort addr) => _bus.Read(addr, false);

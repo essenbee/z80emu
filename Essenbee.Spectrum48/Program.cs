@@ -36,10 +36,13 @@ namespace Essenbee.Z80.Spectrum48
             }
 
             Array.Copy(romData, _ram, 16384);
-            _cpu = new Z80();
+            _cpu = new Z80() 
+            { 
+                Z80ClockSpeed = 3_500_000.0f /* 3.5 MHz*/
+            };
             _simpleBus = new SimpleBus(_ram);
             _cpu.ConnectToBus(_simpleBus);
-            _renderTicks = (int)((1.0f / 4000.0f) * Stopwatch.Frequency); // Tune this value
+            _renderTicks = (int)((1.0f / 4000.0f) * Stopwatch.Frequency); // Tune this value, looking for 50 FPS
         }
 
         public override void OnUpdate(float elapsed)
@@ -66,7 +69,7 @@ namespace Essenbee.Z80.Spectrum48
             }
 
             _simpleBus.ScreenReady = false;
-            AppName = $"Essenbee.Spectrum48 (OLC Pixel Game Engine) rendering @{1.0f / elapsed} FPS";
+            AppName = $"Essenbee.Spectrum48 (OLC Pixel Game Engine) rendering @{Math.Round(1.0f / elapsed, 1)} FPS";
             DrawSprite(_origin, _simpleBus.GetScreen()); // Get buffered sprite representing the screen
         }
 
