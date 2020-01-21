@@ -39,7 +39,7 @@ namespace Essenbee.Z80.Spectrum48
 
         public byte ReadPeripheral(ushort port)
         {
-            Console.WriteLine($"IN 0x{port:X4}");
+            // Console.WriteLine($"IN 0x{port:X4}");
 
             if ((port & 1) == 0)
             {

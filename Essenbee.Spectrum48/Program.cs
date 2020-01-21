@@ -72,7 +72,7 @@ namespace Essenbee.Z80.Spectrum48
                 {
                     _cpu.Step();
                     _simpleBus.Interrupt = false;
-                    Console.WriteLine($"\rPC: {_cpu.PC.ToString("X4")}");
+                    // Console.WriteLine($"\rPC: {_cpu.PC.ToString("X4")}");
                 }
             }
 
