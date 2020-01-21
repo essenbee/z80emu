@@ -5,6 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include=".cr\images\CF3C03E9AEA956395291BE98C580C27F.png" />
+    <Content Include=".cr\images\E5D9CCCCCD8B82BB1159F822CFE086F8.png" />
+    <Content Include=".cr\personal\FavoritesList\List.xml" />
+    <Content Include=".cr\personal\IDE\BuildEngine.xml" />
+    <Content Include=".cr\personal\Navigation\Code Places.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
