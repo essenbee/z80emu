@@ -13,7 +13,7 @@ Known as Project Z, coverage of this project begins from Episode 66. Use the lin
 
 The included project *Essenbee.Spectrum48* is an example implementation using the Z80 emulator. It is a very simple and currently quite emulation of a ZX Spectrum 48K. It is possible to program in BASIC using this emulation. Who knows how sophisticated (or not) it might become over time?
 
-
+![image](https://user-images.githubusercontent.com/7979108/72829874-7fbba480-3c77-11ea-88ce-17c31865ad5c.png)
 
 ### YouTube
 
