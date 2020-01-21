@@ -101,7 +101,10 @@ namespace Essenbee.Z80.Spectrum48
 
         public void WritePeripheral(ushort port, byte data)
         {
-            if (port == 0x07FE)
+            Console.WriteLine($"OUT 0x{port:X4} Data 0x{data}");
+
+            // Set border colour (0 - 7)
+            if ((port & 0x00FF) == 0xFE && ((port >> 8) < 8))
             {
                 var borderColour = data & 0b00000111;
                 BorderColour = GetColouredPixel(borderColour, 0);
