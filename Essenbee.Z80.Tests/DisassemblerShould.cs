@@ -50,7 +50,7 @@ namespace Essenbee.Z80.Tests
                 { 0x8008, "LD D,&00" },
                 { 0x800A, "LD HL,&0000" },
                 { 0x800D, "SRL C" },
-                { 0x800F, "JR C,$+3" },
+                { 0x800F, "JR NC,$+3" },
                 { 0x8011, "ADD HL,DE" },
                 { 0x8012, "SLA E" },
                 { 0x8014, "RL D" },

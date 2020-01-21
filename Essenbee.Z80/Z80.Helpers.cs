@@ -319,7 +319,6 @@
         {
             SetFlag(Flags.Z, n == 0);
             SetFlag(Flags.P, Parity(n));
-            SetFlag(Flags.Z, false);
             SetFlag(Flags.H, false);
             SetFlag(Flags.N, false);
             SetFlag(Flags.S, false);

@@ -173,7 +173,7 @@ namespace Essenbee.Z80
                 { 0x2D, new Instruction("DEC L", IMP, IMP, DECR, new List<int>{ 4 }) },
                 { 0x2E, new Instruction("LD L,n", IMM, IMP, LDRN, new List<int>{ 4, 3 }) },
                 { 0x2F, new Instruction("CPL", IMP, IMP, CPL, new List<int>{ 4 }) },
-                { 0x30, new Instruction("JR C,e", REL, IMP, JRNC, new List<int>{ 4, 3 }) },
+                { 0x30, new Instruction("JR NC,e", REL, IMP, JRNC, new List<int>{ 4, 3 }) },
                 { 0x31, new Instruction("LD SP,nn", IMX, IMP, LDSPNN, new List<int>{ 4, 3, 3 }) },
                 { 0x32, new Instruction("LD (nn),A", IMX, IMP, LDNNA, new List<int>{ 4, 3, 3, 3 }) },
                 { 0x33, new Instruction("INC SP", IMP, IMP, INCSS, new List<int>{ 6 }) },
@@ -1444,7 +1444,7 @@ namespace Essenbee.Z80
             }
 
             if (_bus.Interrupt)
-            {;
+            {
                 Interrupt();
             }
         }

@@ -8,6 +8,8 @@ namespace Essenbee.Z80.Spectrum48
     {
         public bool ScreenReady { get; set; }
         public Pixel BorderColour { get; set; } = Pixel.Presets.Black;
+
+        public int[] KeyMatrix { get; set; } = new int[8];
         public bool Interrupt { get; set; }
         public bool NonMaskableInterrupt { get; set; }
         public IList<byte> Data { get; set; } = new List<byte>();
@@ -37,10 +39,60 @@ namespace Essenbee.Z80.Spectrum48
 
         public byte ReadPeripheral(ushort port)
         {
-            Console.WriteLine();
             Console.WriteLine($"IN 0x{port:X4}");
 
-            // ToDo: Keyboard handling here...
+            if ((port & 1) == 0)
+            {
+                // Keyboard handling..
+                byte result = 0xFF;
+                var keyRow = (port & 0xFF00) >> 8;
+
+                if (keyRow == 0x7F)
+                {
+                    result &= (byte)KeyMatrix[7];
+                }
+
+                if (keyRow == 0xBF)
+                {
+                    result &= (byte)KeyMatrix[6];
+                }
+
+                if (keyRow == 0xDF)
+                {
+                    result &= (byte)KeyMatrix[5];
+                }
+
+                if (keyRow == 0xEF)
+                {
+                    result &= (byte)KeyMatrix[4];
+                }
+
+                if (keyRow == 0xF7)
+                {
+                    result &= (byte)KeyMatrix[3];
+                }
+
+                if (keyRow == 0xFB)
+                {
+                    result &= (byte)KeyMatrix[2];
+                }
+
+                if (keyRow == 0xFD)
+                {
+                    result &= (byte)KeyMatrix[1];
+                }
+
+                if (keyRow == 0xFE)
+                {
+                    result &= (byte)KeyMatrix[0];
+                }
+
+                result &= 0x1F; //mask out bits 0 to 4
+                result |= 0b11100000; //set bit 5 - 7
+                //Console.WriteLine($">>>>>>> Sending {Convert.ToString(result ,2)}");
+
+                return result;
+            }
 
             return 0;
         }
