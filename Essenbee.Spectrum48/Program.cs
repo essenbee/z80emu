@@ -49,19 +49,7 @@ namespace Essenbee.Z80.Spectrum48
         public override void OnUpdate(float elapsed)
         {
             Clear(_simpleBus.BorderColour);
-            var keyMatrix = new int[8] { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, };
-
-            if (Focus)
-            {
-                if (GetKey(Key.Escape).Pressed)
-                {
-                    _cpu.Reset();
-                }
-
-                keyMatrix = UpdateInput();
-            }
-
-            _simpleBus.KeyMatrix = keyMatrix;
+            var keyMatrix = new int[8];
 
             while (!_simpleBus.ScreenReady)
             {
@@ -76,7 +64,18 @@ namespace Essenbee.Z80.Spectrum48
                 }
             }
 
+            if (Focus)
+            {
+                if (GetKey(Key.Escape).Pressed)
+                {
+                    _cpu.Reset();
+                }
+
+                keyMatrix = UpdateInput();
+            }
+
             _simpleBus.ScreenReady = false;
+            _simpleBus.KeyMatrix = keyMatrix;
             AppName = $"Essenbee.Spectrum48 (OLC Pixel Game Engine) rendering @{Math.Round(1.0f / elapsed, 1)} FPS";
             DrawSprite(_origin, _simpleBus.GetScreen()); // Get buffered sprite representing the screen
         }
@@ -90,7 +89,8 @@ namespace Essenbee.Z80.Spectrum48
 
         public int[] UpdateInput()
         { 
-            if (GetKey(Key.Shift).Pressed)
+            // Caps Shift
+            if (GetKey(Key.Shift).Down)
             {
                 _keyLine[0] = _keyLine[0] & ~(0x1);
             }
@@ -414,7 +414,8 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[7] = _keyLine[7] | (0x1);
             }
 
-            if (GetKey(Key.Delete).Pressed)
+            //Symbol Shift
+            if (GetKey(Key.Control).Down)
             {
                 _keyLine[7] = _keyLine[7] & ~(0x02);
             }
@@ -448,6 +449,37 @@ namespace Essenbee.Z80.Spectrum48
             else
             {
                 _keyLine[7] = _keyLine[7] | (0x010);
+            }
+
+            //Special Helper Mappings
+            if (GetKey(Key.Back).Pressed || GetKey(Key.Delete).Pressed)
+            {
+                _keyLine[0] = _keyLine[0] & ~(0x1);
+                _keyLine[4] = _keyLine[0] & ~(0x1);
+            }
+
+            if (GetKey(Key.Left).Pressed)
+            {
+                _keyLine[0] = _keyLine[0] & ~(0x1);
+                _keyLine[3] = _keyLine[3] & ~(0x10);
+            }
+
+            if (GetKey(Key.Right).Pressed)
+            {
+                _keyLine[0] = _keyLine[0] & ~(0x1);
+                _keyLine[4] = _keyLine[4] & ~(0x04);
+            }
+
+            if (GetKey(Key.Up).Pressed)
+            {
+                _keyLine[0] = _keyLine[0] & ~(0x1);
+                _keyLine[4] = _keyLine[4] & ~(0x08);
+            }
+
+            if (GetKey(Key.Down).Pressed)
+            {
+                _keyLine[0] = _keyLine[0] & ~(0x1);
+                _keyLine[4] = _keyLine[4] & ~(0x10);
             }
 
             return _keyLine;
