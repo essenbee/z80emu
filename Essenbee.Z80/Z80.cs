@@ -1386,7 +1386,7 @@ namespace Essenbee.Z80
             I = R = 0x00;
             PC = 0x0000;
             SP = 0xFFFF;
-            IFF1 = IFF2 = false;
+            IFF1 = IFF2 =  false;
             InterruptMode = InterruptMode.Mode0;
             IsHalted = false;
             Q = 0x00;
@@ -1444,8 +1444,7 @@ namespace Essenbee.Z80
             }
 
             if (_bus.Interrupt)
-            {
-                IFF1 = true;
+            {;
                 Interrupt();
             }
         }
