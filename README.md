@@ -15,6 +15,8 @@ The included project *Essenbee.Spectrum48* is an example implementation using th
 
 ![image](https://user-images.githubusercontent.com/7979108/72829874-7fbba480-3c77-11ea-88ce-17c31865ad5c.png)
 
+![image](https://user-images.githubusercontent.com/7979108/72908129-f9fa3080-3d2c-11ea-8b3e-2fde99422991.png)
+
 ### YouTube
 
 The videos for Project Z episodes are archived on YouTube [here](https://www.youtube.com/channel/UCFFtfkaWjMb9UMDpPVnC1Sg). Please subscribe to my YouTube channel to get notified when new videoes are uploaded. Subscribing is free and it helps me out a lot.
