@@ -7,6 +7,7 @@ namespace Essenbee.Z80.Spectrum48
     public class SimpleBus : IBus
     {
         public bool ScreenReady { get; set; }
+        public bool SoundOn { get; set; }
         public Pixel BorderColour { get; set; } = Pixel.Presets.Black;
 
         public int[] KeyMatrix { get; set; } = new int[8];
@@ -101,13 +102,38 @@ namespace Essenbee.Z80.Spectrum48
 
         public void WritePeripheral(ushort port, byte data)
         {
-            Console.WriteLine($"OUT 0x{port:X4} Data 0x{data}");
+            Console.WriteLine($"OUT 0x{port:X4} Data 0x{data:X2}");
 
-            // Set border colour (0 - 7)
-            if ((port & 0x00FF) == 0xFE && ((port >> 8) < 8))
+            //` Bit   7   6   5   4   3   2   1   0
+            //`     +-------------------------------+
+            //`     |   |   |   | E | M |   Border  |
+             //`    +-------------------------------+
+
+            // ULA select
+            if ((port & 0x00FF) == 0xFE)
             {
-                var borderColour = data & 0b00000111;
-                BorderColour = GetColouredPixel(borderColour, 0);
+                // Set border colour (0 - 7)
+                if ((port >> 8) < 8)
+                {
+                    var borderColour = data & 0b00000111;
+                    BorderColour = GetColouredPixel(borderColour, 0);
+                    return;
+                }
+
+                if ((port & 0b00001000) > 1)
+                {
+                    // Activate MIC
+                }
+
+                if ((port & 0b00010000) > 1)
+                {
+                    // Activate EAR
+                    SoundOn = true;
+                }
+                else
+                {
+                    SoundOn = false;
+                }
             }
         }
 
