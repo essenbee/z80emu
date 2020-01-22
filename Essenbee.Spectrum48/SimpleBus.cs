@@ -165,10 +165,10 @@ namespace Essenbee.Z80.Spectrum48
                 var c1 = _memory[memOffset1 + c]; // Get byte value 1
                 var c2 = _memory[memOffset2 + c]; // Get byte value 2
 
-                if (_lineRendered % 8 == 0)
-                {
+                //if (_lineRendered % 8 == 0)
+                //{
                     ReadAttributesForCharacter(c);
-                }
+                //}
 
                 // Decode bits
                 for (var bitPos = 0; bitPos < 8; ++bitPos)
