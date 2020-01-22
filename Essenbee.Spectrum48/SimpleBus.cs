@@ -22,7 +22,7 @@ namespace Essenbee.Z80.Spectrum48
         private Sprite _screenBuffer = new Sprite(32 * 8, 24 * 8);
         private const ushort _screenStart = 0x4000;     // Beginning of Spectrum video RAM
         private const ushort _attributeStart = 0x5800;  // 768 bytes of colour attributes
-        private int _pen0, _pen1, _pen2;
+        private int _ink0, _ink1, _ink2;
         private int _paper0, _paper1, _paper2;
         private int _bright0, _bright1, _bright2;
         private int _flash0, _flash1, _flash2;
@@ -99,12 +99,12 @@ namespace Essenbee.Z80.Spectrum48
 
         public void WritePeripheral(ushort port, byte data)
         {
-            Console.WriteLine($"OUT 0x{port:X4} Data 0x{data:X2}");
+            // Console.WriteLine($"OUT 0x{port:X4} Data 0x{data:X2}");
 
             //` Bit   7   6   5   4   3   2   1   0
             //`     +-------------------------------+
             //`     |   |   |   | E | M |   Border  |
-            //`    +-------------------------------+
+            //`     +-------------------------------+
 
             // ULA select
             if ((port & 0x00FF) == 0xFE)
@@ -171,9 +171,9 @@ namespace Essenbee.Z80.Spectrum48
                     var b2 = 0x1 & (c2 >> (7 - bitPos));
                     var x = (c * 8) + bitPos;
 
-                    _screenBuffer[x, _lineRendered + 0] = GetPixel(b0 != 0, _pen0, _paper0, _bright0, _flash0 == 1);
-                    _screenBuffer[x, _lineRendered + 64] = GetPixel(b1 != 0, _pen1, _paper1, _bright1, _flash1 == 1);
-                    _screenBuffer[x, _lineRendered + 128] = GetPixel(b2 != 0, _pen2, _paper2, _bright2, _flash2 == 1);
+                    _screenBuffer[x, _lineRendered + 0] = GetPixel(b0 != 0, _ink0, _paper0, _bright0, _flash0 == 1);
+                    _screenBuffer[x, _lineRendered + 64] = GetPixel(b1 != 0, _ink1, _paper1, _bright1, _flash1 == 1);
+                    _screenBuffer[x, _lineRendered + 128] = GetPixel(b2 != 0, _ink2, _paper2, _bright2, _flash2 == 1);
                 }
             }
 
@@ -205,17 +205,17 @@ namespace Essenbee.Z80.Spectrum48
             var attrib1 = _memory[_attributeStart + ((_lineRendered + 64) / 8) + c];
             var attrib2 = _memory[_attributeStart + ((_lineRendered + 128) / 8) + c];
 
-            _pen0 = attrib0 & 0b00000111;
+            _ink0 = attrib0 & 0b00000111;
             _paper0 = (attrib0 & 0b00111000) >> 3;
             _bright0 = (attrib0 & 0b01000000) >> 6;
             _flash0 = (attrib0 & 0b10000000) >> 7;
 
-            _pen1 = attrib1 & 0b00000111;
+            _ink1 = attrib1 & 0b00000111;
             _paper1 = (attrib1 & 0b00111000) >> 3;
             _bright1 = (attrib1 & 0b01000000) >> 6;
             _flash1 = (attrib1 & 0b10000000) >> 7;
 
-            _pen2 = attrib2 & 0b00000111;
+            _ink2 = attrib2 & 0b00000111;
             _paper2 = (attrib2 & 0b00111000) >> 3;
             _bright2 = (attrib2 & 0b01000000) >> 6;
             _flash2 = (attrib2 & 0b10000000) >> 7;
