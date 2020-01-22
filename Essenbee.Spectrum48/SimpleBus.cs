@@ -25,6 +25,8 @@ namespace Essenbee.Z80.Spectrum48
         private int _pen0, _pen1, _pen2;
         private int _paper0, _paper1, _paper2;
         private int _bright0, _bright1, _bright2;
+        private int _flash0, _flash1, _flash2;
+        private int _frameCounter;
 
         public SimpleBus(byte[] ram)
         {
@@ -164,11 +166,7 @@ namespace Essenbee.Z80.Spectrum48
                 var c0 = _memory[memOffset0 + c]; // Get byte value 0
                 var c1 = _memory[memOffset1 + c]; // Get byte value 1
                 var c2 = _memory[memOffset2 + c]; // Get byte value 2
-
-                //if (_lineRendered % 8 == 0)
-                //{
-                    ReadAttributesForCharacter(c);
-                //}
+                ReadAttributesForCharacter(c);
 
                 // Decode bits
                 for (var bitPos = 0; bitPos < 8; ++bitPos)
@@ -208,6 +206,7 @@ namespace Essenbee.Z80.Spectrum48
             {
                 _lineRendered = 0;
                 ScreenReady = true;
+                _frameCounter++;
             }
         }
 
@@ -220,14 +219,17 @@ namespace Essenbee.Z80.Spectrum48
             _pen0 = attrib0 & 0b00000111;
             _paper0 = (attrib0 & 0b00111000) >> 3;
             _bright0 = (attrib0 & 0b01000000) >> 6;
+            _flash0 = (attrib0 & 0b10000000) >> 7;
 
             _pen1 = attrib1 & 0b00000111;
             _paper1 = (attrib1 & 0b00111000) >> 3;
             _bright1 = (attrib1 & 0b01000000) >> 6;
+            _flash1 = (attrib1 & 0b10000000) >> 7;
 
             _pen2 = attrib2 & 0b00000111;
             _paper2 = (attrib2 & 0b00111000) >> 3;
             _bright2 = (attrib2 & 0b01000000) >> 6;
+            _flash2 = (attrib2 & 0b10000000) >> 7;
         }
 
         private Pixel GetColouredPixel(int colour, int brightness)
