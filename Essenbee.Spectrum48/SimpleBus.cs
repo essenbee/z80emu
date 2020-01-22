@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using PixelEngine;
+﻿using PixelEngine;
 using System;
+using System.Collections.Generic;
 
 namespace Essenbee.Z80.Spectrum48
 {
@@ -28,15 +28,10 @@ namespace Essenbee.Z80.Spectrum48
         private int _flash0, _flash1, _flash2;
         private int _frameCounter;
 
-        public SimpleBus(byte[] ram)
-        {
-            _memory = ram;
-        }
+        public SimpleBus(byte[] ram) => _memory = ram;
 
         public IReadOnlyCollection<byte> RAM
-        {
-            get => _memory;
-        }
+=> _memory;
 
         public byte Read(ushort addr, bool ro = false) => _memory[addr];
 
@@ -109,13 +104,13 @@ namespace Essenbee.Z80.Spectrum48
             //` Bit   7   6   5   4   3   2   1   0
             //`     +-------------------------------+
             //`     |   |   |   | E | M |   Border  |
-             //`    +-------------------------------+
+            //`    +-------------------------------+
 
             // ULA select
             if ((port & 0x00FF) == 0xFE)
             {
                 // Set border colour (0 - 7)
-                if ((port >> 8) < 8)
+                if (port >> 8 < 8)
                 {
                     var borderColour = data & 0b00000111;
                     BorderColour = GetColouredPixel(borderColour, 0);
@@ -176,15 +171,9 @@ namespace Essenbee.Z80.Spectrum48
                     var b2 = 0x1 & (c2 >> (7 - bitPos));
                     var x = (c * 8) + bitPos;
 
-                    _screenBuffer[x, _lineRendered + 0] = b0 != 0 
-                        ? GetColouredPixel(_pen0, _bright0)
-                        : GetColouredPixel(_paper0, _bright0);
-                    _screenBuffer[x, _lineRendered + 64] = b1 != 0
-                        ? GetColouredPixel(_pen1, _bright1)
-                        : GetColouredPixel(_paper1, _bright1);
-                    _screenBuffer[x, _lineRendered + 128] = b2 != 0
-                        ? GetColouredPixel(_pen2, _bright2)
-                        : GetColouredPixel(_paper2, _bright2);
+                    _screenBuffer[x, _lineRendered + 0] = GetPixel(b0 != 0, _pen0, _paper0, _bright0, _flash0 == 1);
+                    _screenBuffer[x, _lineRendered + 64] = GetPixel(b1 != 0, _pen1, _paper1, _bright1, _flash1 == 1);
+                    _screenBuffer[x, _lineRendered + 128] = GetPixel(b2 != 0, _pen2, _paper2, _bright2, _flash2 == 1);
                 }
             }
 
@@ -199,7 +188,7 @@ namespace Essenbee.Z80.Spectrum48
 
             if (_screenLine > 7)
             {
-                _screenLine = 0;;
+                _screenLine = 0; ;
             }
 
             if (_lineRendered > 63)
@@ -231,6 +220,31 @@ namespace Essenbee.Z80.Spectrum48
             _bright2 = (attrib2 & 0b01000000) >> 6;
             _flash2 = (attrib2 & 0b10000000) >> 7;
         }
+        private Pixel GetPixel(bool foreground, int ink, int paper, int brightness, bool flashing)
+        {
+            if (flashing)
+            {
+                if (_frameCounter < 17)
+                {
+                    return NormalPixel(foreground, ink, paper, brightness);
+                }
+
+                if (_frameCounter > 32)
+                {
+                    _frameCounter = 0;
+                }
+
+                return InvertedPixel(foreground, ink, paper, brightness);
+            }
+
+            return NormalPixel(foreground, ink, paper, brightness);
+        }
+
+        private Pixel InvertedPixel(bool foreground, int ink, int paper, int brightness) => 
+            foreground ? GetColouredPixel(paper, brightness) : GetColouredPixel(ink, brightness);
+
+        private Pixel NormalPixel(bool foreground, int ink, int paper, int brightness) => 
+            foreground ? GetColouredPixel(ink, brightness) : GetColouredPixel(paper, brightness);
 
         private Pixel GetColouredPixel(int colour, int brightness)
         {
@@ -248,7 +262,7 @@ namespace Essenbee.Z80.Spectrum48
                     default: return Pixel.Presets.Grey;
                 }
             }
-            else 
+            else
             {
                 switch (colour)
                 {
