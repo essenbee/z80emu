@@ -79,15 +79,22 @@ namespace Essenbee.Z80.Spectrum48
 
                 if (GetKey(Key.F1).Pressed)
                 {
-                    var snapshot = Z80FileReader.LoadZ80File("D:/Snapshots/Adventure.z80");
+                    try
+                    {
+                        var snapshot = Z80FileReader.LoadZ80File("D:/Snapshots/KR.z80");
 
-                    if (snapshot.Type == 0)
-                    {
-                        SetUpMachineState(snapshot);
+                        if (snapshot.Type == 0)
+                        {
+                            SetUpMachineState(snapshot);
+                        }
+                        else
+                        {
+                            Console.WriteLine("** Not a Spectrum 48K file! **");
+                        }
                     }
-                    else
+                    catch
                     {
-                        Console.WriteLine("** Not a Spectrum 48K file! **");
+                        Console.WriteLine("** Error loading .z80 file! **");
                     }
                 }
 
@@ -119,7 +126,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[0] = _keyLine[0] | (0x1);
             }
 
-            if (GetKey(Key.Z).Pressed)
+            if (GetKey(Key.Z).Pressed || GetKey(Key.Z).Down)
             {
                 _keyLine[0] = _keyLine[0] & ~(0x02);
             }
@@ -128,7 +135,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[0] = _keyLine[0] | (0x02);
             }
 
-            if (GetKey(Key.X).Pressed)
+            if (GetKey(Key.X).Pressed || GetKey(Key.X).Down)
             {
                 _keyLine[0] = _keyLine[0] & ~(0x04);
             }
@@ -137,7 +144,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[0] = _keyLine[0] | (0x04);
             }
 
-            if (GetKey(Key.C).Pressed)
+            if (GetKey(Key.C).Pressed || GetKey(Key.C).Down)
             {
                 _keyLine[0] = _keyLine[0] & ~(0x08);
             }
@@ -146,7 +153,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[0] = _keyLine[0] | (0x08);
             }
 
-            if (GetKey(Key.V).Pressed)
+            if (GetKey(Key.V).Pressed || GetKey(Key.V).Down)
             {
                 _keyLine[0] = _keyLine[0] & ~(0x10);
             }
@@ -155,7 +162,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[0] = _keyLine[0] | (0x10);
             }
 
-            if (GetKey(Key.A).Pressed)
+            if (GetKey(Key.A).Pressed || GetKey(Key.A).Down)
             {
                 _keyLine[1] = _keyLine[1] & ~(0x1);
             }
@@ -164,7 +171,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[1] = _keyLine[1] | (0x1);
             }
 
-            if (GetKey(Key.S).Pressed)
+            if (GetKey(Key.S).Pressed || GetKey(Key.S).Down)
             {
                 _keyLine[1] = _keyLine[1] & ~(0x02);
             }
@@ -173,7 +180,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[1] = _keyLine[1] | (0x02);
             }
 
-            if (GetKey(Key.D).Pressed)
+            if (GetKey(Key.D).Pressed || GetKey(Key.D).Down)
             {
                 _keyLine[1] = _keyLine[1] & ~(0x04);
             }
@@ -182,7 +189,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[1] = _keyLine[1] | (0x04);
             }
 
-            if (GetKey(Key.F).Pressed)
+            if (GetKey(Key.F).Pressed || GetKey(Key.F).Down)
             {
                 _keyLine[1] = _keyLine[1] & ~(0x08);
             }
@@ -191,7 +198,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[1] = _keyLine[1] | (0x08);
             }
 
-            if (GetKey(Key.G).Pressed)
+            if (GetKey(Key.G).Pressed || GetKey(Key.G).Down)
             {
                 _keyLine[1] = _keyLine[1] & ~(0x10);
             }
@@ -200,7 +207,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[1] = _keyLine[1] | (0x10);
             }
 
-            if (GetKey(Key.Q).Pressed)
+            if (GetKey(Key.Q).Pressed || GetKey(Key.Q).Down)
             {
                 _keyLine[2] = _keyLine[2] & ~(0x1);
             }
@@ -209,7 +216,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[2] = _keyLine[2] | (0x1);
             }
 
-            if (GetKey(Key.W).Pressed)
+            if (GetKey(Key.W).Pressed || GetKey(Key.W).Down)
             {
                 _keyLine[2] = _keyLine[2] & ~(0x02);
             }
@@ -218,7 +225,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[2] = _keyLine[2] | (0x02);
             }
 
-            if (GetKey(Key.E).Pressed)
+            if (GetKey(Key.E).Pressed || GetKey(Key.E).Down)
             {
                 _keyLine[2] = _keyLine[2] & ~(0x04);
             }
@@ -227,7 +234,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[2] = _keyLine[2] | (0x04);
             }
 
-            if (GetKey(Key.R).Pressed)
+            if (GetKey(Key.R).Pressed || GetKey(Key.R).Down)
             {
                 _keyLine[2] = _keyLine[2] & ~(0x08);
             }
@@ -236,7 +243,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[2] = _keyLine[2] | (0x08);
             }
 
-            if (GetKey(Key.T).Pressed)
+            if (GetKey(Key.T).Pressed || GetKey(Key.T).Down)
             {
                 _keyLine[2] = _keyLine[2] & ~(0x10);
             }
@@ -245,7 +252,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[2] = _keyLine[2] | (0x10);
             }
 
-            if (GetKey(Key.K1).Pressed)
+            if (GetKey(Key.K1).Pressed || GetKey(Key.K1).Down)
             {
                 _keyLine[3] = _keyLine[3] & ~(0x1);
             }
@@ -254,7 +261,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[3] = _keyLine[3] | (0x1);
             }
 
-            if (GetKey(Key.K2).Pressed)
+            if (GetKey(Key.K2).Pressed || GetKey(Key.K2).Down)
             {
                 _keyLine[3] = _keyLine[3] & ~(0x02);
             }
@@ -263,7 +270,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[3] = _keyLine[3] | (0x02);
             }
 
-            if (GetKey(Key.K3).Pressed)
+            if (GetKey(Key.K3).Pressed || GetKey(Key.K3).Down)
             {
                 _keyLine[3] = _keyLine[3] & ~(0x04);
             }
@@ -272,7 +279,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[3] = _keyLine[3] | (0x04);
             }
 
-            if (GetKey(Key.K4).Pressed)
+            if (GetKey(Key.K4).Pressed || GetKey(Key.K4).Down)
             {
                 _keyLine[3] = _keyLine[3] & ~(0x08);
             }
@@ -281,7 +288,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[3] = _keyLine[3] | (0x08);
             }
 
-            if (GetKey(Key.K5).Pressed)
+            if (GetKey(Key.K5).Pressed || GetKey(Key.K5).Down)
             {
                 _keyLine[3] = _keyLine[3] & ~(0x10);
             }
@@ -290,7 +297,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[3] = _keyLine[3] | (0x10);
             }
 
-            if (GetKey(Key.K0).Pressed)
+            if (GetKey(Key.K0).Pressed || GetKey(Key.K0).Down)
             {
                 _keyLine[4] = _keyLine[4] & ~(0x1);
             }
@@ -299,7 +306,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[4] = _keyLine[4] | (0x1);
             }
 
-            if (GetKey(Key.K9).Pressed)
+            if (GetKey(Key.K9).Pressed || GetKey(Key.K9).Down)
             {
                 _keyLine[4] = _keyLine[4] & ~(0x02);
             }
@@ -308,7 +315,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[4] = _keyLine[4] | (0x02);
             }
 
-            if (GetKey(Key.K8).Pressed)
+            if (GetKey(Key.K8).Pressed || GetKey(Key.K8).Down)
             {
                 _keyLine[4] = _keyLine[4] & ~(0x04);
             }
@@ -317,7 +324,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[4] = _keyLine[4] | (0x04);
             }
 
-            if (GetKey(Key.K7).Pressed)
+            if (GetKey(Key.K7).Pressed || GetKey(Key.K7).Down)
             {
                 _keyLine[4] = _keyLine[4] & ~(0x08);
             }
@@ -326,7 +333,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[4] = _keyLine[4] | (0x08);
             }
 
-            if (GetKey(Key.K6).Pressed)
+            if (GetKey(Key.K6).Pressed || GetKey(Key.K6).Down)
             {
                 _keyLine[4] = _keyLine[4] & ~(0x10);
             }
@@ -335,7 +342,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[4] = _keyLine[4] | (0x10);
             }
 
-            if (GetKey(Key.P).Pressed)
+            if (GetKey(Key.P).Pressed || GetKey(Key.P).Down)
             {
                 _keyLine[5] = _keyLine[5] & ~(0x1);
             }
@@ -344,7 +351,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[5] = _keyLine[5] | (0x1);
             }
 
-            if (GetKey(Key.O).Pressed)
+            if (GetKey(Key.O).Pressed || GetKey(Key.O).Down)
             {
                 _keyLine[5] = _keyLine[5] & ~(0x02);
             }
@@ -353,7 +360,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[5] = _keyLine[5] | (0x02);
             }
 
-            if (GetKey(Key.I).Pressed)
+            if (GetKey(Key.I).Pressed || GetKey(Key.I).Down)
             {
                 _keyLine[5] = _keyLine[5] & ~(0x04);
             }
@@ -362,7 +369,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[5] = _keyLine[5] | (0x04);
             }
 
-            if (GetKey(Key.U).Pressed)
+            if (GetKey(Key.U).Pressed || GetKey(Key.U).Down)
             {
                 _keyLine[5] = _keyLine[5] & ~(0x08);
             }
@@ -371,7 +378,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[5] = _keyLine[5] | (0x08);
             }
 
-            if (GetKey(Key.Y).Pressed)
+            if (GetKey(Key.Y).Pressed || GetKey(Key.Y).Down)
             {
                 _keyLine[5] = _keyLine[5] & ~(0x10);
             }
@@ -389,7 +396,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[6] = _keyLine[6] | (0x1);
             }
 
-            if (GetKey(Key.L).Pressed)
+            if (GetKey(Key.L).Pressed || GetKey(Key.L).Down)
             {
                 _keyLine[6] = _keyLine[6] & ~(0x02);
             }
@@ -398,7 +405,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[6] = _keyLine[6] | (0x02);
             }
 
-            if (GetKey(Key.K).Pressed)
+            if (GetKey(Key.K).Pressed || GetKey(Key.K).Down)
             {
                 _keyLine[6] = _keyLine[6] & ~(0x04);
             }
@@ -407,7 +414,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[6] = _keyLine[6] | (0x04);
             }
 
-            if (GetKey(Key.J).Pressed)
+            if (GetKey(Key.J).Pressed || GetKey(Key.J).Down)
             {
                 _keyLine[6] = _keyLine[6] & ~(0x08);
             }
@@ -416,7 +423,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[6] = _keyLine[6] | (0x08);
             }
 
-            if (GetKey(Key.H).Pressed)
+            if (GetKey(Key.H).Pressed || GetKey(Key.H).Down)
             {
                 _keyLine[6] = _keyLine[6] & ~(0x10);
             }
@@ -425,7 +432,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[6] = _keyLine[6] | (0x10);
             }
 
-            if (GetKey(Key.Space).Pressed)
+            if (GetKey(Key.Space).Pressed || GetKey(Key.Space).Down)
             {
                 _keyLine[7] = _keyLine[7] & ~(0x1);
             }
@@ -444,7 +451,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[7] = _keyLine[7] | (0x02);
             }
 
-            if (GetKey(Key.M).Pressed)
+            if (GetKey(Key.M).Pressed || GetKey(Key.M).Down)
             {
                 _keyLine[7] = _keyLine[7] & ~(0x04);
             }
@@ -453,7 +460,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[7] = _keyLine[7] | (0x04);
             }
 
-            if (GetKey(Key.N).Pressed)
+            if (GetKey(Key.N).Pressed || GetKey(Key.N).Down)
             {
                 _keyLine[7] = _keyLine[7] & ~(0x08);
             }
@@ -462,7 +469,7 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[7] = _keyLine[7] | (0x08);
             }
 
-            if (GetKey(Key.B).Pressed)
+            if (GetKey(Key.B).Pressed || GetKey(Key.B).Down)
             {
                 _keyLine[7] = _keyLine[7] & ~(0x10);
             }
@@ -478,25 +485,25 @@ namespace Essenbee.Z80.Spectrum48
                 _keyLine[4] = _keyLine[0] & ~(0x1);
             }
 
-            if (GetKey(Key.Left).Pressed)
+            if (GetKey(Key.Left).Pressed || GetKey(Key.Left).Down)
             {
                 _keyLine[0] = _keyLine[0] & ~(0x1);
                 _keyLine[3] = _keyLine[3] & ~(0x10);
             }
 
-            if (GetKey(Key.Right).Pressed)
+            if (GetKey(Key.Right).Pressed || GetKey(Key.Right).Down)
             {
                 _keyLine[0] = _keyLine[0] & ~(0x1);
                 _keyLine[4] = _keyLine[4] & ~(0x04);
             }
 
-            if (GetKey(Key.Up).Pressed)
+            if (GetKey(Key.Up).Pressed || GetKey(Key.Up).Down)
             {
                 _keyLine[0] = _keyLine[0] & ~(0x1);
                 _keyLine[4] = _keyLine[4] & ~(0x08);
             }
 
-            if (GetKey(Key.Down).Pressed)
+            if (GetKey(Key.Down).Pressed || GetKey(Key.Down).Down)
             {
                 _keyLine[0] = _keyLine[0] & ~(0x1);
                 _keyLine[4] = _keyLine[4] & ~(0x10);
