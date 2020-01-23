@@ -77,6 +77,20 @@ namespace Essenbee.Z80.Spectrum48
                     _cpu.Reset();
                 }
 
+                if (GetKey(Key.F1).Pressed)
+                {
+                    var snapshot = Z80FileReader.LoadZ80File("D:/Snapshots/Adventure.z80");
+
+                    if (snapshot.Type == 0)
+                    {
+                        SetUpMachineState(snapshot);
+                    }
+                    else
+                    {
+                        Console.WriteLine("** Not a Spectrum 48K file! **");
+                    }
+                }
+
                 keyMatrix = UpdateInput();
             }
 
@@ -489,6 +503,44 @@ namespace Essenbee.Z80.Spectrum48
             }
 
             return _keyLine;
+        }
+
+        private void SetUpMachineState(Z80Snapshot snapshot)
+        {
+            _cpu.A = (byte)(snapshot.AF >> 8);
+            _cpu.F = (Z80.Flags)((byte)(snapshot.AF & 0x00FF));
+            _cpu.A1 = (byte)(snapshot.AF1 >> 8);
+            _cpu.F1 = (Z80.Flags)((byte)(snapshot.AF1 & 0x00FF));
+
+            _cpu.B = (byte)(snapshot.BC >> 8);
+            _cpu.C = (byte)(snapshot.BC & 0x00FF);
+            _cpu.B1 = (byte)(snapshot.BC1 >> 8);
+            _cpu.C1 = (byte)(snapshot.BC1 & 0x00FF);
+
+            _cpu.D = (byte)(snapshot.DE >> 8);
+            _cpu.E = (byte)(snapshot.DE & 0x00FF);
+            _cpu.D1 = (byte)(snapshot.DE1 >> 8);
+            _cpu.E1 = (byte)(snapshot.DE1 & 0x00FF);
+
+            _cpu.H = (byte)(snapshot.HL >> 8);
+            _cpu.L = (byte)(snapshot.HL & 0x00FF);
+            _cpu.H1 = (byte)(snapshot.HL1 >> 8);
+            _cpu.L1 = (byte)(snapshot.HL1 & 0x00FF);
+
+            _cpu.IX = (ushort)snapshot.IX;
+            _cpu.IY = (ushort)snapshot.IY;
+            _cpu.SP = (ushort)snapshot.SP;
+            _cpu.PC = (ushort)snapshot.PC;
+
+            _cpu.IFF1 = snapshot.IFF1;
+            _cpu.IFF2 = snapshot.IFF2;
+
+            _cpu.I = snapshot.I;
+            _cpu.R = snapshot.R;
+
+            _cpu.InterruptMode = (InterruptMode)snapshot.IM;
+
+            Array.Copy(snapshot.Spectrum48, 0, _ram, 16384, 49152);
         }
     }
 }
