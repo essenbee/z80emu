@@ -156,11 +156,12 @@ namespace Essenbee.Z80.Spectrum48
             // Bottom third of screen
             var memOffset2 = (2 << 11) + offset;
 
-            for (var c = 0; c < 32; ++c)
+            for (var c = 0; c < 32; c++)
             {
                 var c0 = _memory[memOffset0 + c]; // Get byte value 0
                 var c1 = _memory[memOffset1 + c]; // Get byte value 1
                 var c2 = _memory[memOffset2 + c]; // Get byte value 2
+
                 ReadAttributesForCharacter(c);
 
                 // Decode bits
@@ -201,24 +202,29 @@ namespace Essenbee.Z80.Spectrum48
 
         private void ReadAttributesForCharacter(int c)
         {
-            var attrib0 = _memory[_attributeStart + (_lineRendered / 8) + c];
-            var attrib1 = _memory[_attributeStart + ((_lineRendered + 64) / 8) + c];
-            var attrib2 = _memory[_attributeStart + ((_lineRendered + 128) / 8) + c];
+            var offset = _attributeStart + (_screenLine << 5);
+            var attrOffset0 = (0 << 8) + offset + c;
+            var attrOffset1 = (1 << 8) + offset + c;
+            var attrOffset2 = (2 << 8) + offset + c;
 
-            _ink0 = attrib0 & 0b00000111;
-            _paper0 = (attrib0 & 0b00111000) >> 3;
-            _bright0 = (attrib0 & 0b01000000) >> 6;
-            _flash0 = (attrib0 & 0b10000000) >> 7;
+            var attr0 = _memory[attrOffset0];
+            var attr1 = _memory[attrOffset1];
+            var attr2 = _memory[attrOffset2];
 
-            _ink1 = attrib1 & 0b00000111;
-            _paper1 = (attrib1 & 0b00111000) >> 3;
-            _bright1 = (attrib1 & 0b01000000) >> 6;
-            _flash1 = (attrib1 & 0b10000000) >> 7;
+            _ink0 = attr0 & 0b00000111;
+            _paper0 = (attr0 & 0b00111000) >> 3;
+            _bright0 = (attr0 & 0b01000000) >> 6;
+            _flash0 = (attr0 & 0b10000000) >> 7;
 
-            _ink2 = attrib2 & 0b00000111;
-            _paper2 = (attrib2 & 0b00111000) >> 3;
-            _bright2 = (attrib2 & 0b01000000) >> 6;
-            _flash2 = (attrib2 & 0b10000000) >> 7;
+            _ink1 = attr1 & 0b00000111;
+            _paper1 = (attr1 & 0b00111000) >> 3;
+            _bright1 = (attr1 & 0b01000000) >> 6;
+            _flash1 = (attr1 & 0b10000000) >> 7;
+
+            _ink2 = attr2 & 0b00000111;
+            _paper2 = (attr2 & 0b00111000) >> 3;
+            _bright2 = (attr2 & 0b01000000) >> 6;
+            _flash2 = (attr2 & 0b10000000) >> 7;
         }
         private Pixel GetPixel(bool foreground, int ink, int paper, int brightness, bool flashing)
         {
