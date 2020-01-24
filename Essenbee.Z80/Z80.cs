@@ -120,6 +120,7 @@ namespace Essenbee.Z80
         private byte _currentOpCode = 0x00;
         private int _clockCycles = 0;
         private float _tState; // Number of microseconds per T-State
+        private Stopwatch _sw= new Stopwatch();
 
         public Z80()
         {
@@ -1642,8 +1643,8 @@ namespace Essenbee.Z80
 
         private void Wait(int noOfTStates)
         {
-            var sw = Stopwatch.StartNew();
-            while (sw.ElapsedTicks < noOfTStates * _tState)
+            _sw.Restart();
+            while (_sw.ElapsedTicks < noOfTStates * _tState)
             {
                 // do nothing
             }

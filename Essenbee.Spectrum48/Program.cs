@@ -41,7 +41,7 @@ namespace Essenbee.Z80.Spectrum48
             {
                 throw new InvalidOperationException("Not a valid ROM file");
             }
-
+            
             Array.Copy(romData, _ram, 16384);
             _cpu = new Z80()
             {
@@ -49,7 +49,10 @@ namespace Essenbee.Z80.Spectrum48
             };
             _simpleBus = new SimpleBus(_ram);
             _cpu.ConnectToBus(_simpleBus);
-            _renderTicks = (int)((1.0f / 4000.0f) * Stopwatch.Frequency); // Tune this value, looking for 50 FPS
+
+            // I'm guessing: run CPU steps for about 80% of the time to render 1/64th of a frame @ ~50fps
+            // The figures may need tuning for the PC you are running this code on...
+            _renderTicks = (int)(0.8f * (0.02f / 64.0f) * Stopwatch.Frequency);
         }
 
         public override void OnUpdate(float elapsed)
