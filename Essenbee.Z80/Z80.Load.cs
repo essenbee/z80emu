@@ -941,5 +941,60 @@
             return 0;
         }
 
+        // Instruction   : LD IXh, n
+        // Operation     : IXh <- n
+        // Flags Affected: 
+        private byte LDIXHN(byte opCode)
+        { 
+            var n = Fetch1(DDInstructions);
+            var loByte = (byte)(IX & 0x00FF);
+
+            IX = (ushort)((n << 8) + loByte);
+            ResetQ();
+
+            return 0;
+        }
+
+        // Instruction   : LD IYh, n
+        // Operation     : IYh <- n
+        // Flags Affected: 
+        private byte LDIYHN(byte opCode)
+        {
+            var n = Fetch1(FDInstructions);
+            var loByte = (byte)(IY & 0x00FF);
+
+            IY = (ushort)((n << 8) + loByte);
+            ResetQ();
+
+            return 0;
+        }
+
+        // Instruction   : LD IXl, n
+        // Operation     : IXl <- n
+        // Flags Affected: 
+        private byte LDIXLN(byte opCode)
+        {
+            var n = Fetch1(DDInstructions);
+            var hiByte = (byte)(IX >> 8);
+
+            IX = (ushort)((hiByte << 8) + n);
+            ResetQ();
+
+            return 0;
+        }
+
+        // Instruction   : LD IYl, n
+        // Operation     : IYl <- n
+        // Flags Affected: 
+        private byte LDIYLN(byte opCode)
+        {
+            var n = Fetch1(FDInstructions);
+            var hiByte = (byte)(IY >> 8);
+
+            IY = (ushort)((hiByte << 8) + n);
+            ResetQ();
+
+            return 0;
+        }
     }
 }

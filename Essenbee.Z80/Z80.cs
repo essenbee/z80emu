@@ -393,12 +393,15 @@ namespace Essenbee.Z80
                 { 0x23, new Instruction("INC IX", IMP, IMP, INCIX, new List<int>{ 4, 6 }) },
 
                 { 0x24, new Instruction("INC IXh", IMP, IMP, INCIXH, new List<int>{ 4, 4 }) },
+                { 0x25, new Instruction("DEC IXh", IMP, IMP, DECIXH, new List<int>{ 4, 4 }) },
+                { 0x26, new Instruction("LD IXh,n", IMM, IMP, LDIXHN, new List<int>{ 4, 3, 4 }) },
 
                 { 0x29, new Instruction("ADD IX,IX", IMP, IMP, ADDIXPP, new List<int>{ 4, 4, 4, 3 }) },
                 { 0x2A, new Instruction("LD IX,(nn)", IMX, IDX, LDIXFNN, new List<int>{ 4, 4, 3, 3, 3, 3 }) },
                 { 0x2B, new Instruction("DEC IX", IMP, IMP, DECIX, new List<int>{ 4, 6 }) },
-
                 { 0x2C, new Instruction("INC IXl", IMP, IMP, INCIXL, new List<int>{ 4, 4 }) },
+                { 0x2D, new Instruction("DEC IXl", IMP, IMP, DECIXL, new List<int>{ 4, 4 }) },
+                { 0x2E, new Instruction("LD IXl,n", IMM, IMP, LDIXLN, new List<int>{ 4, 3, 4 }) },
 
                 { 0x34, new Instruction("INC (IX+d)", REL, IDX, INCIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
                 { 0x35, new Instruction("DEC (IX+d)", REL, IDX, DECIXD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
@@ -454,12 +457,15 @@ namespace Essenbee.Z80
                 { 0x23, new Instruction("INC IY", IMP, IMP, INCIY, new List<int>{ 4, 6 }) },
 
                 { 0x24, new Instruction("INC IYh", IMP, IMP, INCIYH, new List<int>{ 4, 4 }) },
+                { 0x25, new Instruction("DEC IYh", IMP, IMP, DECIYH, new List<int>{ 4, 4 }) },
+                { 0x26, new Instruction("LD IYh,n", IMM, IMP, LDIYHN, new List<int>{ 4, 3, 4 }) },
 
                 { 0x29, new Instruction("ADD IY,IY", IMP, IMP, ADDIYPP, new List<int>{ 4, 4, 4, 3 }) },
                 { 0x2A, new Instruction("LD IY,(nn)", IMX, IDX, LDIYFNN, new List<int>{ 4, 4, 3, 3, 3, 3 }) },
                 { 0x2B, new Instruction("DEC IY", IMP, IMP, DECIY, new List<int>{ 4, 6 }) },
-
-                { 0x2C, new Instruction("INC IXl", IMP, IMP, INCIYL, new List<int>{ 4, 4 }) },
+                { 0x2C, new Instruction("INC IYl", IMP, IMP, INCIYL, new List<int>{ 4, 4 }) },
+                { 0x2D, new Instruction("DEC IYl", IMP, IMP, DECIYL, new List<int>{ 4, 4 }) },
+                { 0x2E, new Instruction("LD IYl,n", IMM, IMP, LDIYLN, new List<int>{ 4, 3, 4 }) },
 
                 { 0x34, new Instruction("INC (IY+d)", REL, IDX, INCIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },
                 { 0x35, new Instruction("DEC (IY+d)", REL, IDX, DECIYD, new List<int>{ 4, 4, 3, 5, 4, 3 }) },

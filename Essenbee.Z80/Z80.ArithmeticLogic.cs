@@ -788,8 +788,8 @@
         }
 
         // Instruction    : INC IXh
-        // Operation      : IX <- IXh + 1
-        // Flags Affected : None
+        // Operation      : IXl <- IXh + 1
+        // Flags Affected : 
 
         private byte INCIXH(byte opCode)
         {
@@ -804,19 +804,14 @@
         }
 
         // Instruction    : INC IXl
-        // Operation      : IX <- IXl + 1
-        // Flags Affected : None
+        // Operation      : IXl <- IXl + 1
+        // Flags Affected : 
 
         private byte INCIXL(byte opCode)
         {
             var hiByte = (byte)(IX >> 8);
             var loByte = (byte)(IX & 0x00FF);
             var incVal = (byte)(loByte + 1);
-
-            if (incVal == 0)
-            {
-                hiByte++;
-            }
 
             IX = (ushort)((hiByte << 8) + incVal);
 
@@ -836,8 +831,8 @@
         }
 
         // Instruction    : INC IYh
-        // Operation      : IY <- IYh + 1
-        // Flags Affected : None
+        // Operation      : IYh <- IYh + 1
+        // Flags Affected : 
 
         private byte INCIYH(byte opCode)
         {
@@ -852,19 +847,14 @@
         }
 
         // Instruction    : INC IYl
-        // Operation      : IY <- IYl + 1
-        // Flags Affected : None
+        // Operation      : IYl <- IYl + 1
+        // Flags Affected : 
 
         private byte INCIYL(byte opCode)
         {
             var hiByte = (byte)(IY >> 8);
             var loByte = (byte)(IY & 0x00FF);
             var incVal = (byte)(loByte + 1);
-
-            if (incVal == 0)
-            {
-                hiByte++;
-            }
 
             IY = (ushort)((hiByte << 8) + incVal);
 
@@ -906,6 +896,72 @@
         private byte DECIY(byte opCode)
         {
             IY--;
+            return 0;
+        }
+
+        // Instruction    : DEC IXh
+        // Operation      : IXh <- IXh - 1
+        // Flags Affected : 
+
+        private byte DECIXH(byte opCode)
+        {
+            var hiByte = (byte)(IX >> 8);
+            var loByte = IX & 0x00FF;
+            var incVal = (byte)(hiByte - 1);
+            IX = (ushort)((incVal << 8) + loByte);
+
+            SetDecFlags(hiByte, incVal);
+
+            return 0;
+        }
+
+        // Instruction    : DEC IYh
+        // Operation      : IYh <- IYh - 1
+        // Flags Affected : 
+
+        private byte DECIYH(byte opCode)
+        {
+            var hiByte = (byte)(IY >> 8);
+            var loByte = IY & 0x00FF;
+            var incVal = (byte)(hiByte - 1);
+            IY = (ushort)((incVal << 8) + loByte);
+
+            SetDecFlags(hiByte, incVal);
+
+            return 0; ;
+        }
+
+        // Instruction    : DEC IXl
+        // Operation      : IXl <- IXl - 1
+        // Flags Affected : 
+
+        private byte DECIXL(byte opCode)
+        {
+            var hiByte = (byte)(IX >> 8);
+            var loByte = (byte)(IX & 0x00FF);
+            var incVal = (byte)(loByte - 1);
+
+            IX = (ushort)((hiByte << 8) + incVal);
+
+            SetDecFlags(loByte, incVal);
+
+            return 0;
+        }
+
+        // Instruction    : DEC IYl
+        // Operation      : IYl <- IYl - 1
+        // Flags Affected : 
+
+        private byte DECIYL(byte opCode)
+        {
+            var hiByte = (byte)(IY >> 8);
+            var loByte = (byte)(IY & 0x00FF);
+            var incVal = (byte)(loByte - 1);
+
+            IY = (ushort)((hiByte << 8) + incVal);
+
+            SetDecFlags(loByte, incVal);
+
             return 0;
         }
     }
