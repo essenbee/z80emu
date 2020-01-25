@@ -482,7 +482,8 @@ namespace Essenbee.Z80.Spectrum48
             }
 
             //Special Helper Mappings
-            if (GetKey(Key.Back).Pressed || GetKey(Key.Delete).Pressed)
+            if (GetKey(Key.Back).Pressed || GetKey(Key.Delete).Pressed ||
+                GetKey(Key.Back).Down || GetKey(Key.Delete).Down)
             {
                 _keyLine[0] = _keyLine[0] & ~(0x1);
                 _keyLine[4] = _keyLine[0] & ~(0x1);
