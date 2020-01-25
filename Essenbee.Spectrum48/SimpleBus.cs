@@ -143,6 +143,12 @@ namespace Essenbee.Z80.Spectrum48
             if (ScreenReady)
             {
                 Interrupt = true; // 50 Hz maskable interrupt
+
+                // If interrupt Mode is 2:-
+                //   The Spectrum didn’t use IM 2 normally; it was widely assumed that cannot
+                //   guarantee what is on the data bus when the interrupt occurred, so programmers
+                //   tend to generate a vector table with 128 addresses, all pointing to the routine.
+                Data = new List<byte> { 0x00, 0x00 };
             }
         }
 
