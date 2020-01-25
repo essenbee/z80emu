@@ -202,16 +202,15 @@ namespace Essenbee.Z80
         // Flags Affected : None
         // Notes          : Interrupts are not accepted immediately after an EI, but are accepted
         //                  after the next instruction.
+
         private byte EI(byte opCode)
         {
-            // ToDo: only allow interrupts after the next instruction is executed
             IFF1 = true;
             IFF2 = true;
             ResetQ();
 
             return 0;
         }
-
 
         // Instruction    : IM0
         // Operation      : Set Interrupt Mode 0

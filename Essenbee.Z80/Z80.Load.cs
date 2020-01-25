@@ -1116,5 +1116,93 @@
 
             return 0;
         }
+
+        // Instruction    : LD IXH, IXH
+        // Operation      : IXH <- IXH 
+        // Flags Affected : None
+        private byte LDIXHIXH(byte opCode)
+        {
+            ResetQ();
+            return 0;
+        }
+
+        // Instruction    : LD IXL, IXL
+        // Operation      : IXL <- IXL 
+        // Flags Affected : None
+        private byte LDIXLIXL(byte opCode)
+        {
+            ResetQ();
+            return 0;
+        }
+
+        // Instruction    : LD IXH, IXL
+        // Operation      : IXH <- IXL
+        // Flags Affected : None
+        private byte LDIXHIXL(byte opCode)
+        {
+ 
+            var loByte = (byte)(IX & 0x00FF);
+            IX = (ushort)((loByte << 8) + loByte);
+
+            ResetQ();
+            return 0;
+        }
+
+        // Instruction    : LD IXL, IXH
+        // Operation      : IXL <- IXH
+        // Flags Affected : None
+        private byte LDIXLIXH(byte opCode)
+        {
+
+            var hiByte = (byte)(IX >> 8);
+            IX = (ushort)((hiByte << 8) + hiByte);
+
+            ResetQ();
+            return 0;
+        }
+
+        // Instruction    : LD IYH, IYH
+        // Operation      : IYH <- IYH 
+        // Flags Affected : None
+        private byte LDIYHIYH(byte opCode)
+        {
+            ResetQ();
+            return 0;
+        }
+
+        // Instruction    : LD IYL, IYL
+        // Operation      : IYL <- IYL 
+        // Flags Affected : None
+        private byte LDIYLIYL(byte opCode)
+        {
+            ResetQ();
+            return 0;
+        }
+
+        // Instruction    : LD IYH, IYL
+        // Operation      : IYH <- IYL
+        // Flags Affected : None
+        private byte LDIYHIYL(byte opCode)
+        {
+
+            var loByte = (byte)(IY & 0x00FF);
+            IY = (ushort)((loByte << 8) + loByte);
+
+            ResetQ();
+            return 0;
+        }
+
+        // Instruction    : LD IYL, IYH
+        // Operation      : IYL <- IYH
+        // Flags Affected : None
+        private byte LDIYLIYH(byte opCode)
+        {
+
+            var hiByte = (byte)(IY >> 8);
+            IY = (ushort)((hiByte << 8) + hiByte);
+
+            ResetQ();
+            return 0;
+        }
     }
 }

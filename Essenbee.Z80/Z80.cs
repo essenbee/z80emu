@@ -386,6 +386,7 @@ namespace Essenbee.Z80
 
             DDInstructions = new Dictionary<byte, Instruction>
             {
+                { 0x00, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4, 4 }) },
                 { 0x09, new Instruction("ADD IX,BC", IMP, IMP, ADDIXPP, new List<int>{ 4, 4, 4, 3 }) },
                 { 0x19, new Instruction("ADD IX,DE", IMP, IMP, ADDIXPP, new List<int>{ 4, 4, 4, 3 }) },
                 { 0x21, new Instruction("LD IX,nn", IMX, IMP, LDIXNN, new List<int>{ 4, 4, 3, 3 }) },
@@ -429,15 +430,16 @@ namespace Essenbee.Z80
                 { 0x61, new Instruction("LD IXh,C", IMP, IMP, LDIXHR, new List<int>{ 4, 4 }) },
                 { 0x62, new Instruction("LD IXh,D", IMP, IMP, LDIXHR, new List<int>{ 4, 4 }) },
                 { 0x63, new Instruction("LD IXh,E", IMP, IMP, LDIXHR, new List<int>{ 4, 4 }) },
-
+                { 0x64, new Instruction("LD IXh,IXh", IMP, IMP, LDIXHIXH, new List<int>{ 4, 4 }) },
+                { 0x65, new Instruction("LD IXh,IXl", IMP, IMP, LDIXHIXL, new List<int>{ 4, 4 }) },
                 { 0x66, new Instruction("LD H,(IX+d)", REL, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
                 { 0x67, new Instruction("LD IXh,A", IMP, IMP, LDIXHR, new List<int>{ 4, 4 }) },
-
                 { 0x68, new Instruction("LD IXl,B", IMP, IMP, LDIXLR, new List<int>{ 4, 4 }) },
                 { 0x69, new Instruction("LD IXl,C", IMP, IMP, LDIXLR, new List<int>{ 4, 4 }) },
                 { 0x6A, new Instruction("LD IXl,D", IMP, IMP, LDIXLR, new List<int>{ 4, 4 }) },
                 { 0x6B, new Instruction("LD IXl,E", IMP, IMP, LDIXLR, new List<int>{ 4, 4 }) },
-
+                { 0x6C, new Instruction("LD IXl,IXh", IMP, IMP, LDIXLIXH, new List<int>{ 4, 4 }) },
+                { 0x6D, new Instruction("LD IXl,IXl", IMP, IMP, LDIXLIXL, new List<int>{ 4, 4 }) },
                 { 0x6E, new Instruction("LD L,(IX+d)", REL, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
                 { 0x6F, new Instruction("LD IXl,A", IMP, IMP, LDIXLR, new List<int>{ 4, 4 }) },
                 { 0x70, new Instruction("LD (IX+d),B", REL, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
@@ -520,17 +522,18 @@ namespace Essenbee.Z80
                 { 0x61, new Instruction("LD IYh,C", IMP, IMP, LDIYHR, new List<int>{ 4, 4 }) },
                 { 0x62, new Instruction("LD IYh,D", IMP, IMP, LDIYHR, new List<int>{ 4, 4 }) },
                 { 0x63, new Instruction("LD IYh,E", IMP, IMP, LDIYHR, new List<int>{ 4, 4 }) },
-
+                { 0x64, new Instruction("LD IYh,IYh", IMP, IMP, LDIYHIYH, new List<int>{ 4, 4 }) },
+                { 0x65, new Instruction("LD IYh,IYl", IMP, IMP, LDIYHIYL, new List<int>{ 4, 4 }) },
                 { 0x66, new Instruction("LD H,(IY+d)", REL, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
                 { 0x67, new Instruction("LD IYh,A", IMP, IMP, LDIYHR, new List<int>{ 4, 4 }) },
-                { 0x68, new Instruction("LD IXl,B", IMP, IMP, LDIYLR, new List<int>{ 4, 4 }) },
-                { 0x69, new Instruction("LD IXl,C", IMP, IMP, LDIYLR, new List<int>{ 4, 4 }) },
-                { 0x6A, new Instruction("LD IXl,D", IMP, IMP, LDIYLR, new List<int>{ 4, 4 }) },
-                { 0x6B, new Instruction("LD IXl,E", IMP, IMP, LDIYLR, new List<int>{ 4, 4 }) },
-
+                { 0x68, new Instruction("LD IYl,B", IMP, IMP, LDIYLR, new List<int>{ 4, 4 }) },
+                { 0x69, new Instruction("LD IYl,C", IMP, IMP, LDIYLR, new List<int>{ 4, 4 }) },
+                { 0x6A, new Instruction("LD IYl,D", IMP, IMP, LDIYLR, new List<int>{ 4, 4 }) },
+                { 0x6B, new Instruction("LD IYl,E", IMP, IMP, LDIYLR, new List<int>{ 4, 4 }) },
+                { 0x6C, new Instruction("LD IYl,IYh", IMP, IMP, LDIYLIYH, new List<int>{ 4, 4 }) },
+                { 0x6D, new Instruction("LD IYl,IYl", IMP, IMP, LDIYLIYL, new List<int>{ 4, 4 }) },
                 { 0x6E, new Instruction("LD L,(IY+d)", REL, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x6F, new Instruction("LD IXl,A", IMP, IMP, LDIYLR, new List<int>{ 4, 4 }) },
-
+                { 0x6F, new Instruction("LD IYl,A", IMP, IMP, LDIYLR, new List<int>{ 4, 4 }) },
                 { 0x70, new Instruction("LD (IY+d),B", REL, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
                 { 0x71, new Instruction("LD (IY+d),C", REL, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
                 { 0x72, new Instruction("LD (IY+d),D", REL, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
