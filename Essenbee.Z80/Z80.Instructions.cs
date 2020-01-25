@@ -179,7 +179,11 @@ namespace Essenbee.Z80
         //                  routine is called.
         private byte HALT(byte opCode)
         {
-            // ToDo: Figure this out!
+            if (!IsHalted)
+            {
+                IsHalted = true;
+                PC--;
+            }
 
             ResetQ();
             return 0;

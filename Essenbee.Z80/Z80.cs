@@ -1488,13 +1488,20 @@ namespace Essenbee.Z80
 
         public void Step()
         {
-            var address = PC;
-            var (_, operation, _) = PeekNextInstruction(ReadFromBus(address), ref address);
-            var tStates = operation.TStates;
-
-            for (int i = 0; i < tStates; i++)
+            if (!IsHalted)
             {
-                Tick();
+                var address = PC;
+                var (_, operation, _) = PeekNextInstruction(ReadFromBus(address), ref address);
+                var tStates = operation.TStates;
+
+                for (int i = 0; i < tStates; i++)
+                {
+                    Tick();
+                }
+            }
+            else
+            {
+                Wait(4);
             }
 
             HandleInterrupts();
@@ -1515,10 +1522,10 @@ namespace Essenbee.Z80
 
         public void Interrupt()
         {
+            UnhaltIfHalted();
             if (IFF1)
             {
                 IFF1 = IFF2 = false;
-                UnhaltIfHalted();
 
                 switch (InterruptMode)
                 {
@@ -1769,17 +1776,7 @@ namespace Essenbee.Z80
 
         private (byte opCode, Instruction operation, int refresh) FetchNextInstruction(byte code, ref ushort address)
         {
-            if (code != 0x76)
-            {
-                address++;
-            }
-            else
-            {
-                // Do not increment PC
-                // Execute NOP
-                IsHalted = true;
-                return (0x00, new Instruction("NOP", IMP, IMP, NOP, new List<int> { 4 }), 1);
-            }
+            address++;
 
             return GetInstruction(code, ref address);
         }
