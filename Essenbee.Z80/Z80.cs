@@ -1580,9 +1580,9 @@ namespace Essenbee.Z80
                             PushProgramCounter();
                             var addr = (ushort)((I << 8) + vector);
 
-                            //Get starting address from vector table (little-endian)
-                            var loByte = ReadFromBus(addr++);
-                            var hiByte = ReadFromBus(addr);
+                            // Get starting address from vector table (little-endian)
+                            var loByte = ReadFromBus(addr);
+                            var hiByte = ReadFromBus((ushort)(addr + 1));
                             PC = (ushort)((hiByte << 8) + loByte);
                         }
 
