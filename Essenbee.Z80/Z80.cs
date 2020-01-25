@@ -386,7 +386,7 @@ namespace Essenbee.Z80
 
             DDInstructions = new Dictionary<byte, Instruction>
             {
-                { 0x00, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4, 4 }) },
+                // { 0x00, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4, 4 }) },
                 { 0x09, new Instruction("ADD IX,BC", IMP, IMP, ADDIXPP, new List<int>{ 4, 4, 4, 3 }) },
                 { 0x19, new Instruction("ADD IX,DE", IMP, IMP, ADDIXPP, new List<int>{ 4, 4, 4, 3 }) },
                 { 0x21, new Instruction("LD IX,nn", IMX, IMP, LDIXNN, new List<int>{ 4, 4, 3, 3 }) },
