@@ -996,5 +996,125 @@
 
             return 0;
         }
+
+        // Instruction    : LD r, IXh
+        // Operation      : r <- IXh
+        // Flags Affected : None
+        private byte LDRIXH(byte opCode)
+        {
+            var dest = (opCode & 0b00111000) >> 3;
+            var hiByte = (byte)(IX >> 8);
+
+            AssignToRegister(dest, hiByte);
+            ResetQ();
+
+            return 0;
+        }
+
+        // Instruction    : LD r, IYh
+        // Operation      : r <- IYh
+        // Flags Affected : None
+        private byte LDRIYH(byte opCode)
+        {
+            var dest = (opCode & 0b00111000) >> 3;
+            var hiByte = (byte)(IY >> 8);
+
+            AssignToRegister(dest, hiByte);
+            ResetQ();
+
+            return 0;
+        }
+
+        // Instruction    : LD r, IXl
+        // Operation      : r <- IXl
+        // Flags Affected : None
+        private byte LDRIXL(byte opCode)
+        {
+            var dest = (opCode & 0b00111000) >> 3;
+            var loByte = (byte)(IX & 0x00FF);
+
+            AssignToRegister(dest, loByte);
+            ResetQ();
+
+            return 0;
+        }
+
+        // Instruction    : LD r, IYl
+        // Operation      : r <- IYl
+        // Flags Affected : None
+        private byte LDRIYL(byte opCode)
+        {
+            var dest = (opCode & 0b00111000) >> 3;
+            var loByte = (byte)(IY & 0x00FF);
+
+            AssignToRegister(dest, loByte);
+            ResetQ();
+
+            return 0;
+        }
+
+        // Instruction    : LD IXH, r
+        // Operation      : IXH <- r
+        // Flags Affected : None
+        private byte LDIXHR(byte opCode)
+        {
+            var src = opCode & 0b00000111;
+            byte n = ReadFromRegister(src);
+            var loByte = (byte)(IX & 0x00FF);
+
+            IX = (ushort)((n << 8) + loByte);
+
+            ResetQ();
+
+            return 0;
+        }
+
+        // Instruction    : LD IYH, r
+        // Operation      : IYH <- r
+        // Flags Affected : None
+        private byte LDIYHR(byte opCode)
+        {
+            var src = opCode & 0b00000111;
+            byte n = ReadFromRegister(src);
+            var loByte = (byte)(IY & 0x00FF);
+
+            IY = (ushort)((n << 8) + loByte);
+
+            ResetQ();
+
+            return 0;
+        }
+
+        // Instruction    : LD IXL, r
+        // Operation      : IXL <- r
+        // Flags Affected : None
+        private byte LDIXLR(byte opCode)
+        {
+            var src = opCode & 0b00000111;
+            byte n = ReadFromRegister(src);
+            var hiByte = (byte)(IX >> 8);
+
+            IX = (ushort)((hiByte << 8) + n);
+
+            ResetQ();
+
+            return 0;
+        }
+
+        // Instruction    : LD IYL, r
+        // Operation      : IYL <- r
+        // Flags Affected : None
+        private byte LDIYLR(byte opCode)
+        {
+            var src = opCode & 0b00000111;
+            byte n = ReadFromRegister(src);
+            var hiByte = (byte)(IY >> 8);
+
+            IY = (ushort)((hiByte << 8) + n);
+
+            ResetQ();
+
+            return 0;
+        }
     }
 }

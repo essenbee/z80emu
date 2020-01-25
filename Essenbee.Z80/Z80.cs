@@ -408,13 +408,38 @@ namespace Essenbee.Z80
 
                 { 0x36, new Instruction("LD (IX+d),n", REL, IMM, LDIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
                 { 0x39, new Instruction("ADD IX,SP", IMP, IMP, ADDIXPP, new List<int>{ 4, 4, 4, 3 }) },
-                { 0x46, new Instruction("LD B,(IX+d)", REL, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x4E, new Instruction("LD C,(IX+d)", REL, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x56, new Instruction("LD D,(IX+d)", REL, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x5E, new Instruction("LD E,(IX+d)", REL, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x66, new Instruction("LD H,(IX+d)", REL, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
-                { 0x6E, new Instruction("LD L,(IX+d)", REL, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
 
+                { 0x44, new Instruction("LD B,IXh", IMP, IMP, LDRIXH, new List<int>{ 4, 4 }) },
+                { 0x45, new Instruction("LD B,IXl", IMP, IMP, LDRIXL, new List<int>{ 4, 4 }) },
+                { 0x46, new Instruction("LD B,(IX+d)", REL, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
+
+                { 0x4C, new Instruction("LD C,IXh", IMP, IMP, LDRIXH, new List<int>{ 4, 4 }) },
+                { 0x4D, new Instruction("LD C,IXl", IMP, IMP, LDRIXL, new List<int>{ 4, 4 }) },
+                { 0x4E, new Instruction("LD C,(IX+d)", REL, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
+
+                { 0x54, new Instruction("LD D,IXh", IMP, IMP, LDRIXH, new List<int>{ 4, 4 }) },
+                { 0x55, new Instruction("LD D,IXl", IMP, IMP, LDRIXL, new List<int>{ 4, 4 }) },
+                { 0x56, new Instruction("LD D,(IX+d)", REL, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
+
+                { 0x5C, new Instruction("LD E,IXh", IMP, IMP, LDRIXH, new List<int>{ 4, 4 }) },
+                { 0x5D, new Instruction("LD E,IXl", IMP, IMP, LDRIXL, new List<int>{ 4, 4 }) },
+                { 0x5E, new Instruction("LD E,(IX+d)", REL, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
+
+                { 0x60, new Instruction("LD IXh,B", IMP, IMP, LDIXHR, new List<int>{ 4, 4 }) },
+                { 0x61, new Instruction("LD IXh,C", IMP, IMP, LDIXHR, new List<int>{ 4, 4 }) },
+                { 0x62, new Instruction("LD IXh,D", IMP, IMP, LDIXHR, new List<int>{ 4, 4 }) },
+                { 0x63, new Instruction("LD IXh,E", IMP, IMP, LDIXHR, new List<int>{ 4, 4 }) },
+
+                { 0x66, new Instruction("LD H,(IX+d)", REL, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x67, new Instruction("LD IXh,A", IMP, IMP, LDIXHR, new List<int>{ 4, 4 }) },
+
+                { 0x68, new Instruction("LD IXl,B", IMP, IMP, LDIXLR, new List<int>{ 4, 4 }) },
+                { 0x69, new Instruction("LD IXl,C", IMP, IMP, LDIXLR, new List<int>{ 4, 4 }) },
+                { 0x6A, new Instruction("LD IXl,D", IMP, IMP, LDIXLR, new List<int>{ 4, 4 }) },
+                { 0x6B, new Instruction("LD IXl,E", IMP, IMP, LDIXLR, new List<int>{ 4, 4 }) },
+
+                { 0x6E, new Instruction("LD L,(IX+d)", REL, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x6F, new Instruction("LD IXl,A", IMP, IMP, LDIXLR, new List<int>{ 4, 4 }) },
                 { 0x70, new Instruction("LD (IX+d),B", REL, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
                 { 0x71, new Instruction("LD (IX+d),C", REL, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
                 { 0x72, new Instruction("LD (IX+d),D", REL, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
@@ -424,6 +449,8 @@ namespace Essenbee.Z80
 
                 { 0x77, new Instruction("LD (IX+d),A", REL, IDX, LDIXDR, new List<int>{ 4, 4, 3, 5, 3 }) },
 
+                { 0x7C, new Instruction("LD A,IXh", IMP, IMP, LDRIXH, new List<int>{ 4, 4 }) },
+                { 0x7D, new Instruction("LD A,IXl", IMP, IMP, LDRIXL, new List<int>{ 4, 4 }) },
                 { 0x7E, new Instruction("LD A,(IX+d)", REL, IDX, LDRIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
 
                 { 0x86, new Instruction("ADD A,(IX+d)", REL, IDX, ADDAIXDN, new List<int>{ 4, 4, 3, 5, 3 }) },
@@ -472,12 +499,37 @@ namespace Essenbee.Z80
 
                 { 0x36, new Instruction("LD (IY+d),n", REL, IMM, LDIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
                 { 0x39, new Instruction("ADD IY,SP", IMP, IMP, ADDIYPP, new List<int>{ 4, 4, 4, 3 }) },
+
+                { 0x44, new Instruction("LD B,IYh", IMP, IMP, LDRIYH, new List<int>{ 4, 4 }) },
+                { 0x45, new Instruction("LD B,IYl", IMP, IMP, LDRIYL, new List<int>{ 4, 4 }) },
                 { 0x46, new Instruction("LD B,(IY+d)", REL, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
+
+                { 0x4C, new Instruction("LD C,IYh", IMP, IMP, LDRIYH, new List<int>{ 4, 4 }) },
+                { 0x4D, new Instruction("LD C,IYl", IMP, IMP, LDRIYL, new List<int>{ 4, 4 }) },
                 { 0x4E, new Instruction("LD C,(IY+d)", REL, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
+
+                { 0x54, new Instruction("LD D,IYh", IMP, IMP, LDRIYH, new List<int>{ 4, 4 }) },
+                { 0x55, new Instruction("LD D,IYl", IMP, IMP, LDRIYL, new List<int>{ 4, 4 }) },
                 { 0x56, new Instruction("LD D,(IY+d)", REL, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
+
+                { 0x5C, new Instruction("LD E,IYh", IMP, IMP, LDRIYH, new List<int>{ 4, 4 }) },
+                { 0x5D, new Instruction("LD E,IYl", IMP, IMP, LDRIYL, new List<int>{ 4, 4 }) },
                 { 0x5E, new Instruction("LD E,(IY+d)", REL, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
+
+                { 0x60, new Instruction("LD IYh,B", IMP, IMP, LDIYHR, new List<int>{ 4, 4 }) },
+                { 0x61, new Instruction("LD IYh,C", IMP, IMP, LDIYHR, new List<int>{ 4, 4 }) },
+                { 0x62, new Instruction("LD IYh,D", IMP, IMP, LDIYHR, new List<int>{ 4, 4 }) },
+                { 0x63, new Instruction("LD IYh,E", IMP, IMP, LDIYHR, new List<int>{ 4, 4 }) },
+
                 { 0x66, new Instruction("LD H,(IY+d)", REL, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x67, new Instruction("LD IYh,A", IMP, IMP, LDIYHR, new List<int>{ 4, 4 }) },
+                { 0x68, new Instruction("LD IXl,B", IMP, IMP, LDIYLR, new List<int>{ 4, 4 }) },
+                { 0x69, new Instruction("LD IXl,C", IMP, IMP, LDIYLR, new List<int>{ 4, 4 }) },
+                { 0x6A, new Instruction("LD IXl,D", IMP, IMP, LDIYLR, new List<int>{ 4, 4 }) },
+                { 0x6B, new Instruction("LD IXl,E", IMP, IMP, LDIYLR, new List<int>{ 4, 4 }) },
+
                 { 0x6E, new Instruction("LD L,(IY+d)", REL, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
+                { 0x6F, new Instruction("LD IXl,A", IMP, IMP, LDIYLR, new List<int>{ 4, 4 }) },
 
                 { 0x70, new Instruction("LD (IY+d),B", REL, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
                 { 0x71, new Instruction("LD (IY+d),C", REL, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
@@ -488,6 +540,8 @@ namespace Essenbee.Z80
 
                 { 0x77, new Instruction("LD (IY+d),A", REL, IDX, LDIYDR, new List<int>{ 4, 4, 3, 5, 3 }) },
 
+                { 0x7C, new Instruction("LD A,IYh", IMP, IMP, LDRIYH, new List<int>{ 4, 4 }) },
+                { 0x7D, new Instruction("LD A,IYl", IMP, IMP, LDRIYL, new List<int>{ 4, 4 }) },
                 { 0x7E, new Instruction("LD A,(IY+d)", REL, IDX, LDRIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
 
                 { 0x86, new Instruction("ADD A,(IY+d)", REL, IDX, ADDAIYDN, new List<int>{ 4, 4, 3, 5, 3 }) },
