@@ -1576,8 +1576,7 @@ namespace Essenbee.Z80
                         if (_bus.Data != null && _bus.Data.Count == 1)
                         {
                             PushProgramCounter();
-                            var vector = _bus.Data[0];
-                            PushProgramCounter();
+                            var vector = _bus.Data[0];;
                             var addr = (ushort)((I << 8) + vector);
 
                             // Get starting address from vector table (little-endian)
