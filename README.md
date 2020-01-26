@@ -17,6 +17,7 @@ The included project *Essenbee.Spectrum48* is an example implementation using th
 - [X] Dizzy II - Treasure Island Dizzy
 - [X] Galaxians (shoot-em up)
 - [X] Pyramid (shoot-em up)
+- [X] Lords of Midnight (strategy)
 
 Who knows how sophisticated (or not) it might become over time? If you would like to contribute code for the sample (or any other project), **why not submit a Pull Request?** Check out the Issues list for things I need help with.
 
