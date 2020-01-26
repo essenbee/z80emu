@@ -14,6 +14,7 @@ Known as Project Z, coverage of this project begins from Episode 66. Use the lin
 The included project *Essenbee.Spectrum48* is an example implementation using the Z80 emulator. It is a very simple and currently quite limited emulation of a ZX Spectrum 48K. It is possible to program in BASIC using this emulation. At the time of writing, I have successfully run the following games on the emulation (as yet, without sound):
 
 - [X] King's Ransom (an "illustrated" text adventure)
+- [X] Dizzy II - Treasure Island Dizzy
 - [X] Galaxians (shoot-em up)
 - [X] Pyramid (shoot-em up)
 
