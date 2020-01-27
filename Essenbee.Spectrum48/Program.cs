@@ -84,7 +84,7 @@ namespace Essenbee.Z80.Spectrum48
                 {
                     try
                     {
-                        var snapshot = Z80FileReader.LoadZ80File("D:/Snapshots/KR.z80");
+                        var snapshot = Z80FileReader.LoadZ80File("D:/Snapshots/Dizzy2.z80");
 
                         if (snapshot.Type == 0)
                         {

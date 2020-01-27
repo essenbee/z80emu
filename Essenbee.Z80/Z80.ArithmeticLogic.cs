@@ -964,5 +964,233 @@
 
             return 0;
         }
+
+        // Instruction    : ADD A, IXH
+        // Operation      : A <- A + IXH
+        // Flags Affected : All except N
+        private byte ADDAIXH(byte opCode)
+        {
+            var n = (byte)((IX & 0xFF00) >> 8);
+            A = Add8(A, n);
+
+            return 0;
+        }
+
+        // Instruction    : ADD A, IXL
+        // Operation      : A <- A + IXL
+        // Flags Affected : All except N
+        private byte ADDAIXL(byte opCode)
+        {
+            var n = (byte)(IX & 0x00FF);
+            A = Add8(A, n);
+
+            return 0;
+        }
+
+        // Instruction    : ADD A, IYH
+        // Operation      : A <- A + IYH
+        // Flags Affected : All except N
+        private byte ADDAIYH(byte opCode)
+        {
+            var n = (byte)((IY & 0xFF00) >> 8);
+            A = Add8(A, n);
+
+            return 0;
+        }
+
+        // Instruction    : ADD A, IYL
+        // Operation      : A <- A + IYL
+        // Flags Affected : All except N
+        private byte ADDAIYL(byte opCode)
+        {
+            var n = (byte)(IY & 0x00FF);
+            A = Add8(A, n);
+
+            return 0;
+        }
+
+        // Instruction    : ADC A, IXH
+        // Operation      : A <- A + IXH + C
+        // Flags Affected : All except N
+        private byte ADCAIXH(byte opCode)
+        {
+            var n = (byte)((IX & 0xFF00) >> 8);
+            byte c = CheckFlag(Flags.C) ? ((byte)0x01) : ((byte)0x00);
+            A = Add8(A, n, c);
+
+            return 0;
+        }
+
+        // Instruction    : ADC A, IXL
+        // Operation      : A <- A + IXL + C
+        // Flags Affected : All except N
+        private byte ADCAIXL(byte opCode)
+        {
+            var n = (byte)(IX & 0x00FF);
+            byte c = CheckFlag(Flags.C) ? ((byte)0x01) : ((byte)0x00);
+            A = Add8(A, n, c);
+
+            return 0;
+        }
+
+        // Instruction    : ADC A, IYH
+        // Operation      : A <- A + IYH + C
+        // Flags Affected : All except N
+        private byte ADCAIYH(byte opCode)
+        {
+            var n = (byte)((IY & 0xFF00) >> 8);
+            byte c = CheckFlag(Flags.C) ? ((byte)0x01) : ((byte)0x00);
+            A = Add8(A, n, c);
+
+            return 0;
+        }
+
+        // Instruction    : ADC A, IYL
+        // Operation      : A <- A + IYL + C
+        // Flags Affected : All except N
+        private byte ADCAIYL(byte opCode)
+        {
+            var n = (byte)(IY & 0x00FF);
+            byte c = CheckFlag(Flags.C) ? ((byte)0x01) : ((byte)0x00);
+            A = Add8(A, n, c);
+
+            return 0;
+        }
+
+        // Instruction    : SUB A, IXH
+        // Operation      : A <- A - IXH
+        // Flags Affected : All
+        private byte SUBAIXH(byte opCode)
+        {
+            var n = (byte)((IX & 0xFF00) >> 8);
+            A = Sub8(A, n);
+
+            return 0;
+        }
+
+        // Instruction    : SUB A, IXL
+        // Operation      : A <- A - IXL
+        // Flags Affected : All
+        private byte SUBAIXL(byte opCode)
+        {
+            var n = (byte)(IX & 0x00FF);
+            A = Sub8(A, n);
+
+            return 0;
+        }
+
+        // Instruction    : SUB A, IYH
+        // Operation      : A <- A - IYH
+        // Flags Affected : All
+        private byte SUBAIYH(byte opCode)
+        {
+            var n = (byte)((IY & 0xFF00) >> 8);
+            A = Sub8(A, n);
+
+            return 0;
+        }
+
+        // Instruction    : SUB A, IYL
+        // Operation      : A <- A - IYL
+        // Flags Affected : All
+        private byte SUBAIYL(byte opCode)
+        {
+            var n = (byte)(IY & 0x00FF);
+            A = Sub8(A, n);
+
+            return 0;
+        }
+
+        // Instruction    : SBC A, IXH
+        // Operation      : A <- A - IXH - C
+        // Flags Affected : All
+        private byte SBCAIXH(byte opCode)
+        {
+            var n = (byte)((IX & 0xFF00) >> 8);
+            byte c = CheckFlag(Flags.C) ? ((byte)0x01) : ((byte)0x00);
+            A = Sub8(A, n, c);
+
+            return 0;
+        }
+
+        // Instruction    : SBC A, IXL
+        // Operation      : A <- A - IXL - C
+        // Flags Affected : All
+        private byte SBCAIXL(byte opCode)
+        {
+            var n = (byte)(IX & 0x00FF);
+            byte c = CheckFlag(Flags.C) ? ((byte)0x01) : ((byte)0x00);
+            A = Sub8(A, n, c);
+
+            return 0;
+        }
+
+        // Instruction    : SBC A, IYH
+        // Operation      : A <- A - IYH - C
+        // Flags Affected : All
+        private byte SBCAIYH(byte opCode)
+        {
+            var n = (byte)((IY & 0xFF00) >> 8);
+            byte c = CheckFlag(Flags.C) ? ((byte)0x01) : ((byte)0x00);
+            A = Sub8(A, n, c);
+
+            return 0;
+        }
+
+        // Instruction    : SBC A, IYL
+        // Operation      : A <- A - IYL - C
+        // Flags Affected : All
+        private byte SBCAIYL(byte opCode)
+        {
+            var n = (byte)(IY & 0x00FF);
+            byte c = CheckFlag(Flags.C) ? ((byte)0x01) : ((byte)0x00);
+            A = Sub8(A, n, c);
+
+            return 0;
+        }
+
+        // Instruction   : AND IXH
+        // Operation     : A <- A & IXH
+        // Flags Affected: All
+        private byte ANDIXH(byte opCode)
+        {
+            var n = (byte)((IX & 0xFF00) >> 8);
+            A = And(A, n);
+
+            return 0;
+        }
+
+        // Instruction   : AND IXL
+        // Operation     : A <- A & IXL
+        // Flags Affected: All
+        private byte ANDIXL(byte opCode)
+        {
+            var n = (byte)(IX & 0x00FF);
+            A = And(A, n);
+
+            return 0;
+        }
+
+        // Instruction   : AND IYH
+        // Operation     : A <- A & IYH
+        // Flags Affected: All
+        private byte ANDIYH(byte opCode)
+        {
+            var n = (byte)((IY & 0xFF00) >> 8);
+            A = And(A, n);
+
+            return 0;
+        }
+
+        // Instruction   : AND IYL
+        // Operation     : A <- A & IXL
+        // Flags Affected: All
+        private byte ANDIYL(byte opCode)
+        {
+            var n = (byte)(IY & 0x00FF);
+            A = And(A, n);
+
+            return 0;
+        }
     }
 }
