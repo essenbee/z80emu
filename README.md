@@ -5,7 +5,7 @@
 ![Twitch](https://img.shields.io/twitch/status/codebasealpha)
 ![Twitter](https://img.shields.io/twitter/follow/codebasealpha?label=Follow&style=social)
 
-Building a Z80 emulator in C# 7.3 as a .NET Standard 2.0 Class Library using the Test Driven Development (TDD) mindset. The aim is to create an accurate emulation of the Z80 CPU as a nuget package for general use. We will then go on to use the emulated CPU in a larger project to emulate a particular machine, maybe a ZX Spectrum or an Amstrad CPC or similar (not decided yet). Development will happen both on and off my Twitch live-coding stream, https://twitch.tv/codebasealpha.
+Building a Z80 emulator in C# 7.3 as a .NET Standard 2.0 Class Library using the Test Driven Development (TDD) mindset. The aim is to create an accurate emulation of the Z80 CPU as a nuget package for general use. We will then go on to use the emulated CPU in a larger project to emulate a particular machine, a ZX Spectrum probably, since it has a very simple architecture, and the project is not really about creating such an emulator. Development will happen both on and off my Twitch live-coding stream, https://twitch.tv/codebasealpha.
 
 Known as Project Z, coverage of this project begins from Episode 66. Use the link above to follow me on Twitch and be notifed when I am streaming (normally twice a week on Mondays and Wednesdays, but I sometimes run unscheduled pop-up streams).
 
@@ -14,8 +14,10 @@ Known as Project Z, coverage of this project begins from Episode 66. Use the lin
 The included project *Essenbee.Spectrum48* is an example implementation using the Z80 emulator. It is a very simple and currently quite limited emulation of a ZX Spectrum 48K. It is possible to program in BASIC using this emulation. At the time of writing, I have successfully run the following games on the emulation (as yet, without sound):
 
 - [X] King's Ransom (an "illustrated" text adventure)
+- [X] Dizzy II - Treasure Island Dizzy
 - [X] Galaxians (shoot-em up)
 - [X] Pyramid (shoot-em up)
+- [X] Lords of Midnight (strategy)
 
 Who knows how sophisticated (or not) it might become over time? If you would like to contribute code for the sample (or any other project), **why not submit a Pull Request?** Check out the Issues list for things I need help with.
 
