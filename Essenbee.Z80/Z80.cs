@@ -475,8 +475,10 @@ namespace Essenbee.Z80
 
                 { 0xA4, new Instruction("AND IXH", IMP, IMP, ANDIXH, new List<int> { 4, 4 }) },
                 { 0xA5, new Instruction("AND IXL", IMP, IMP, ANDIXL, new List<int> { 4, 4 }) },
-
                 { 0xA6, new Instruction("AND (IX+d)", REL, IDX, ANDIXD, new List<int>{ 4, 4 , 3, 5, 3 }) },
+
+                { 0xAC, new Instruction("XOR IXH", IMP, IMP, XORIXH, new List<int> { 4, 4 }) },
+                { 0xAD, new Instruction("XOR IXL", IMP, IMP, XORIXL, new List<int> { 4, 4 }) },
                 { 0xAE, new Instruction("XOR (IX+d)", REL, IDX, XORIXD, new List<int>{ 4, 4 , 3, 5, 3 }) },
                 { 0xB6, new Instruction("OR (IX+d)", REL, IDX, ORIXD, new List<int>{ 4, 4 , 3, 5, 3 }) },
 
@@ -583,8 +585,10 @@ namespace Essenbee.Z80
 
                 { 0xA4, new Instruction("AND IYH", IMP, IMP, ANDIYH, new List<int> { 4, 4 }) },
                 { 0xA5, new Instruction("AND IYL", IMP, IMP, ANDIYL, new List<int> { 4, 4 }) },
-
                 { 0xA6, new Instruction("AND (IY+d)", REL, IDX, ANDIYD, new List<int>{ 4, 4 , 3, 5, 3 }) },
+
+                { 0xAC, new Instruction("XOR IYH", IMP, IMP, XORIYH, new List<int> { 4, 4 }) },
+                { 0xAD, new Instruction("XOR IYL", IMP, IMP, XORIYL, new List<int> { 4, 4 }) },
                 { 0xAE, new Instruction("XOR (IY+d)", REL, IDX, XORIYD, new List<int>{ 4, 4 , 3, 5, 3 }) },
                 { 0xB6, new Instruction("OR (IY+d)", REL, IDX, ORIYD, new List<int>{ 4, 4 , 3, 5, 3 }) },
 

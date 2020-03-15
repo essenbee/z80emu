@@ -1192,5 +1192,50 @@
 
             return 0;
         }
+
+
+        // Instruction   : XOR IXH
+        // Operation     : A <- A ^ IXH
+        // Flags Affected: All
+        private byte XORIXH(byte opCode)
+        {
+            var n = (byte)((IX & 0xFF00) >> 8);
+            A = Xor(A, n);
+
+            return 0;
+        }
+
+        // Instruction   : XOR IXL
+        // Operation     : A <- A ^ IXL
+        // Flags Affected: All
+        private byte XORIXL(byte opCode)
+        {
+            var n = (byte)(IX & 0x00FF);
+            A = Xor(A, n);
+
+            return 0;
+        }
+
+        // Instruction   : XOR IYH
+        // Operation     : A <- A ^ IYH
+        // Flags Affected: All
+        private byte XORIYH(byte opCode)
+        {
+            var n = (byte)((IY & 0xFF00) >> 8);
+            A = Xor(A, n);
+
+            return 0;
+        }
+
+        // Instruction   : AND IYL
+        // Operation     : A <- A ^ IXL
+        // Flags Affected: All
+        private byte XORIYL(byte opCode)
+        {
+            var n = (byte)(IY & 0x00FF);
+            A = Xor(A, n);
+
+            return 0;
+        }
     }
 }
