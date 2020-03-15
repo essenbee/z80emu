@@ -1227,13 +1227,57 @@
             return 0;
         }
 
-        // Instruction   : AND IYL
+        // Instruction   : XOR IYL
         // Operation     : A <- A ^ IXL
         // Flags Affected: All
         private byte XORIYL(byte opCode)
         {
             var n = (byte)(IY & 0x00FF);
             A = Xor(A, n);
+
+            return 0;
+        }
+
+        // Instruction   : OR IXH
+        // Operation     : A <- A | IXH
+        // Flags Affected: All
+        private byte ORIXH(byte opCode)
+        {
+            var n = (byte)((IX & 0xFF00) >> 8);
+            A = Or(A, n);
+
+            return 0;
+        }
+
+        // Instruction   : OR IXL
+        // Operation     : A <- A | IXL
+        // Flags Affected: All
+        private byte ORIXL(byte opCode)
+        {
+            var n = (byte)(IX & 0x00FF);
+            A = Or(A, n);
+
+            return 0;
+        }
+
+        // Instruction   : OR IYH
+        // Operation     : A <- A | IYH
+        // Flags Affected: All
+        private byte ORIYH(byte opCode)
+        {
+            var n = (byte)((IY & 0xFF00) >> 8);
+            A = Or(A, n);
+
+            return 0;
+        }
+
+        // Instruction   : OR IYL
+        // Operation     : A <- A | IXL
+        // Flags Affected: All
+        private byte ORIYL(byte opCode)
+        {
+            var n = (byte)(IY & 0x00FF);
+            A = Or(A, n);
 
             return 0;
         }
