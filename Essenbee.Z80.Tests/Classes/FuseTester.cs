@@ -48,7 +48,9 @@ namespace Essenbee.Z80.Tests.Classes
 
                 _cpu.Reset(true);
 
-                if (_cpu.IsOpCodeSupported(opCode))
+                var isExtendedNopTest = opCode == "dd00" || opCode == "fddd00";
+
+                if (_cpu.IsOpCodeSupported(opCode) || isExtendedNopTest)
                 {
                     // Run test
                     var testToRun = test.Value;

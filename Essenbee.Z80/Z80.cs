@@ -380,8 +380,8 @@ namespace Essenbee.Z80
                 { 0xFF, new Instruction("RST &38", IMP, IMP, RST, new List<int>{ 5, 3, 3 }) },
 
                 // In case of stray values in memory...
-                { 0xDD, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4 }) },
-                { 0xFD, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4 }) },
+                { 0xDD, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4, 4 }) },
+                { 0xFD, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4, 4 }) },
             };
 
             DDInstructions = new Dictionary<byte, Instruction>
@@ -604,7 +604,7 @@ namespace Essenbee.Z80
                 { 0xBD, new Instruction("CP IYL", IMP, IMP, CPIYL, new List<int> { 4, 4 }) },
                 { 0xBE, new Instruction("CP (IY+d)", REL, IDX, CPIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
 
-                { 0xDD, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4, 4 }) },
+                { 0xDD, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4, 4, 4 }) },
 
                 { 0xE1, new Instruction("POP IY", IMP, IMP, POPIY, new List<int>{ 4, 4, 3, 3 }) },
                 { 0xE3, new Instruction("EX (SP),IY", IMP, IMP, EXSPIY, new List<int>{ 4, 4, 3, 4, 3, 5 }) },
@@ -1904,6 +1904,7 @@ namespace Essenbee.Z80
                         return (opDDCB, DDCBInstructions[opDDCB], 2);
                     }
 
+                    if (opDD == 0) return (opDD, RootInstructions[0xDD], 2); // Extended NOP
                     return (opDD, DDInstructions[opDD], 2);
                 case 0xED:
                     var opED = ReadFromBus(address);
@@ -1919,6 +1920,13 @@ namespace Essenbee.Z80
                         var opFDCB = ReadFromBus(address);
                         address++;
                         return (opFDCB, FDCBInstructions[opFDCB], 2);
+                    }
+
+                    if (opFD == 0xDD)
+                    {
+                        var opFDDD = ReadFromBus(address);
+                        address++;
+                        return (opFDDD, FDInstructions[0xDD], 2); // Extended NOP
                     }
 
                     return (opFD, FDInstructions[opFD], 2);
