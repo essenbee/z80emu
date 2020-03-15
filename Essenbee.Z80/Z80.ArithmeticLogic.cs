@@ -1281,5 +1281,53 @@
 
             return 0;
         }
+
+        // Instruction   : CP IXH
+        // Operation     : Compare IXH with A
+        // Flags Affected: S,Z,H,P/V,N,C
+        private byte CPIXH(byte opCode)
+        {
+            var n = (byte)((IX & 0xFF00) >> 8);
+            var diff = A - n;
+            SetComparisonFlags(n, diff);
+
+            return 0;
+        }
+
+        // Instruction   : CP IXL
+        // Operation     : Compare IXH with A
+        // Flags Affected: S,Z,H,P/V,N,C
+        private byte CPIXL(byte opCode)
+        {
+            var n = (byte)(IX & 0x00FF);
+            var diff = A - n;
+            SetComparisonFlags(n, diff);
+
+            return 0;
+        }
+
+        // Instruction   : CP IYH
+        // Operation     : Compare IXH with A
+        // Flags Affected: S,Z,H,P/V,N,C
+        private byte CPIYH(byte opCode)
+        {
+            var n = (byte)((IY & 0xFF00) >> 8);
+            var diff = A - n;
+            SetComparisonFlags(n, diff);
+
+            return 0;
+        }
+
+        // Instruction   : CP IYL
+        // Operation     : Compare IXH with A
+        // Flags Affected: S,Z,H,P/V,N,C
+        private byte CPIYL(byte opCode)
+        {
+            var n = (byte)(IY & 0x00FF);
+            var diff = A - n;
+            SetComparisonFlags(n, diff);
+
+            return 0;
+        }
     }
 }

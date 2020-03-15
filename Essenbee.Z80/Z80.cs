@@ -485,6 +485,8 @@ namespace Essenbee.Z80
                 { 0xB5, new Instruction("OR IXL", IMP, IMP, ORIXL, new List<int> { 4, 4 }) },
                 { 0xB6, new Instruction("OR (IX+d)", REL, IDX, ORIXD, new List<int>{ 4, 4 , 3, 5, 3 }) },
 
+                { 0xBC, new Instruction("CP IXH", IMP, IMP, CPIXH, new List<int> { 4, 4 }) },
+                { 0xBD, new Instruction("CP IXL", IMP, IMP, CPIXL, new List<int> { 4, 4 }) },
                 { 0xBE, new Instruction("CP (IX+d)", REL, IDX, CPIXD, new List<int>{ 4, 4, 3, 5, 3 }) },
 
                 { 0xDD, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4, 4 }) },
@@ -598,6 +600,8 @@ namespace Essenbee.Z80
                 { 0xB5, new Instruction("OR IYL", IMP, IMP, ORIYL, new List<int> { 4, 4 }) },
                 { 0xB6, new Instruction("OR (IY+d)", REL, IDX, ORIYD, new List<int>{ 4, 4 , 3, 5, 3 }) },
 
+                { 0xBC, new Instruction("CP IYH", IMP, IMP, CPIYH, new List<int> { 4, 4 }) },
+                { 0xBD, new Instruction("CP IYL", IMP, IMP, CPIYL, new List<int> { 4, 4 }) },
                 { 0xBE, new Instruction("CP (IY+d)", REL, IDX, CPIYD, new List<int>{ 4, 4, 3, 5, 3 }) },
 
                 { 0xDD, new Instruction("NOP", IMP, IMP, NOP, new List<int>{ 4, 4 }) },
