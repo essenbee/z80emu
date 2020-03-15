@@ -10,6 +10,8 @@ Building a Z80 emulator in C# 7.3 as a .NET Standard 2.0 Class Library using the
 
 Known as Project Z, coverage of this project begins from Episode 66. Use the link above to follow me on Twitch and be notifed when I am streaming (normally twice a week on Mondays and Wednesdays, but I sometimes run unscheduled pop-up streams).
 
+**2020-03-15**: Essenbee.Z80 nuget package released!
+
 ## Sample Project
 
 The included project *Essenbee.Spectrum48* is an example implementation using the Z80 emulator. It is a very simple and currently quite limited emulation of a ZX Spectrum 48K. It is possible to program in BASIC using this emulation. At the time of writing, I have successfully run the following games on the emulation (as yet, without sound):
