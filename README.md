@@ -4,6 +4,7 @@
 ![Licence](https://img.shields.io/github/license/essenbee/z80emu)
 ![Twitch](https://img.shields.io/twitch/status/codebasealpha)
 ![Twitter](https://img.shields.io/twitter/follow/codebasealpha?label=Follow&style=social)
+![Nuget](https://img.shields.io/nuget/v/Essenbee.Z80)
 
 Building a Z80 emulator in C# 7.3 as a .NET Standard 2.0 Class Library using the Test Driven Development (TDD) mindset. The aim is to create an accurate emulation of the Z80 CPU as a nuget package for general use. We will then go on to use the emulated CPU in a larger project to emulate a particular machine, a ZX Spectrum probably, since it has a very simple architecture, and the project is not really about creating such an emulator. Development will happen both on and off my Twitch live-coding stream, https://twitch.tv/codebasealpha.
 
