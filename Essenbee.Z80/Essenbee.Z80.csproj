@@ -2,6 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Essenbee</Authors>
+    <Company>Codebase Alpha Live-coing Stream</Company>
+    <Description>A Z80 emulator</Description>
+    <RepositoryType>Git</RepositoryType>
+    <RepositoryUrl>https://github.com/essenbee/z80emu</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/essenbee/z80emu</PackageProjectUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageTags>z80</PackageTags>
+    <PackageReleaseNotes>A sample implementation using this code can be found in the repo. It is a ZX Spectrum 48 emulator (without sound).</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +27,13 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
