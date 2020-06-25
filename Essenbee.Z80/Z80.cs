@@ -1960,7 +1960,7 @@ namespace Essenbee.Z80
 
         private void IncrementRefreshRegister(int steps)
         {
-            var refresh = (byte)(R & 0b011111111);  // Only use bits 0-6
+            var refresh = (byte)(R & 0b01111111);  // Only use bits 0-6
             var msbSet = (R & 0b10000000) > 0;
             refresh = (byte)(refresh + steps);
             R = refresh;
@@ -1971,7 +1971,7 @@ namespace Essenbee.Z80
             }
             else
             {
-                R &= 0b011111111;
+                R &= 0b01111111;
             }
         }
     }
